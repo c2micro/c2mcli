@@ -1,0 +1,14 @@
+alias(
+  "pwd",
+  fn (bid, cmd, args, raw) {
+    if len(args) != 0 {
+      return m_error(bid, "invalid number of arguments");
+    }
+
+    m_notify(bid, "tasked beacon to print process working directory");
+    return b_pwd(bid);
+  },
+  "print beacon process working directory",
+  "Usage:\n\tpwd",
+  true
+);

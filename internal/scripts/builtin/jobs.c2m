@@ -1,0 +1,14 @@
+alias(
+  "jobs",
+  fn (bid, cmd, args, raw) {
+    if len(args) != 0 {
+      return m_error(bid, "invalid number of arguments");
+    }
+
+    m_notify(bid, "tasked beacon to list jobs");
+    return b_jobs(bid);
+  },
+  "list jobs, controlled by beacon",
+  "Usage:\n\tjobs",
+  true
+);

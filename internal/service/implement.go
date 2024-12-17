@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/c2micro/c2mcli/internal/storage/beacon"
+	"github.com/c2micro/c2mcli/internal/storage/task"
 	"github.com/c2micro/c2mcli/internal/version"
 	"github.com/c2micro/c2mshr/defaults"
 	operatorv1 "github.com/c2micro/c2mshr/proto/gen/operator/v1"
@@ -193,6 +194,14 @@ func SubscribeTasks(ctx context.Context) error {
 		}
 		// новая таск группа
 		if msg.GetGroup() != nil {
+			t := &task.TaskGroup{}
+			v := msg.GetGroup()
+			t.SetId(v.GetGid())
+			t.SetCmd(v.GetCmd())
+			t.SetCreatedAt(v.GetCreated().AsTime().Add(operatorConn.metadata.delta))
+			t.SetAuthor(v.GetAuthor())
+			// добавление таск группы
+			task.TaskGroups.Add(t)
 			continue
 		}
 		// новое сообщение в таск группе

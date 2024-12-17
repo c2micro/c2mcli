@@ -1,0 +1,14 @@
+alias(
+  "mv",
+  fn (bid, cmd, args, raw) {
+    if len(args) != 2 {
+      return m_error(bid, "tnvalid number of arguments");
+    }
+
+    m_notify(bid, "tasked beacon to move file/dir");
+    return b_mv(bid, args[0], args[1]);
+  },
+  "move source file to the specified destination on target",
+  "Usage:\n\tmv [src file path] [dest file path]",
+  true
+);

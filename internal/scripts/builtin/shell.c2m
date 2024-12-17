@@ -1,0 +1,14 @@
+alias(
+  "shell",
+  fn (bid, cmd, args, raw) {
+    if len(args) == 0 {
+      return m_error(bid, "invalid number of arguments");
+    }
+
+    m_notify(bid, "tasked beacon to execute shell command");
+    return b_shell(bid, raw);
+  },
+  "execute command with arguments from target OS shell process, e.g. cmd.exe/sh",
+  "Usage:\n\tshell [command] [args]",
+  true
+);

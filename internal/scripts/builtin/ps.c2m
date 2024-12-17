@@ -1,0 +1,14 @@
+alias(
+  "ps",
+  fn (bid, cmd, args, raw) {
+    if len(args) != 0 {
+      return m_error(bid, "invalid number of arguments");
+    }
+
+    m_notify(bid, "tasked beacon to list processes");
+    return b_ps(bid);
+  },
+  "list running processes on target machine",
+  "Usage:\n\tps",
+  true
+);

@@ -5,14 +5,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func scriptCommand(*console.Console) *cobra.Command {
-	scriptCmd := &cobra.Command{
-		Use:                   "script",
+func scriptsCommand(*console.Console) *cobra.Command {
+	scriptsCmd := &cobra.Command{
+		Use:                   "scripts",
 		Short:                 "manage scripts",
 		DisableFlagsInUseLine: true,
 	}
 
-	scriptCmd.AddCommand()
+	scriptsCmd.AddCommand()
 
-	return scriptCmd
+	return scriptsCmd
 }

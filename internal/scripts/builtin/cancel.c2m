@@ -1,0 +1,14 @@
+alias(
+  "cancel",
+  fn (bid, cmd, args, raw) {
+    if len(args) != 0 {
+      return m_error(bid, "invalid number of arguments");
+    }
+
+    m_notify(bid, "cancel all tasks in queue for beacon");
+    return t_cancel(bid);
+  },
+  "cancel all (for operator) tasks in queue for beacon",
+  "Usage:\n\tcancel",
+  true
+);

@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func beaconListCommand(*console.Console) *cobra.Command {
+func beaconsListCommand(*console.Console) *cobra.Command {
 	return &cobra.Command{
 		Use:                   "list",
 		Short:                 "list beacons",
@@ -42,16 +42,16 @@ func beaconListCommand(*console.Console) *cobra.Command {
 	}
 }
 
-func beaconCommand(c *console.Console) *cobra.Command {
-	beaconCmd := &cobra.Command{
-		Use:                   "beacon",
+func beaconsCommand(c *console.Console) *cobra.Command {
+	beaconsCmd := &cobra.Command{
+		Use:                   "beacons",
 		Short:                 "manage beacons",
 		DisableFlagsInUseLine: true,
 	}
 
-	beaconCmd.AddCommand(
-		beaconListCommand(c),
+	beaconsCmd.AddCommand(
+		beaconsListCommand(c),
 	)
 
-	return beaconCmd
+	return beaconsCmd
 }

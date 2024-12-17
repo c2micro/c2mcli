@@ -14,11 +14,11 @@ func Commands(app *console.Console) console.Commands {
 		// exit
 		rootCmd.AddCommand(exitCommand(app))
 		// beacon
-		rootCmd.AddCommand(beaconCommand(app))
+		rootCmd.AddCommand(beaconsCommand(app))
 		// use
 		rootCmd.AddCommand(useCommand(app))
 		// script
-		rootCmd.AddCommand(scriptCommand(app))
+		rootCmd.AddCommand(scriptsCommand(app))
 
 		rootCmd.InitDefaultHelpCmd()
 		rootCmd.CompletionOptions.DisableDefaultCmd = true

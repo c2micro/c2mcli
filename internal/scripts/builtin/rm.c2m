@@ -1,0 +1,7 @@
+alias(
+  "rm",
+  fn (bid, cmd, args, raw) {},
+  "remove file/dir recursively",
+  "Usage:\n\trm [path]",
+  true
+);

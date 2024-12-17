@@ -1,0 +1,14 @@
+alias(
+  "whoami",
+  fn (bid, cmd, args, raw) {
+    if len(args) != 0 {
+      return m_error(bid, "invalid number of arguments");
+    }
+
+    m_notify(bid, "tmasked beacon to whoami");
+    return b_whoami(bid);
+  },
+  "print current beacon process user",
+  "Usage:\n\twhoami",
+  true
+);

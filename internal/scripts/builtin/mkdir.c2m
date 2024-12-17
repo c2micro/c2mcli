@@ -1,0 +1,14 @@
+alias(
+  "mkdir",
+  fn (bid, cmd, args, raw) {
+    if len(args) != 1 {
+      return m_error(bid, "invalid number of arguments");
+    }
+
+    m_notify(bid, "tasked beacon to create directory");
+    return b_mkdir(bid, args[0]);
+  },
+  "create directory on target",
+  "Usage:\n\tmkdir [path]",
+  true
+);

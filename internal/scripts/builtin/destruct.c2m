@@ -1,0 +1,14 @@
+alias(
+  "destruct",
+  fn (bid, cmd, args, raw) {
+    if len(args) != 0 {
+      return m_error(bid, "invalid number of arguments");
+    }
+
+    m_notify(bid, "tasked beacon to destruct itself");
+    return b_destruct(bid);
+  },
+  "destruct beacon itself (remove binary and kill process)",
+  "Usage:\n\tdestruct",
+  true
+);

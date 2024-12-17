@@ -1,0 +1,14 @@
+alias(
+  "kill-beacon",
+  fn (bid, cmd, args, raw) {
+    if len(args) != 0 {
+      return m_error(bid, "invalid number of arguments");
+    }
+
+    m_notify(bid, "tasked beacon to kill itself");
+    return b_exit(bid);
+  },
+  "stop beacon process execution (without artefact removing from target system)",
+  "Usage:\n\tkill-beacon",
+  true
+);

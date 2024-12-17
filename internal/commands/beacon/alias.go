@@ -15,8 +15,9 @@ func aliasCommands(*console.Console) []*cobra.Command {
 	cmds := make([]*cobra.Command, 0)
 	for k, v := range aliases.Aliases {
 		cmds = append(cmds, &cobra.Command{
-			Use:   k,
-			Short: v.GetDescription(),
+			Use:                   k,
+			Short:                 v.GetDescription(),
+			DisableFlagsInUseLine: true,
 			Run: func(cmd *cobra.Command, args []string) {
 				rawCmd := k + " " + strings.Join(args, " ")
 				if err := scripts.ProcessCommand(beacon.ActiveBeacon.GetId(), rawCmd); err != nil {

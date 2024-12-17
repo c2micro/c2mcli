@@ -1,0 +1,14 @@
+alias(
+  "download",
+  fn (bid, cmd, args, raw) {
+    if len(args) != 1 {
+      return m_error(bid, "invalid number of arguments");
+    }
+
+    m_notify(bid, "tasked beacon to download file");
+    return b_download(bid, args[0]);
+  },
+  "download file from the target",
+  "Usage:\n\tdownload [path]",
+  true
+);

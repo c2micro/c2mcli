@@ -1,0 +1,26 @@
+alias(
+  "exec",
+  fn (bid, cmd, args, raw) {
+    if len(args) == 0 {
+      return m_error(bid, "invalid number of arguments");
+    } elif len(args) == 1 {
+      m_notify(bid, "tasked beacon to execute command");
+      return b_exec(bid, args[0]);
+    } else {
+      splitted = str_split(raw, " ");
+      r = "";
+      for i = 1; i < len(splitted); i += 1 {
+        if i != len(splitted) -1 {
+          r += splitted[i] + " ";
+        } else {
+          r += splitted[i];
+        }
+      }
+      m_notify(bid, "tasked beacon to execute command with arguments");
+      return b_exec(bid, args[0], r);
+    }
+  },
+  "execute binary with arguments",
+  "Usage:\n\texec [binary path] [args]",
+  true
+);

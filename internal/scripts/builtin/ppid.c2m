@@ -1,0 +1,24 @@
+alias(
+  "ppid",
+  fn (bid, cmd, args, raw) {
+    if !is_windows(bid) {
+      return m_error(bid, "unsupported OS to perform PPID spoofing");
+    }
+    if len(args) == 0 {
+      m_notify(bid, "tasked beacon to revert PPID of process");
+      return b_ppid(bid);
+    } elif len(args) == 1 {
+      p = int(args[0]);
+      if p < 0 {
+        return m_error(bid, "invalid PPID value");
+      }
+      m_notify(bid, "tasked beacon to spoof PPID");
+      return b_ppid(bid, p);
+    } else {
+      return m_error(bid, "invalid number of arguments");
+    }
+  },
+  "spoof parent PID for beacon processes launches",
+  "Usage:\n\tppid [pid] - spoof PPID\n\tppid - reset PPID",
+  true
+);

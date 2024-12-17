@@ -1,0 +1,14 @@
+alias(
+  "kill",
+  fn (bid, cmd, args, raw) {
+    if len(args) != 1 {
+      return m_error(bid, "invalid number of arguments");
+    }
+    
+    m_notify(bid, "tasked beacon to kill process");
+    return b_kill(bid, int(args[0]));
+  },
+  "kill specified process by PID",
+  "Usage:\n\tkill [pid]",
+  true
+);
