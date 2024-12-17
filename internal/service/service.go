@@ -19,11 +19,11 @@ import (
 var operatorConn = &grpcConn{}
 
 type grpcConn struct {
-	ctx           context.Context
-	conn          *grpc.ClientConn
-	controlStream grpc.ServerStreamingClient[operatorv1.HelloResponse]
-	metadata      metadata
-	svc           operatorv1.OperatorServiceClient
+	ctx      context.Context
+	conn     *grpc.ClientConn
+	ss       streams
+	metadata metadata
+	svc      operatorv1.OperatorServiceClient
 }
 
 // инициализация подключения к mgmt серверу
@@ -48,7 +48,7 @@ func Init(ctx context.Context, host string, token string) error {
 	operatorConn.svc = operatorv1.NewOperatorServiceClient(operatorConn.conn)
 
 	// установка соединения, авторизация и получение исходных данных
-	operatorConn.controlStream, err = HelloInit(ctx)
+	operatorConn.ss.controlStream, err = HelloInit(ctx)
 	if err != nil {
 		return errors.Wrap(err, "open hello stream")
 	}
@@ -73,7 +73,10 @@ func Init(ctx context.Context, host string, token string) error {
 	g.Go(func() error {
 		return SubscribeBeacons(ctx)
 	})
-	
+	g.Go(func() error {
+		return SubscribeTasks(ctx)
+	})
+
 	go func() {
 		g.Wait()
 	}()

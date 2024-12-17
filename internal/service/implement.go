@@ -24,7 +24,7 @@ func HelloInit(ctx context.Context) (grpc.ServerStreamingClient[operatorv1.Hello
 // обработка хендшейка из control стрима
 func HelloHandshake(ctx context.Context) error {
 	// получение данных
-	msg, err := operatorConn.controlStream.Recv()
+	msg, err := operatorConn.ss.controlStream.Recv()
 	if err != nil {
 		return err
 	}
@@ -40,7 +40,7 @@ func HelloHandshake(ctx context.Context) error {
 // поддержание подписки на control стрим
 func HelloMonitor(ctx context.Context) error {
 	for {
-		if _, err := operatorConn.controlStream.Recv(); err != nil {
+		if _, err := operatorConn.ss.controlStream.Recv(); err != nil {
 			if errors.Is(err, io.EOF) {
 				break
 			}
@@ -162,4 +162,168 @@ func SubscribeBeacons(ctx context.Context) error {
 		}
 	}
 	return nil
+}
+
+// подписка на получение обновлений по таскам
+func SubscribeTasks(ctx context.Context) error {
+	stream, err := getSvc().SubscribeTasks(ctx)
+	if err != nil {
+		return errors.Wrap(err, "open tasks subscription stream")
+	}
+	// авторизационное сообщение от оператора
+	if err = stream.Send(&operatorv1.SubscribeTasksRequest{
+		Cookie: &operatorv1.SessionCookie{
+			Value: operatorConn.metadata.cookie,
+		},
+		Type: &operatorv1.SubscribeTasksRequest_Hello{
+			Hello: &operatorv1.SubscribeTasksHelloRequest{},
+		},
+	}); err != nil {
+		return errors.Wrap(err, "send hello message to tasks topic")
+	}
+	// сохраняем стрим
+	operatorConn.ss.tasksStream = stream
+	for {
+		msg, err := stream.Recv()
+		if err != nil {
+			if errors.Is(err, io.EOF) {
+				break
+			}
+			return err
+		}
+		// новая таск группа
+		if msg.GetGroup() != nil {
+			continue
+		}
+		// новое сообщение в таск группе
+		if msg.GetMessage() != nil {
+			continue
+		}
+		// новый таск в таск группе
+		if msg.GetTask() != nil {
+			continue
+		}
+		// обновление статуса таска
+		if msg.GetTaskStatus() != nil {
+			continue
+		}
+		// получение результатов выполненного таска
+		if msg.GetTaskDone() != nil {
+			continue
+		}
+	}
+	return nil
+}
+
+// подписка на получение тасков для определенного бикона
+func PollBeaconTasks(b *beacon.Beacon) error {
+	if err := operatorConn.ss.tasksStream.Send(&operatorv1.SubscribeTasksRequest{
+		Cookie: &operatorv1.SessionCookie{
+			Value: operatorConn.metadata.cookie,
+		},
+		Type: &operatorv1.SubscribeTasksRequest_Start{
+			Start: &operatorv1.StartPollBeaconRequest{
+				Bid: b.GetId(),
+			},
+		},
+	}); err != nil {
+		return errors.Wrapf(err, "poll tasks for beacon %s", b.GetIdHex())
+	}
+	return nil
+}
+
+// стоп подписки на получение тасков для определенного бикона
+func UnpollBeaconTasks(b *beacon.Beacon) error {
+	if err := operatorConn.ss.tasksStream.Send(&operatorv1.SubscribeTasksRequest{
+		Cookie: &operatorv1.SessionCookie{
+			Value: operatorConn.metadata.cookie,
+		},
+		Type: &operatorv1.SubscribeTasksRequest_Stop{
+			Stop: &operatorv1.StopPollBeaconRequest{
+				Bid: b.GetId(),
+			},
+		},
+	}); err != nil {
+		return errors.Wrapf(err, "unpoll tasks for beacon %s", b.GetIdHex())
+	}
+	return nil
+}
+
+// открытие новой таск группы
+func NewTaskGroup(id uint32, cmd string, visible bool) error {
+	stream, err := getSvc().NewGroup(context.Background())
+	if err != nil {
+		return errors.Wrap(err, "open task group submition stream")
+	}
+	// создаем новую таск группу
+	if err = stream.Send(&operatorv1.NewGroupRequest{
+		Cookie: &operatorv1.SessionCookie{
+			Value: operatorConn.metadata.cookie,
+		},
+		Type: &operatorv1.NewGroupRequest_Group{
+			Group: &operatorv1.NewTaskGroupRequest{
+				Bid:     id,
+				Cmd:     cmd,
+				Visible: visible,
+			},
+		},
+	}); err != nil {
+		return errors.Wrap(err, "open task group")
+	}
+	// сохраняем стрим
+	operatorConn.ss.groupStreams.Store(id, stream)
+	return nil
+}
+
+// закрытие таск группы
+func CloseTaskGroup(id uint32) error {
+	stream, ok := operatorConn.ss.groupStreams.Load(id)
+	if !ok {
+		return fmt.Errorf("unable load stream for beacon %d", id)
+	}
+	defer func() {
+		// удаление стрима из мапы по ID бикона
+		operatorConn.ss.groupStreams.Delete(id)
+	}()
+	if _, err := stream.CloseAndRecv(); err != nil {
+		if !errors.Is(err, io.EOF) {
+			return errors.Wrap(err, "close stream")
+		}
+	}
+	return nil
+}
+
+// отправка сообщения в таск группу
+func NewTaskGroupMessage(id uint32, tm defaults.TaskMessage, message string) error {
+	stream, ok := operatorConn.ss.groupStreams.Load(id)
+	if !ok {
+		return fmt.Errorf("unable load stream for beacon %d", id)
+	}
+	return stream.Send(&operatorv1.NewGroupRequest{
+		Cookie: &operatorv1.SessionCookie{
+			Value: operatorConn.metadata.cookie,
+		},
+		Type: &operatorv1.NewGroupRequest_Message{
+			Message: &operatorv1.NewTaskMessageRequest{
+				Type: uint32(tm),
+				Msg:  message,
+			},
+		},
+	})
+}
+
+// создание нового таска
+func NewTask(id uint32, v *operatorv1.NewTaskRequest) error {
+	stream, ok := operatorConn.ss.groupStreams.Load(id)
+	if !ok {
+		return fmt.Errorf("unable load stream for beacon %d", id)
+	}
+	return stream.Send(&operatorv1.NewGroupRequest{
+		Cookie: &operatorv1.SessionCookie{
+			Value: operatorConn.metadata.cookie,
+		},
+		Type: &operatorv1.NewGroupRequest_Task{
+			Task: v,
+		},
+	})
 }

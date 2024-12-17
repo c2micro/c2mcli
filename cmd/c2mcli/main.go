@@ -7,6 +7,7 @@ import (
 	"slices"
 
 	"github.com/c2micro/c2mcli/cmd/c2mcli/internal/cmd"
+	"github.com/c2micro/c2mcli/internal/scripts"
 	"github.com/c2micro/c2mcli/internal/service"
 	"github.com/c2micro/c2mcli/internal/zapcfg"
 	"github.com/fatih/color"
@@ -70,6 +71,10 @@ func main() {
 				}
 				// создание GRPC клиента
 				if err = service.Init(cmd.Context(), app.Host, app.Token); err != nil {
+					return err
+				}
+				// инициализация скриптов
+				if err = scripts.Init(); err != nil {
 					return err
 				}
 			}

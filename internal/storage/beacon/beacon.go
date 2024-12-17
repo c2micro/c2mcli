@@ -9,6 +9,9 @@ import (
 	"github.com/lrita/cmap"
 )
 
+// активный бикон для поллинга
+var ActiveBeacon *Beacon
+
 // хранение биконов в рантайме
 var Beacons = &beaconsMapper{
 	sorted: &beacons{

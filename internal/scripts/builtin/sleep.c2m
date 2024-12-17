@@ -1,0 +1,29 @@
+alias(
+  "sleep",
+  fn (bid, cmd, args, raw) {
+    if len(args) == 1 {
+      s = int(args[0]);
+      if s < 0 {
+        return m_error(bid, "invalid sleep value");
+      }
+      m_notify(bid, "tasked beacon to change sleep/jitter values");
+      return b_sleep(bid, s);
+    } elif len(args) == 2 {
+      s = int(args[0]);
+      j = int(args[1]);
+      if s < 0 {
+        return m_error(bid, "invalid sleep value");
+      }
+      if j > 99 || j < 0 {
+        return m_error(bid, "invalid jitter value");
+      }
+      m_notify(bid, "tasked beacon to change sleep/jitter values");
+      return b_sleep(bid, s, j);
+    } else {
+      return m_error(bid, "invalid number of arguments");
+    }
+  },
+  "change sleep/jitter values for beacon",
+  "Usage:\n\tsleep <sleep in sec> [jitter 1-99]",
+  true
+);

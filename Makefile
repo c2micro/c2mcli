@@ -21,3 +21,8 @@ go-sync:
 dep-shared:
 	@echo "Update shared components..."
 	@export GOPRIVATE="github.com/c2micro" && go get -u github.com/c2micro/c2mshr/ && go mod tidy && go mod vendor
+
+.PHONY: dep-mlan
+dep-mlan:
+	@echo "Update mlan components..."
+	@export GOPRIVATE="github.com/c2micro" && go get -u github.com/c2micro/mlan/ && go mod tidy && go mod vendor
