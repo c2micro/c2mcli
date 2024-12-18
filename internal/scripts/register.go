@@ -28,6 +28,13 @@ import (
 	bsleep "github.com/c2micro/c2mcli/internal/scripts/aliases/b_sleep"
 	bupload "github.com/c2micro/c2mcli/internal/scripts/aliases/b_upload"
 	bwhoami "github.com/c2micro/c2mcli/internal/scripts/aliases/b_whoami"
+	isarm32 "github.com/c2micro/c2mcli/internal/scripts/aliases/is_arm32"
+	isarm64 "github.com/c2micro/c2mcli/internal/scripts/aliases/is_arm64"
+	islinux "github.com/c2micro/c2mcli/internal/scripts/aliases/is_linux_os"
+	ismacos "github.com/c2micro/c2mcli/internal/scripts/aliases/is_macos_os"
+	iswindows "github.com/c2micro/c2mcli/internal/scripts/aliases/is_windows_os"
+	isx64 "github.com/c2micro/c2mcli/internal/scripts/aliases/is_x64"
+	isx86 "github.com/c2micro/c2mcli/internal/scripts/aliases/is_x86"
 	merror "github.com/c2micro/c2mcli/internal/scripts/aliases/m_error"
 	minfo "github.com/c2micro/c2mcli/internal/scripts/aliases/m_info"
 	mnotify "github.com/c2micro/c2mcli/internal/scripts/aliases/m_notify"
@@ -98,6 +105,20 @@ func registerApi() {
 	engine.UserFunctions[bexit.GetApiName()] = object.NewUserFunc(bexit.GetApiName(), bexit.UserBeaconExit)
 	// t_cancel: отмена всех тасок в статусе NEW от оператора
 	engine.UserFunctions[tcancel.GetApiName()] = object.NewUserFunc(tcancel.GetApiName(), tcancel.UserBeaconCancel)
+	// is_windows: запущен ли бикон на windows
+	engine.UserFunctions[iswindows.GetApiName()] = object.NewUserFunc(iswindows.GetApiName(), iswindows.UserIsWindows)
+	// is_linux: запущен ли бикон на linux
+	engine.UserFunctions[islinux.GetApiName()] = object.NewUserFunc(islinux.GetApiName(), islinux.UserIsLinux)
+	// is_macos: запущен ли бикон на macos
+	engine.UserFunctions[ismacos.GetApiName()] = object.NewUserFunc(ismacos.GetApiName(), ismacos.UserIsMacos)
+	// is_x64: является ли архитектура процесса x64 (amd64)
+	engine.UserFunctions[isx64.GetApiName()] = object.NewUserFunc(isx64.GetApiName(), isx64.UserIsX64)
+	// is_x86: является ли архитектура процесса x86
+	engine.UserFunctions[isx86.GetApiName()] = object.NewUserFunc(isx86.GetApiName(), isx86.UserIsX86)
+	// is_arm64: является ли архитектура процесса arm64
+	engine.UserFunctions[isarm64.GetApiName()] = object.NewUserFunc(isarm64.GetApiName(), isarm64.UserIsArm64)
+	// is_arm32: является ли архитектура процесса arm32
+	engine.UserFunctions[isarm32.GetApiName()] = object.NewUserFunc(isarm32.GetApiName(), isarm32.UserIsArm32)
 }
 
 var (

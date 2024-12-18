@@ -3,6 +3,7 @@ package beacon
 import (
 	"strings"
 
+	"github.com/c2micro/c2mcli/internal/constants"
 	"github.com/c2micro/c2mcli/internal/scripts"
 	"github.com/c2micro/c2mcli/internal/scripts/aliases"
 	"github.com/c2micro/c2mcli/internal/storage/beacon"
@@ -17,6 +18,7 @@ func aliasCommands(*console.Console) []*cobra.Command {
 		cmds = append(cmds, &cobra.Command{
 			Use:                   k,
 			Short:                 v.GetDescription(),
+			GroupID:               constants.AliasGroupId,
 			DisableFlagsInUseLine: true,
 			Run: func(cmd *cobra.Command, args []string) {
 				rawCmd := k + " " + strings.Join(args, " ")

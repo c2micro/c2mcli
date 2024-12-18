@@ -1,6 +1,7 @@
 package beacon
 
 import (
+	"github.com/c2micro/c2mcli/internal/constants"
 	"github.com/c2micro/c2mcli/internal/storage/task"
 	"github.com/fatih/color"
 	"github.com/reeflective/console"
@@ -13,6 +14,7 @@ func lastCommand(c *console.Console) *cobra.Command {
 		Aliases:               []string{"l"},
 		Short:                 "get output of last task",
 		DisableFlagsInUseLine: true,
+		GroupID:               constants.CoreGroupId,
 		Run: func(cmd *cobra.Command, args []string) {
 			tg := task.TaskGroups.GetLast()
 			if tg == nil {

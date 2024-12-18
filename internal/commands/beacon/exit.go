@@ -15,6 +15,7 @@ func exitCommand(c *console.Console) *cobra.Command {
 		Use:                   "exit",
 		Short:                 "switch back on base console",
 		DisableFlagsInUseLine: true,
+		GroupID:               constants.CoreGroupId,
 		Run: func(cmd *cobra.Command, args []string) {
 			if err := service.UnpollBeaconTasks(beacon.ActiveBeacon); err != nil {
 				color.Yellow("unable stop polling tasks for beacon: %s", err.Error())

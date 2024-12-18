@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/c2micro/c2mcli/internal/constants"
 	"github.com/c2micro/c2mcli/internal/storage/task"
 	"github.com/fatih/color"
 	"github.com/reeflective/console"
@@ -62,6 +63,7 @@ func tasksCommand(c *console.Console) *cobra.Command {
 		Short:                 "show tasks for beacon",
 		Aliases:               []string{"t"},
 		DisableFlagsInUseLine: true,
+		GroupID:               constants.CoreGroupId,
 		Run: func(cmd *cobra.Command, args []string) {
 			for _, v := range task.TaskGroups.Get() {
 				timestamp := v.GetCreatedAt().Format("01/02 15:04:05")

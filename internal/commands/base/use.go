@@ -35,7 +35,7 @@ func useCommand(c *console.Console) *cobra.Command {
 				return
 			}
 			beacon.ActiveBeacon = b
-			c.Menu(constants.BeaconMenuName).Prompt().Primary = func() string { return fmt.Sprintf("[%s] > ", color.CyanString(args[0])) }
+			c.Menu(constants.BeaconMenuName).Prompt().Primary = func() string { return fmt.Sprintf("[%s] > ", color.MagentaString(args[0])) }
 			c.SwitchMenu(constants.BeaconMenuName)
 		},
 	}

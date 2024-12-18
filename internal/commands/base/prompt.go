@@ -7,5 +7,5 @@ import (
 )
 
 func GetPrompt() string {
-	return fmt.Sprintf("[%s] > ", color.CyanString("c2m"))
+	return fmt.Sprintf("[%s] > ", color.MagentaString("c2m"))
 }
