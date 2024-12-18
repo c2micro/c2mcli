@@ -1,4 +1,4 @@
-package engine
+package visitor
 
 import (
 	"fmt"
@@ -6,13 +6,9 @@ import (
 	"github.com/antlr4-go/antlr/v4"
 	"github.com/c2micro/mlan/pkg/engine/object"
 	"github.com/c2micro/mlan/pkg/engine/scope"
+	"github.com/c2micro/mlan/pkg/engine/storage"
+	"github.com/c2micro/mlan/pkg/engine/types"
 )
-
-var BuiltinFunctions = make(map[string]*object.BuiltinFunc)
-var UserFunctions = make(map[string]*object.UserFunc)
-var NativeFunctions = make(map[string]*object.NativeFunc)
-
-var retValue object.Object
 
 // invokeFunc вызов функции
 func (v *Visitor) invokeFunc(
@@ -22,15 +18,15 @@ func (v *Visitor) invokeFunc(
 ) any {
 	var val object.Object
 	// поиск во встроенных функциях
-	val, ok := BuiltinFunctions[name]
+	val, ok := storage.BuiltinFunctions[name]
 	if !ok {
 		// поиск в функциях пользователя
-		val, ok = UserFunctions[name]
+		val, ok = storage.UserFunctions[name]
 		if !ok {
-			val, ok = NativeFunctions[name]
+			val, ok = storage.NativeFunctions[name]
 			if !ok {
 				v.LineError(token, fmt.Errorf("undefined function '%s'", name))
-				return Failure
+				return types.Failure
 			}
 		}
 	}
@@ -38,7 +34,7 @@ func (v *Visitor) invokeFunc(
 	// проверяем, что объект callable
 	if !val.CanCall() {
 		v.LineError(token, fmt.Errorf("unable call function '%s'", name))
-		return Failure
+		return types.Failure
 	}
 
 	// создание нового контекста
@@ -57,7 +53,7 @@ func (v *Visitor) invokeFunc(
 	case *object.NativeFunc:
 		if val.(*object.NativeFunc).GetArgsLen() != len(params) {
 			v.LineError(token, fmt.Errorf("function '%s' expected %d arguments, got %d", name, val.(*object.NativeFunc).GetArgsLen(), len(params)))
-			return Failure
+			return types.Failure
 		}
 		// сохраняем аргументы в скоуп
 		args := val.(*object.NativeFunc).GetArgs()
@@ -66,8 +62,8 @@ func (v *Visitor) invokeFunc(
 		}
 		// выполняем
 		for _, item := range val.(*object.NativeFunc).GetCode() {
-			if ok := v.Visit(item).(VisitResultType); !ok {
-				return Failure
+			if ok := v.Visit(item).(types.VisitResultType); !ok {
+				return types.Failure
 			}
 			if retValue != nil {
 				x := retValue
@@ -76,14 +72,14 @@ func (v *Visitor) invokeFunc(
 			}
 		}
 
-		return Success
+		return types.Success
 	}
 
 	// вызов функции
 	res, err := val.Call(params...)
 	if err != nil {
 		v.LineError(token, err)
-		return Failure
+		return types.Failure
 	}
 	return res
 }
@@ -97,13 +93,13 @@ func (v *Visitor) invokeClosureFunc(
 	fn := scope.CurrentScope.Get(name, true)
 	if fn == nil {
 		v.LineError(token, fmt.Errorf("undefined closure '%s'", name))
-		return Failure
+		return types.Failure
 	}
 
 	// проверяем, что объект callable
 	if !fn.CanCall() {
 		v.LineError(token, fmt.Errorf("unable call closure '%s'", name))
-		return Failure
+		return types.Failure
 	}
 
 	// создание нового контекста
@@ -122,7 +118,7 @@ func (v *Visitor) invokeClosureFunc(
 	case *object.NativeFunc:
 		if fn.(*object.NativeFunc).GetArgsLen() != len(params) {
 			v.LineError(token, fmt.Errorf("closure '%s' expected %d arguments, got %d", name, fn.(*object.NativeFunc).GetArgsLen(), len(params)))
-			return Failure
+			return types.Failure
 		}
 		// сохраняем аргументы в скоуп
 		args := fn.(*object.NativeFunc).GetArgs()
@@ -131,8 +127,8 @@ func (v *Visitor) invokeClosureFunc(
 		}
 		// выполняем
 		for _, item := range fn.(*object.NativeFunc).GetCode() {
-			if ok := v.Visit(item).(VisitResultType); !ok {
-				return Failure
+			if ok := v.Visit(item).(types.VisitResultType); !ok {
+				return types.Failure
 			}
 			if retValue != nil {
 				x := retValue
@@ -141,10 +137,10 @@ func (v *Visitor) invokeClosureFunc(
 			}
 		}
 
-		return Success
+		return types.Success
 	}
 
-	return Success
+	return types.Success
 }
 
 func (v *Visitor) InvokeNativeFunc(
@@ -165,7 +161,7 @@ func (v *Visitor) InvokeNativeFunc(
 
 	if fn.GetArgsLen() != len(params) {
 		v.Error = fmt.Errorf("invalid number of args, expecting %d arguments, got %d", fn.GetArgsLen(), len(params))
-		return Failure
+		return types.Failure
 	}
 	// сохраняем аргументы в скоуп
 	args := fn.GetArgs()
@@ -174,9 +170,9 @@ func (v *Visitor) InvokeNativeFunc(
 	}
 	// выполняем
 	for _, item := range fn.GetCode() {
-		if val, ok := v.Visit(item).(VisitResultType); ok {
+		if val, ok := v.Visit(item).(types.VisitResultType); ok {
 			if !val {
-				return Failure
+				return types.Failure
 			}
 		}
 		if retValue != nil {
@@ -186,5 +182,5 @@ func (v *Visitor) InvokeNativeFunc(
 		}
 	}
 
-	return Success
+	return types.Success
 }

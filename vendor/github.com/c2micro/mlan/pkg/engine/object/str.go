@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/c2micro/mlan/pkg/parser"
+	"github.com/c2micro/mlan/pkg/engine/utils"
 )
 
 // Str тип с плавающей точкой
@@ -203,7 +204,7 @@ func (o *Str) Add(rs Object) (Object, error) {
 func (o *Str) Mul(rs Object) (Object, error) {
 	switch rs.(type) {
 	case *Bool:
-		return NewStr(strings.Repeat(o.value, int(boolToInt(rs.(*Bool).value)))), nil
+		return NewStr(strings.Repeat(o.value, int(utils.BoolToInt(rs.(*Bool).value)))), nil
 	case *Int:
 		return NewStr(strings.Repeat(o.value, int(rs.(*Int).value))), nil
 	}

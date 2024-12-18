@@ -1,4 +1,4 @@
-package engine
+package builtin
 
 import (
 	"bytes"
@@ -17,81 +17,83 @@ import (
 	"unicode/utf8"
 
 	"github.com/c2micro/mlan/pkg/engine/object"
+	"github.com/c2micro/mlan/pkg/engine/storage"
+	"github.com/c2micro/mlan/pkg/engine/utils"
 )
 
-// RegisterBuiltinFunctions регистрация встроенных в язык функций
-func RegisterBuiltinFunctions() {
-	// assert если аргумент false - выход из программы
-	BuiltinFunctions["assert"] = object.NewBuiltinFunc("assert", builtinAssert)
-	// print печать без переноса строки
-	BuiltinFunctions["print"] = object.NewBuiltinFunc("print", builtinPrint)
-	// println печать с переносом строки
-	BuiltinFunctions["println"] = object.NewBuiltinFunc("println", builtinPrintln)
-	// is_bool является ли объект Bool
-	BuiltinFunctions["is_bool"] = object.NewBuiltinFunc("is_bool", builtinIsBool)
-	// is_dict является ли объект Dict
-	BuiltinFunctions["is_dict"] = object.NewBuiltinFunc("is_dict", builtinIsDict)
-	// is_dict является ли объект Float
-	BuiltinFunctions["is_float"] = object.NewBuiltinFunc("is_float", builtinIsFloat)
-	// is_int является ли объект Int
-	BuiltinFunctions["is_int"] = object.NewBuiltinFunc("is_int", builtinIsInt)
-	// is_list является ли объект List
-	BuiltinFunctions["is_list"] = object.NewBuiltinFunc("is_list", builtinIsList)
-	// is_null является ли объект Null
-	BuiltinFunctions["is_null"] = object.NewBuiltinFunc("is_null", builtinIsNull)
-	// is_str является ли объект Str
-	BuiltinFunctions["is_str"] = object.NewBuiltinFunc("is_str", builtinIsStr)
-	// len получение длины объекта
-	BuiltinFunctions["len"] = object.NewBuiltinFunc("len", builtinLen)
-	// str_len получение длины строки (количество рун)
-	BuiltinFunctions["str_len"] = object.NewBuiltinFunc("str_len", builtinStrLen)
-	// bool кастинг в Bool
-	BuiltinFunctions["bool"] = object.NewBuiltinFunc("bool", builtinBool)
-	// float кастинг в Float
-	BuiltinFunctions["float"] = object.NewBuiltinFunc("float", builtinFloat)
-	// int кастинг в Int
-	BuiltinFunctions["int"] = object.NewBuiltinFunc("int", builtinInt)
-	// str кастинг в Str
-	BuiltinFunctions["str"] = object.NewBuiltinFunc("str", builtinStr)
-	// reverse разворот объекта задом-наперед
-	BuiltinFunctions["reverse"] = object.NewBuiltinFunc("reverse", builtinReverse)
-	// chr получение символа на базе int кода
-	BuiltinFunctions["chr"] = object.NewBuiltinFunc("chr", builtinChr)
-	// ord получение int кода символа
-	BuiltinFunctions["ord"] = object.NewBuiltinFunc("ord", builtinOrd)
-	// str_chr_at получение руны в строке по индексу
-	BuiltinFunctions["str_chr_at"] = object.NewBuiltinFunc("str_chr_at", builtinStrChrAt)
-	// list_pop_index убираем из списка значение по индексу
-	BuiltinFunctions["list_pop_index"] = object.NewBuiltinFunc("list_pop_index", builtinListPopIndex)
-	// dict_pop_key убираем из списка значение по ключу
-	BuiltinFunctions["dict_pop_key"] = object.NewBuiltinFunc("dict_pop_key", builtinDictPopKey)
-	// base64_enc кодирование строки в base64
-	BuiltinFunctions["base64_enc"] = object.NewBuiltinFunc("base64_enc", builtinBase64Enc)
-	// base64_dec декодирование строки из base64
-	BuiltinFunctions["base64_dec"] = object.NewBuiltinFunc("base64_dec", builtinBase64Dec)
-	// base32_enc кодирование строки в base32
-	BuiltinFunctions["base32_enc"] = object.NewBuiltinFunc("base32_enc", builtinBase32Enc)
-	// base32_dec декодирование строки из base32
-	BuiltinFunctions["base32_dec"] = object.NewBuiltinFunc("base32_dec", builtinBase32Dec)
-	// md5 получение md5 хеша от строки
-	BuiltinFunctions["md5"] = object.NewBuiltinFunc("md5", builtinMd5)
-	// sha1 получение sha1 хеша от строки
-	BuiltinFunctions["sha1"] = object.NewBuiltinFunc("sha1", builtinSha1)
-	// sha256 получение sha256 хеша от строки
-	BuiltinFunctions["sha256"] = object.NewBuiltinFunc("sha256", builtinSha256)
-	// gzip сжатие строки
-	BuiltinFunctions["gzip"] = object.NewBuiltinFunc("gzip", builtinGzip)
-	// gunzip распаковка архива в виде строки
-	BuiltinFunctions["gunzip"] = object.NewBuiltinFunc("gunzip", builtinGunzip)
-	// fread чтение файла с ФС
-	BuiltinFunctions["fread"] = object.NewBuiltinFunc("fread", builtinFread)
-	// fwrite запись данных в файл на ФС
-	BuiltinFunctions["fwrite"] = object.NewBuiltinFunc("fwrite", builtinFwrite)
-	// str_split сплиттинг строки по символу
-	BuiltinFunctions["str_split"] = object.NewBuiltinFunc("str_split", builtinStrSplit)
+// регистрация встроенных в язык функций
+func Register() {
+	// assert: если аргумент false - выход из программы
+	storage.BuiltinFunctions["assert"] = object.NewBuiltinFunc("assert", Assert)
+	// print: печать без переноса строки
+	storage.BuiltinFunctions["print"] = object.NewBuiltinFunc("print", Print)
+	// println: печать с переносом строки
+	storage.BuiltinFunctions["println"] = object.NewBuiltinFunc("println", Println)
+	// is_bool: является ли объект Bool
+	storage.BuiltinFunctions["is_bool"] = object.NewBuiltinFunc("is_bool", IsBool)
+	// is_dict: является ли объект Dict
+	storage.BuiltinFunctions["is_dict"] = object.NewBuiltinFunc("is_dict", IsDict)
+	// is_float: является ли объект Float
+	storage.BuiltinFunctions["is_float"] = object.NewBuiltinFunc("is_float", IsFloat)
+	// is_int: является ли объект Int
+	storage.BuiltinFunctions["is_int"] = object.NewBuiltinFunc("is_int", IsInt)
+	// is_list: является ли объект List
+	storage.BuiltinFunctions["is_list"] = object.NewBuiltinFunc("is_list", IsList)
+	// is_null: является ли объект Null
+	storage.BuiltinFunctions["is_null"] = object.NewBuiltinFunc("is_null", IsNull)
+	// is_str: является ли объект Str
+	storage.BuiltinFunctions["is_str"] = object.NewBuiltinFunc("is_str", IsStr)
+	// len: получение длины объекта
+	storage.BuiltinFunctions["len"] = object.NewBuiltinFunc("len", Len)
+	// str_len: получение длины строки (количество рун)
+	storage.BuiltinFunctions["str_len"] = object.NewBuiltinFunc("str_len", StrLen)
+	// bool: кастинг в Bool
+	storage.BuiltinFunctions["bool"] = object.NewBuiltinFunc("bool", Bool)
+	// float: кастинг в Float
+	storage.BuiltinFunctions["float"] = object.NewBuiltinFunc("float", Float)
+	// int: кастинг в Int
+	storage.BuiltinFunctions["int"] = object.NewBuiltinFunc("int", Int)
+	// str: кастинг в Str
+	storage.BuiltinFunctions["str"] = object.NewBuiltinFunc("str", Str)
+	// reverse: разворот объекта задом-наперед
+	storage.BuiltinFunctions["reverse"] = object.NewBuiltinFunc("reverse", Reverse)
+	// chr: получение символа на базе int кода
+	storage.BuiltinFunctions["chr"] = object.NewBuiltinFunc("chr", Chr)
+	// ord: получение int кода символа
+	storage.BuiltinFunctions["ord"] = object.NewBuiltinFunc("ord", Ord)
+	// str_chr_at: получение руны в строке по индексу
+	storage.BuiltinFunctions["str_chr_at"] = object.NewBuiltinFunc("str_chr_at", StrChrAt)
+	// list_pop_index: убираем из списка значение по индексу
+	storage.BuiltinFunctions["list_pop_index"] = object.NewBuiltinFunc("list_pop_index", ListPopIndex)
+	// dict_pop_key: убираем из списка значение по ключу
+	storage.BuiltinFunctions["dict_pop_key"] = object.NewBuiltinFunc("dict_pop_key", DictPopKey)
+	// base64_enc: кодирование строки в base64
+	storage.BuiltinFunctions["base64_enc"] = object.NewBuiltinFunc("base64_enc", Base64Enc)
+	// base64_dec: декодирование строки из base64
+	storage.BuiltinFunctions["base64_dec"] = object.NewBuiltinFunc("base64_dec", Base64Dec)
+	// base32_enc: кодирование строки в base32
+	storage.BuiltinFunctions["base32_enc"] = object.NewBuiltinFunc("base32_enc", Base32Enc)
+	// base32_dec: декодирование строки из base32
+	storage.BuiltinFunctions["base32_dec"] = object.NewBuiltinFunc("base32_dec", Base32Dec)
+	// md5: получение md5 хеша от строки
+	storage.BuiltinFunctions["md5"] = object.NewBuiltinFunc("md5", Md5)
+	// sha1: получение sha1 хеша от строки
+	storage.BuiltinFunctions["sha1"] = object.NewBuiltinFunc("sha1", Sha1)
+	// sha256: получение sha256 хеша от строки
+	storage.BuiltinFunctions["sha256"] = object.NewBuiltinFunc("sha256", Sha256)
+	// gzip: сжатие строки
+	storage.BuiltinFunctions["gzip"] = object.NewBuiltinFunc("gzip", Gzip)
+	// gunzip: распаковка архива в виде строки
+	storage.BuiltinFunctions["gunzip"] = object.NewBuiltinFunc("gunzip", Gunzip)
+	// fread: чтение файла с ФС
+	storage.BuiltinFunctions["fread"] = object.NewBuiltinFunc("fread", Fread)
+	// fwrite: запись данных в файл на ФС
+	storage.BuiltinFunctions["fwrite"] = object.NewBuiltinFunc("fwrite", Fwrite)
+	// str_split: сплиттинг строки по символу
+	storage.BuiltinFunctions["str_split"] = object.NewBuiltinFunc("str_split", StrSplit)
 }
 
-func builtinAssert(args ...object.Object) (object.Object, error) {
+func Assert(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
@@ -104,14 +106,14 @@ func builtinAssert(args ...object.Object) (object.Object, error) {
 	return object.NewNull(), nil
 }
 
-func builtinPrint(args ...object.Object) (object.Object, error) {
+func Print(args ...object.Object) (object.Object, error) {
 	for _, arg := range args {
 		fmt.Print(arg.String())
 	}
 	return object.NewNull(), nil
 }
 
-func builtinPrintln(args ...object.Object) (object.Object, error) {
+func Println(args ...object.Object) (object.Object, error) {
 	for _, arg := range args {
 		fmt.Print(arg.String())
 	}
@@ -119,7 +121,7 @@ func builtinPrintln(args ...object.Object) (object.Object, error) {
 	return object.NewNull(), nil
 }
 
-func builtinIsBool(args ...object.Object) (object.Object, error) {
+func IsBool(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
@@ -129,7 +131,7 @@ func builtinIsBool(args ...object.Object) (object.Object, error) {
 	return object.NewBool(false), nil
 }
 
-func builtinIsDict(args ...object.Object) (object.Object, error) {
+func IsDict(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
@@ -139,7 +141,7 @@ func builtinIsDict(args ...object.Object) (object.Object, error) {
 	return object.NewBool(false), nil
 }
 
-func builtinIsFloat(args ...object.Object) (object.Object, error) {
+func IsFloat(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
@@ -149,7 +151,7 @@ func builtinIsFloat(args ...object.Object) (object.Object, error) {
 	return object.NewBool(false), nil
 }
 
-func builtinIsInt(args ...object.Object) (object.Object, error) {
+func IsInt(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
@@ -159,7 +161,7 @@ func builtinIsInt(args ...object.Object) (object.Object, error) {
 	return object.NewBool(false), nil
 }
 
-func builtinIsList(args ...object.Object) (object.Object, error) {
+func IsList(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
@@ -169,7 +171,7 @@ func builtinIsList(args ...object.Object) (object.Object, error) {
 	return object.NewBool(false), nil
 }
 
-func builtinIsNull(args ...object.Object) (object.Object, error) {
+func IsNull(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
@@ -179,7 +181,7 @@ func builtinIsNull(args ...object.Object) (object.Object, error) {
 	return object.NewBool(false), nil
 }
 
-func builtinIsStr(args ...object.Object) (object.Object, error) {
+func IsStr(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
@@ -189,7 +191,7 @@ func builtinIsStr(args ...object.Object) (object.Object, error) {
 	return object.NewBool(false), nil
 }
 
-func builtinLen(args ...object.Object) (object.Object, error) {
+func Len(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
@@ -204,7 +206,7 @@ func builtinLen(args ...object.Object) (object.Object, error) {
 	return nil, fmt.Errorf("unable get len of '%s' type", args[0].TypeName())
 }
 
-func builtinStrLen(args ...object.Object) (object.Object, error) {
+func StrLen(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
@@ -215,7 +217,7 @@ func builtinStrLen(args ...object.Object) (object.Object, error) {
 	return nil, fmt.Errorf("unable get str len of '%s' type", args[0].TypeName())
 }
 
-func builtinBool(args ...object.Object) (object.Object, error) {
+func Bool(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
@@ -253,30 +255,30 @@ func builtinBool(args ...object.Object) (object.Object, error) {
 	return nil, fmt.Errorf("unknown type '%s'", args[0].TypeName())
 }
 
-func builtinFloat(args ...object.Object) (object.Object, error) {
+func Float(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
 	switch args[0].(type) {
 	case *object.Bool:
-		return object.NewFloat(boolToFloat(args[0].(*object.Bool).GetValue().(bool))), nil
+		return object.NewFloat(utils.BoolToFloat(args[0].(*object.Bool).GetValue().(bool))), nil
 	case *object.Float:
 		return args[0], nil
 	case *object.Int:
-		return object.NewFloat(intToFloat(args[0].(*object.Int).GetValue().(int64))), nil
+		return object.NewFloat(utils.IntToFloat(args[0].(*object.Int).GetValue().(int64))), nil
 	}
 	return nil, fmt.Errorf("unknown type '%s'", args[0].TypeName())
 }
 
-func builtinInt(args ...object.Object) (object.Object, error) {
+func Int(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
 	switch args[0].(type) {
 	case *object.Bool:
-		return object.NewInt(boolToInt(args[0].(*object.Bool).GetValue().(bool))), nil
+		return object.NewInt(utils.BoolToInt(args[0].(*object.Bool).GetValue().(bool))), nil
 	case *object.Float:
-		return object.NewInt(floatToInt(args[0].(*object.Float).GetValue().(float64))), nil
+		return object.NewInt(utils.FloatToInt(args[0].(*object.Float).GetValue().(float64))), nil
 	case *object.Int:
 		return args[0], nil
 	case *object.Str:
@@ -289,7 +291,7 @@ func builtinInt(args ...object.Object) (object.Object, error) {
 	return nil, fmt.Errorf("unknown type '%s'", args[0].TypeName())
 }
 
-func builtinStr(args ...object.Object) (object.Object, error) {
+func Str(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
@@ -312,7 +314,7 @@ func builtinStr(args ...object.Object) (object.Object, error) {
 	return nil, fmt.Errorf("unknown type '%s'", args[0].TypeName())
 }
 
-func builtinReverse(args ...object.Object) (object.Object, error) {
+func Reverse(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
@@ -328,20 +330,20 @@ func builtinReverse(args ...object.Object) (object.Object, error) {
 	return nil, fmt.Errorf("unknown type '%s'", args[0].TypeName())
 }
 
-func builtinChr(args ...object.Object) (object.Object, error) {
+func Chr(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
 	switch args[0].(type) {
 	case *object.Bool:
-		return object.NewStr(string(rune(boolToInt(args[0].(*object.Bool).GetValue().(bool))))), nil
+		return object.NewStr(string(rune(utils.BoolToInt(args[0].(*object.Bool).GetValue().(bool))))), nil
 	case *object.Int:
 		return object.NewStr(string(rune(args[0].(*object.Int).GetValue().(int64)))), nil
 	}
 	return nil, fmt.Errorf("unknown type '%s'", args[0].TypeName())
 }
 
-func builtinOrd(args ...object.Object) (object.Object, error) {
+func Ord(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
@@ -356,7 +358,7 @@ func builtinOrd(args ...object.Object) (object.Object, error) {
 	return nil, fmt.Errorf("unknown type '%s'", args[0].TypeName())
 }
 
-func builtinStrChrAt(args ...object.Object) (object.Object, error) {
+func StrChrAt(args ...object.Object) (object.Object, error) {
 	if len(args) != 2 {
 		return nil, fmt.Errorf("expecting 2 arguments, got %d", len(args))
 	}
@@ -369,7 +371,7 @@ func builtinStrChrAt(args ...object.Object) (object.Object, error) {
 	var idx int64
 	switch args[1].(type) {
 	case *object.Bool:
-		idx = boolToInt(args[1].(*object.Bool).GetValue().(bool))
+		idx = utils.BoolToInt(args[1].(*object.Bool).GetValue().(bool))
 	case *object.Int:
 		idx = args[1].(*object.Int).GetValue().(int64)
 	default:
@@ -394,7 +396,7 @@ func builtinStrChrAt(args ...object.Object) (object.Object, error) {
 	return nil, object.ErrNotImplemented
 }
 
-func builtinListPopIndex(args ...object.Object) (object.Object, error) {
+func ListPopIndex(args ...object.Object) (object.Object, error) {
 	if len(args) != 2 {
 		return nil, fmt.Errorf("expecting 2 arguments, got %d", len(args))
 	}
@@ -414,7 +416,7 @@ func builtinListPopIndex(args ...object.Object) (object.Object, error) {
 	return object.NewList(append(l[:i], l[i+1:]...)), nil
 }
 
-func builtinDictPopKey(args ...object.Object) (object.Object, error) {
+func DictPopKey(args ...object.Object) (object.Object, error) {
 	if len(args) != 2 {
 		return nil, fmt.Errorf("expecting 2 arguments, got %d", len(args))
 	}
@@ -431,7 +433,7 @@ func builtinDictPopKey(args ...object.Object) (object.Object, error) {
 	return object.NewDict(d), nil
 }
 
-func builtinBase64Enc(args ...object.Object) (object.Object, error) {
+func Base64Enc(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
@@ -442,7 +444,7 @@ func builtinBase64Enc(args ...object.Object) (object.Object, error) {
 	return object.NewStr(base64.StdEncoding.EncodeToString([]byte(str.GetValue().(string)))), nil
 }
 
-func builtinBase64Dec(args ...object.Object) (object.Object, error) {
+func Base64Dec(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
@@ -457,7 +459,7 @@ func builtinBase64Dec(args ...object.Object) (object.Object, error) {
 	return object.NewStr(string(val)), nil
 }
 
-func builtinBase32Enc(args ...object.Object) (object.Object, error) {
+func Base32Enc(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
@@ -468,7 +470,7 @@ func builtinBase32Enc(args ...object.Object) (object.Object, error) {
 	return object.NewStr(base32.StdEncoding.EncodeToString([]byte(str.GetValue().(string)))), nil
 }
 
-func builtinBase32Dec(args ...object.Object) (object.Object, error) {
+func Base32Dec(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
@@ -483,7 +485,7 @@ func builtinBase32Dec(args ...object.Object) (object.Object, error) {
 	return object.NewStr(string(val)), nil
 }
 
-func builtinMd5(args ...object.Object) (object.Object, error) {
+func Md5(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
@@ -495,7 +497,7 @@ func builtinMd5(args ...object.Object) (object.Object, error) {
 	return object.NewStr(hex.EncodeToString(md5sum[:])), nil
 }
 
-func builtinSha1(args ...object.Object) (object.Object, error) {
+func Sha1(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
@@ -507,7 +509,7 @@ func builtinSha1(args ...object.Object) (object.Object, error) {
 	return object.NewStr(hex.EncodeToString(sha1sum[:])), nil
 }
 
-func builtinSha256(args ...object.Object) (object.Object, error) {
+func Sha256(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
@@ -519,7 +521,7 @@ func builtinSha256(args ...object.Object) (object.Object, error) {
 	return object.NewStr(hex.EncodeToString(sha256sum[:])), nil
 }
 
-func builtinGzip(args ...object.Object) (object.Object, error) {
+func Gzip(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
@@ -537,7 +539,7 @@ func builtinGzip(args ...object.Object) (object.Object, error) {
 	return object.NewStr(b.String()), nil
 }
 
-func builtinGunzip(args ...object.Object) (object.Object, error) {
+func Gunzip(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
@@ -559,7 +561,7 @@ func builtinGunzip(args ...object.Object) (object.Object, error) {
 	return object.NewStr(string(res)), nil
 }
 
-func builtinFread(args ...object.Object) (object.Object, error) {
+func Fread(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
 	}
@@ -574,7 +576,7 @@ func builtinFread(args ...object.Object) (object.Object, error) {
 	return object.NewStr(string(data)), nil
 }
 
-func builtinFwrite(args ...object.Object) (object.Object, error) {
+func Fwrite(args ...object.Object) (object.Object, error) {
 	if len(args) != 2 {
 		return nil, fmt.Errorf("expecting 2 arguments, got %d", len(args))
 	}
@@ -592,7 +594,7 @@ func builtinFwrite(args ...object.Object) (object.Object, error) {
 	return object.NewNull(), nil
 }
 
-func builtinStrSplit(args ...object.Object) (object.Object, error) {
+func StrSplit(args ...object.Object) (object.Object, error) {
 	if len(args) != 2 {
 		return nil, fmt.Errorf("expecting 2 arguments, got %d", len(args))
 	}

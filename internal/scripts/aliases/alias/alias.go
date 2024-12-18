@@ -6,8 +6,8 @@ import (
 
 	"github.com/c2micro/c2mcli/internal/scripts/aliases"
 	"github.com/c2micro/c2mcli/internal/service"
-	"github.com/c2micro/mlan/pkg/engine"
 	"github.com/c2micro/mlan/pkg/engine/object"
+	"github.com/c2micro/mlan/pkg/engine/visitor"
 	"github.com/fatih/color"
 	"github.com/go-faster/errors"
 	"github.com/google/shlex"
@@ -106,7 +106,7 @@ func BackendAlias(id uint32, cmd string) error {
 	}
 
 	// вызов нативной функции (по факту кложура)
-	v := engine.NewVisitor()
+	v := visitor.NewVisitor()
 	v.InvokeNativeFunc(al.GetClosure(), arg0, arg1, arg2, arg3)
 	if v.Error != nil {
 		return v.Error

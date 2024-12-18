@@ -8,7 +8,9 @@ import (
 
 	"github.com/antlr4-go/antlr/v4"
 	"github.com/c2micro/c2mcli/internal/utils"
-	"github.com/c2micro/mlan/pkg/engine"
+	"github.com/c2micro/mlan/pkg/engine/types"
+	mlanUtils "github.com/c2micro/mlan/pkg/engine/utils"
+	"github.com/c2micro/mlan/pkg/engine/visitor"
 	"github.com/go-faster/errors"
 	"github.com/lrita/cmap"
 )
@@ -157,14 +159,14 @@ func processExternalScript(path string) (*Script, error) {
 	}
 
 	// строим AST
-	temp.tree, err = engine.CreateAST(string(data))
+	temp.tree, err = mlanUtils.CreateAST(string(data))
 	if err != nil {
 		return nil, errors.Wrap(err, "create ast")
 	}
 
 	// проход по дереву
-	v := engine.NewVisitor()
-	if res := v.Visit(temp.tree); res != engine.Success {
+	v := visitor.NewVisitor()
+	if res := v.Visit(temp.tree); res != types.Success {
 		return nil, v.Error
 	}
 

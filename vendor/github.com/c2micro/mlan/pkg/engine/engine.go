@@ -1,101 +1,64 @@
 package engine
 
 import (
-	"fmt"
 	"os"
 
-	"github.com/antlr4-go/antlr/v4"
+	"github.com/c2micro/mlan/pkg/engine/builtin"
 	"github.com/c2micro/mlan/pkg/engine/object"
 	"github.com/c2micro/mlan/pkg/engine/scope"
-	"github.com/c2micro/mlan/pkg/parser"
-	"github.com/c2micro/mlan/pkg/perror"
+	"github.com/c2micro/mlan/pkg/engine/storage"
+	"github.com/c2micro/mlan/pkg/engine/types"
+	"github.com/c2micro/mlan/pkg/engine/utils"
+	"github.com/c2micro/mlan/pkg/engine/visitor"
+	"github.com/go-faster/errors"
 )
 
-type VisitResultType bool
-
-const (
-	Success VisitResultType = true
-	Failure VisitResultType = false
-)
-
-// init инициализация рантайма для языка
 func init() {
 	Init()
 }
 
 // инициализация движка
 func Init() {
-	// инициализация глобального скоупа
 	scope.GlobalScope = scope.NewScope(
 		nil,
 		0,
 		false,
 		false,
-		map[string]object.Object{})
-	// установка текущего скоупа
+		map[string]object.Object{},
+	)
 	scope.CurrentScope = scope.GlobalScope
-	// регистрация дефолтных функций
-	RegisterBuiltinFunctions()
+	builtin.Register()
 }
 
 // очистка движка и перерегистрация всех необходимых компонентов
 func Clear() {
 	// зануление хендлеров функций
-	BuiltinFunctions = make(map[string]*object.BuiltinFunc)
-	UserFunctions = make(map[string]*object.UserFunc)
-	NativeFunctions = make(map[string]*object.NativeFunc)
+	storage.BuiltinFunctions = make(map[string]*object.BuiltinFunc)
+	storage.UserFunctions = make(map[string]*object.UserFunc)
+	storage.NativeFunctions = make(map[string]*object.NativeFunc)
 	// зануление рета
-	retValue = nil
+	visitor.ClearRet()
 	// инициализация
 	Init()
 }
 
-// Evaluate выполнение скрипта с указанием файла
+// выполнение скрипта из файла
 func Evaluate(file string) error {
-	// читаем файл
-	data, err := ReadFile(file)
-	if err != nil {
-		return err
-	}
-	// создание дерева
-	tree, err := CreateAST(string(data))
+	data, err := os.ReadFile(file)
 	if err != nil {
 		return err
 	}
 
-	// создание визитора
-	v := NewVisitor()
+	tree, err := utils.CreateAST(string(data))
+	if err != nil {
+		return err
+	}
 
-	// проходим по дереву
+	v := visitor.NewVisitor()
 	res := v.Visit(tree)
-	if res != Success {
-		return fmt.Errorf("runtime failure: %v", v.Error)
+	if res != types.Success {
+		return errors.Wrap(v.Error, "runtime failure")
 	}
 
 	return nil
-}
-
-// ReadFile вычитываем файл со скриптом
-func ReadFile(path string) ([]byte, error) {
-	return os.ReadFile(path)
-}
-
-// CreateAST создание AST дерева
-func CreateAST(data string) (antlr.ParseTree, error) {
-	// создание входного стрима
-	iStream := antlr.NewInputStream(data)
-	// создание лексера
-	lexer := parser.NewMlanLexer(iStream)
-	// создание стрима из лексера
-	stream := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
-	// создание парсера
-	p := parser.NewMlanParser(stream)
-	// error парсер
-	errorParser := &perror.Error{}
-	// кастомный коллбэк для ошибок
-	p.RemoveErrorListeners()
-	p.AddErrorListener(errorParser)
-	// создание AST древа
-	tree := p.Program()
-	return tree, errorParser.Err
 }

@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/c2micro/mlan/pkg/parser"
+	"github.com/c2micro/mlan/pkg/engine/utils"
 )
 
 // Int целочисленный тип
@@ -83,7 +84,7 @@ func (o *Int) UnaryOp(op int) (Object, error) {
 }
 
 func (o *Int) LogicalNot() (Object, error) {
-	return NewBool(!intToBool(o.value)), nil
+	return NewBool(!utils.IntToBool(o.value)), nil
 }
 
 func (o *Int) Negative() (Object, error) {
@@ -110,11 +111,11 @@ func (o *Int) LogicalAnd(rs Object) (Object, error) {
 func (o *Int) Equal(rs Object) (Object, error) {
 	switch rs.(type) {
 	case *Bool:
-		return NewBool(o.value == boolToInt(rs.(*Bool).value)), nil
+		return NewBool(o.value == utils.BoolToInt(rs.(*Bool).value)), nil
 	case *Dict:
 		return NewBool(false), nil
 	case *Float:
-		return NewBool(intToFloat(o.value) == rs.(*Float).value), nil
+		return NewBool(utils.IntToFloat(o.value) == rs.(*Float).value), nil
 	case *Int:
 		return NewBool(o.value == rs.(*Int).value), nil
 	case *List:
@@ -130,11 +131,11 @@ func (o *Int) Equal(rs Object) (Object, error) {
 func (o *Int) NotEqual(rs Object) (Object, error) {
 	switch rs.(type) {
 	case *Bool:
-		return NewBool(o.value != boolToInt(rs.(*Bool).value)), nil
+		return NewBool(o.value != utils.BoolToInt(rs.(*Bool).value)), nil
 	case *Dict:
 		return NewBool(true), nil
 	case *Float:
-		return NewBool(intToFloat(o.value) != rs.(*Float).value), nil
+		return NewBool(utils.IntToFloat(o.value) != rs.(*Float).value), nil
 	case *Int:
 		return NewBool(o.value != rs.(*Int).value), nil
 	case *List:
@@ -150,9 +151,9 @@ func (o *Int) NotEqual(rs Object) (Object, error) {
 func (o *Int) GtEq(rs Object) (Object, error) {
 	switch rs.(type) {
 	case *Bool:
-		return NewBool(o.value >= boolToInt(rs.(*Bool).value)), nil
+		return NewBool(o.value >= utils.BoolToInt(rs.(*Bool).value)), nil
 	case *Float:
-		return NewBool(intToFloat(o.value) >= rs.(*Float).value), nil
+		return NewBool(utils.IntToFloat(o.value) >= rs.(*Float).value), nil
 	case *Int:
 		return NewBool(o.value >= rs.(*Int).value), nil
 	}
@@ -162,9 +163,9 @@ func (o *Int) GtEq(rs Object) (Object, error) {
 func (o *Int) Gt(rs Object) (Object, error) {
 	switch rs.(type) {
 	case *Bool:
-		return NewBool(o.value > boolToInt(rs.(*Bool).value)), nil
+		return NewBool(o.value > utils.BoolToInt(rs.(*Bool).value)), nil
 	case *Float:
-		return NewBool(intToFloat(o.value) > rs.(*Float).value), nil
+		return NewBool(utils.IntToFloat(o.value) > rs.(*Float).value), nil
 	case *Int:
 		return NewBool(o.value > rs.(*Int).value), nil
 	}
@@ -174,9 +175,9 @@ func (o *Int) Gt(rs Object) (Object, error) {
 func (o *Int) LtEq(rs Object) (Object, error) {
 	switch rs.(type) {
 	case *Bool:
-		return NewBool(o.value <= boolToInt(rs.(*Bool).value)), nil
+		return NewBool(o.value <= utils.BoolToInt(rs.(*Bool).value)), nil
 	case *Float:
-		return NewBool(intToFloat(o.value) <= rs.(*Float).value), nil
+		return NewBool(utils.IntToFloat(o.value) <= rs.(*Float).value), nil
 	case *Int:
 		return NewBool(o.value <= rs.(*Int).value), nil
 	}
@@ -186,9 +187,9 @@ func (o *Int) LtEq(rs Object) (Object, error) {
 func (o *Int) Lt(rs Object) (Object, error) {
 	switch rs.(type) {
 	case *Bool:
-		return NewBool(o.value < boolToInt(rs.(*Bool).value)), nil
+		return NewBool(o.value < utils.BoolToInt(rs.(*Bool).value)), nil
 	case *Float:
-		return NewBool(intToFloat(o.value) < rs.(*Float).value), nil
+		return NewBool(utils.IntToFloat(o.value) < rs.(*Float).value), nil
 	case *Int:
 		return NewBool(o.value < rs.(*Int).value), nil
 	}
@@ -198,9 +199,9 @@ func (o *Int) Lt(rs Object) (Object, error) {
 func (o *Int) Add(rs Object) (Object, error) {
 	switch rs.(type) {
 	case *Bool:
-		return NewInt(o.value + boolToInt(rs.(*Bool).value)), nil
+		return NewInt(o.value + utils.BoolToInt(rs.(*Bool).value)), nil
 	case *Float:
-		return NewFloat(intToFloat(o.value) + rs.(*Float).value), nil
+		return NewFloat(utils.IntToFloat(o.value) + rs.(*Float).value), nil
 	case *Int:
 		return NewInt(o.value + rs.(*Int).value), nil
 	}
@@ -210,9 +211,9 @@ func (o *Int) Add(rs Object) (Object, error) {
 func (o *Int) Sub(rs Object) (Object, error) {
 	switch rs.(type) {
 	case *Bool:
-		return NewInt(o.value - boolToInt(rs.(*Bool).value)), nil
+		return NewInt(o.value - utils.BoolToInt(rs.(*Bool).value)), nil
 	case *Float:
-		return NewFloat(intToFloat(o.value) - rs.(*Float).value), nil
+		return NewFloat(utils.IntToFloat(o.value) - rs.(*Float).value), nil
 	case *Int:
 		return NewInt(o.value - rs.(*Int).value), nil
 	}
@@ -222,11 +223,11 @@ func (o *Int) Sub(rs Object) (Object, error) {
 func (o *Int) Pow(rs Object) (Object, error) {
 	switch rs.(type) {
 	case *Bool:
-		return NewInt(int64(math.Pow(intToFloat(o.value), boolToFloat(rs.(*Bool).value)))), nil
+		return NewInt(int64(math.Pow(utils.IntToFloat(o.value), utils.BoolToFloat(rs.(*Bool).value)))), nil
 	case *Float:
-		return NewFloat(math.Pow(intToFloat(o.value), rs.(*Float).value)), nil
+		return NewFloat(math.Pow(utils.IntToFloat(o.value), rs.(*Float).value)), nil
 	case *Int:
-		return NewInt(int64(math.Pow(intToFloat(o.value), intToFloat(rs.(*Int).value)))), nil
+		return NewInt(int64(math.Pow(utils.IntToFloat(o.value), utils.IntToFloat(rs.(*Int).value)))), nil
 	}
 	return nil, ErrInvalidOp
 }
@@ -234,9 +235,9 @@ func (o *Int) Pow(rs Object) (Object, error) {
 func (o *Int) Mul(rs Object) (Object, error) {
 	switch rs.(type) {
 	case *Bool:
-		return NewInt(o.value * boolToInt(rs.(*Bool).value)), nil
+		return NewInt(o.value * utils.BoolToInt(rs.(*Bool).value)), nil
 	case *Float:
-		return NewFloat(intToFloat(o.value) * rs.(*Float).value), nil
+		return NewFloat(utils.IntToFloat(o.value) * rs.(*Float).value), nil
 	case *Int:
 		return NewInt(o.value * rs.(*Int).value), nil
 	case *List:
@@ -258,12 +259,12 @@ func (o *Int) Div(rs Object) (Object, error) {
 		if !rs.(*Bool).value {
 			return nil, ErrDivByZero
 		}
-		return NewFloat(intToFloat(o.value) / boolToFloat(rs.(*Bool).value)), nil
+		return NewFloat(utils.IntToFloat(o.value) / utils.BoolToFloat(rs.(*Bool).value)), nil
 	case *Float:
 		if rs.(*Float).value == 0.0 {
 			return nil, ErrDivByZero
 		}
-		return NewFloat(intToFloat(o.value) / rs.(*Float).value), nil
+		return NewFloat(utils.IntToFloat(o.value) / rs.(*Float).value), nil
 	case *Int:
 		if rs.(*Int).value == 0 {
 			return nil, ErrDivByZero
@@ -279,12 +280,12 @@ func (o *Int) Mod(rs Object) (Object, error) {
 		if !rs.(*Bool).value {
 			return nil, ErrModByZero
 		}
-		return NewInt(o.value % boolToInt(rs.(*Bool).value)), nil
+		return NewInt(o.value % utils.BoolToInt(rs.(*Bool).value)), nil
 	case *Float:
 		if rs.(*Float).value == 0.0 {
 			return nil, ErrModByZero
 		}
-		return NewFloat(math.Mod(intToFloat(o.value), rs.(*Float).value)), nil
+		return NewFloat(math.Mod(utils.IntToFloat(o.value), rs.(*Float).value)), nil
 	case *Int:
 		if rs.(*Int).value == 0 {
 			return nil, ErrModByZero
@@ -297,7 +298,7 @@ func (o *Int) Mod(rs Object) (Object, error) {
 func (o *Int) Xor(rs Object) (Object, error) {
 	switch rs.(type) {
 	case *Bool:
-		return NewInt(o.value ^ boolToInt(rs.(*Bool).value)), nil
+		return NewInt(o.value ^ utils.BoolToInt(rs.(*Bool).value)), nil
 	case *Int:
 		return NewInt(o.value ^ rs.(*Int).value), nil
 	}

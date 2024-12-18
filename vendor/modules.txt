@@ -6,12 +6,17 @@ github.com/antlr4-go/antlr/v4
 github.com/c2micro/c2mshr/defaults
 github.com/c2micro/c2mshr/proto/gen/common/v1
 github.com/c2micro/c2mshr/proto/gen/operator/v1
-# github.com/c2micro/mlan v0.0.0-20241218151639-6af2f5656c3c
+# github.com/c2micro/mlan v0.0.0-20241218222148-7c883299085d
 ## explicit; go 1.22.4
 github.com/c2micro/mlan/pkg/constants
 github.com/c2micro/mlan/pkg/engine
+github.com/c2micro/mlan/pkg/engine/builtin
 github.com/c2micro/mlan/pkg/engine/object
 github.com/c2micro/mlan/pkg/engine/scope
+github.com/c2micro/mlan/pkg/engine/storage
+github.com/c2micro/mlan/pkg/engine/types
+github.com/c2micro/mlan/pkg/engine/utils
+github.com/c2micro/mlan/pkg/engine/visitor
 github.com/c2micro/mlan/pkg/parser
 github.com/c2micro/mlan/pkg/perror
 # github.com/docker/go-units v0.5.0

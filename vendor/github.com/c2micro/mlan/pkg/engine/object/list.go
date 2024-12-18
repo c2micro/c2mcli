@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/c2micro/mlan/pkg/parser"
+	"github.com/c2micro/mlan/pkg/engine/utils"
 )
 
 // List список, содержащий другие объекты
@@ -193,7 +194,7 @@ func (o *List) Mul(rs Object) (Object, error) {
 	case *Bool:
 		var list []Object
 		var i int64
-		for i = 0; i < boolToInt(rs.(*Bool).value); i++ {
+		for i = 0; i < utils.BoolToInt(rs.(*Bool).value); i++ {
 			list = append(list, o.value...)
 		}
 		return NewList(list), nil

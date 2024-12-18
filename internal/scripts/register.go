@@ -40,85 +40,88 @@ import (
 	mnotify "github.com/c2micro/c2mcli/internal/scripts/aliases/m_notify"
 	mwarning "github.com/c2micro/c2mcli/internal/scripts/aliases/m_warning"
 	tcancel "github.com/c2micro/c2mcli/internal/scripts/aliases/t_cancel"
-	"github.com/c2micro/mlan/pkg/engine"
 	"github.com/c2micro/mlan/pkg/engine/object"
+	"github.com/c2micro/mlan/pkg/engine/storage"
+	"github.com/c2micro/mlan/pkg/engine/types"
+	mlanUtils "github.com/c2micro/mlan/pkg/engine/utils"
+	"github.com/c2micro/mlan/pkg/engine/visitor"
 	"github.com/go-faster/errors"
 )
 
 // регистрация API для интеграции MLAN с C2
 func registerApi() {
 	// alias: регистрация нового алиаса
-	engine.UserFunctions[alias.GetApiName()] = object.NewUserFunc(alias.GetApiName(), alias.UserAlias)
+	storage.UserFunctions[alias.GetApiName()] = object.NewUserFunc(alias.GetApiName(), alias.UserAlias)
 	// m_notify: сообщение с типом NOTIFY
-	engine.UserFunctions[mnotify.GetApiName()] = object.NewUserFunc(mnotify.GetApiName(), mnotify.UserMessageNotify)
+	storage.UserFunctions[mnotify.GetApiName()] = object.NewUserFunc(mnotify.GetApiName(), mnotify.UserMessageNotify)
 	// m_info: сообщение с типом INFO
-	engine.UserFunctions[minfo.GetApiName()] = object.NewUserFunc(minfo.GetApiName(), minfo.UserMessageInfo)
+	storage.UserFunctions[minfo.GetApiName()] = object.NewUserFunc(minfo.GetApiName(), minfo.UserMessageInfo)
 	// m_warning: сообщение с типом WARNING
-	engine.UserFunctions[mwarning.GetApiName()] = object.NewUserFunc(mwarning.GetApiName(), mwarning.UserMessageWarning)
+	storage.UserFunctions[mwarning.GetApiName()] = object.NewUserFunc(mwarning.GetApiName(), mwarning.UserMessageWarning)
 	// m_error: сообщение с типом ERROR
-	engine.UserFunctions[merror.GetApiName()] = object.NewUserFunc(merror.GetApiName(), merror.UserMessageError)
+	storage.UserFunctions[merror.GetApiName()] = object.NewUserFunc(merror.GetApiName(), merror.UserMessageError)
 	// b_sleep: изменение параметров sleep/jitter бикона
-	engine.UserFunctions[bsleep.GetApiName()] = object.NewUserFunc(bsleep.GetApiName(), bsleep.UserBeaconSleep)
+	storage.UserFunctions[bsleep.GetApiName()] = object.NewUserFunc(bsleep.GetApiName(), bsleep.UserBeaconSleep)
 	// b_ls: получение листинга директорий
-	engine.UserFunctions[bls.GetApiName()] = object.NewUserFunc(bls.GetApiName(), bls.UserBeaconLs)
+	storage.UserFunctions[bls.GetApiName()] = object.NewUserFunc(bls.GetApiName(), bls.UserBeaconLs)
 	// b_pwd: получение текущей директории (CWD)
-	engine.UserFunctions[bpwd.GetApiName()] = object.NewUserFunc(bpwd.GetApiName(), bpwd.UserBeaconPwd)
+	storage.UserFunctions[bpwd.GetApiName()] = object.NewUserFunc(bpwd.GetApiName(), bpwd.UserBeaconPwd)
 	// b_cd: изменение рабочей директории
-	engine.UserFunctions[bcd.GetApiName()] = object.NewUserFunc(bcd.GetApiName(), bcd.UserBeaconCd)
+	storage.UserFunctions[bcd.GetApiName()] = object.NewUserFunc(bcd.GetApiName(), bcd.UserBeaconCd)
 	// b_whoami: получение текущего пользователя/его грантов
-	engine.UserFunctions[bwhoami.GetApiName()] = object.NewUserFunc(bwhoami.GetApiName(), bwhoami.UserBeaconWhoami)
+	storage.UserFunctions[bwhoami.GetApiName()] = object.NewUserFunc(bwhoami.GetApiName(), bwhoami.UserBeaconWhoami)
 	// b_ps: листинг процессов
-	engine.UserFunctions[bps.GetApiName()] = object.NewUserFunc(bps.GetApiName(), bps.UserBeaconPs)
+	storage.UserFunctions[bps.GetApiName()] = object.NewUserFunc(bps.GetApiName(), bps.UserBeaconPs)
 	// b_cat: вывод файла
-	engine.UserFunctions[bcat.GetApiName()] = object.NewUserFunc(bcat.GetApiName(), bcat.UserBeaconCat)
+	storage.UserFunctions[bcat.GetApiName()] = object.NewUserFunc(bcat.GetApiName(), bcat.UserBeaconCat)
 	// b_exec: выполнение исполняемого файла
-	engine.UserFunctions[bexec.GetApiName()] = object.NewUserFunc(bexec.GetApiName(), bexec.UserBeaconExec)
+	storage.UserFunctions[bexec.GetApiName()] = object.NewUserFunc(bexec.GetApiName(), bexec.UserBeaconExec)
 	// b_cp: копирование файлов/директорий
-	engine.UserFunctions[bcp.GetApiName()] = object.NewUserFunc(bcp.GetApiName(), bcp.UserBeaconCp)
+	storage.UserFunctions[bcp.GetApiName()] = object.NewUserFunc(bcp.GetApiName(), bcp.UserBeaconCp)
 	// b_jobs: получение активных задач на биконе
-	engine.UserFunctions[bjobs.GetApiName()] = object.NewUserFunc(bjobs.GetApiName(), bjobs.UserBeaconJobs)
+	storage.UserFunctions[bjobs.GetApiName()] = object.NewUserFunc(bjobs.GetApiName(), bjobs.UserBeaconJobs)
 	// b_jobkill: килл активной задачи на биконе
-	engine.UserFunctions[bjobkill.GetApiName()] = object.NewUserFunc(bjobkill.GetApiName(), bjobkill.UserBeaconJobkill)
+	storage.UserFunctions[bjobkill.GetApiName()] = object.NewUserFunc(bjobkill.GetApiName(), bjobkill.UserBeaconJobkill)
 	// b_kill: килл процессса на машине
-	engine.UserFunctions[bkill.GetApiName()] = object.NewUserFunc(bkill.GetApiName(), bkill.UserBeaconKill)
+	storage.UserFunctions[bkill.GetApiName()] = object.NewUserFunc(bkill.GetApiName(), bkill.UserBeaconKill)
 	// b_mv: перемещение файлов/директорий
-	engine.UserFunctions[bmv.GetApiName()] = object.NewUserFunc(bmv.GetApiName(), bmv.UserBeaconMv)
+	storage.UserFunctions[bmv.GetApiName()] = object.NewUserFunc(bmv.GetApiName(), bmv.UserBeaconMv)
 	// b_mkdir: создание директории
-	engine.UserFunctions[bmkdir.GetApiName()] = object.NewUserFunc(bmkdir.GetApiName(), bmkdir.UserBeaconMkdir)
+	storage.UserFunctions[bmkdir.GetApiName()] = object.NewUserFunc(bmkdir.GetApiName(), bmkdir.UserBeaconMkdir)
 	// b_exec_assembly: исполнение .NET в памяти
-	engine.UserFunctions[bexecassembly.GetApiName()] = object.NewUserFunc(bexecassembly.GetApiName(), bexecassembly.UserBeaconExecuteAssembly)
+	storage.UserFunctions[bexecassembly.GetApiName()] = object.NewUserFunc(bexecassembly.GetApiName(), bexecassembly.UserBeaconExecuteAssembly)
 	// b_download: скачивание файла
-	engine.UserFunctions[bdownload.GetApiName()] = object.NewUserFunc(bdownload.GetApiName(), bdownload.UserBeaconDownload)
+	storage.UserFunctions[bdownload.GetApiName()] = object.NewUserFunc(bdownload.GetApiName(), bdownload.UserBeaconDownload)
 	// b_upload: загрузка файла на хост
-	engine.UserFunctions[bupload.GetApiName()] = object.NewUserFunc(bupload.GetApiName(), bupload.UserBeaconUpload)
+	storage.UserFunctions[bupload.GetApiName()] = object.NewUserFunc(bupload.GetApiName(), bupload.UserBeaconUpload)
 	// b_pause: одноразовый слип на биконе
-	engine.UserFunctions[bpause.GetApiName()] = object.NewUserFunc(bpause.GetApiName(), bpause.UserBeaconPause)
+	storage.UserFunctions[bpause.GetApiName()] = object.NewUserFunc(bpause.GetApiName(), bpause.UserBeaconPause)
 	// b_destruct: самоликвидация бикона
-	engine.UserFunctions[bdestruct.GetApiName()] = object.NewUserFunc(bdestruct.GetApiName(), bdestruct.UserBeaconDestruct)
+	storage.UserFunctions[bdestruct.GetApiName()] = object.NewUserFunc(bdestruct.GetApiName(), bdestruct.UserBeaconDestruct)
 	// b_exec_detach: выполнение исполняемого файла с детачем
-	engine.UserFunctions[bexecdetach.GetApiName()] = object.NewUserFunc(bexec.GetApiName(), bexecdetach.UserBeaconExecDetach)
+	storage.UserFunctions[bexecdetach.GetApiName()] = object.NewUserFunc(bexec.GetApiName(), bexecdetach.UserBeaconExecDetach)
 	// b_shell: выполнение shell команды
-	engine.UserFunctions[bshell.GetApiName()] = object.NewUserFunc(bshell.GetApiName(), bshell.UserBeaconShell)
+	storage.UserFunctions[bshell.GetApiName()] = object.NewUserFunc(bshell.GetApiName(), bshell.UserBeaconShell)
 	// b_ppid: спуфинг parent PID
-	engine.UserFunctions[bppid.GetApiName()] = object.NewUserFunc(bppid.GetApiName(), bppid.UserBeaconPpid)
+	storage.UserFunctions[bppid.GetApiName()] = object.NewUserFunc(bppid.GetApiName(), bppid.UserBeaconPpid)
 	// b_exit: остановка бикона
-	engine.UserFunctions[bexit.GetApiName()] = object.NewUserFunc(bexit.GetApiName(), bexit.UserBeaconExit)
+	storage.UserFunctions[bexit.GetApiName()] = object.NewUserFunc(bexit.GetApiName(), bexit.UserBeaconExit)
 	// t_cancel: отмена всех тасок в статусе NEW от оператора
-	engine.UserFunctions[tcancel.GetApiName()] = object.NewUserFunc(tcancel.GetApiName(), tcancel.UserBeaconCancel)
+	storage.UserFunctions[tcancel.GetApiName()] = object.NewUserFunc(tcancel.GetApiName(), tcancel.UserBeaconCancel)
 	// is_windows: запущен ли бикон на windows
-	engine.UserFunctions[iswindows.GetApiName()] = object.NewUserFunc(iswindows.GetApiName(), iswindows.UserIsWindows)
+	storage.UserFunctions[iswindows.GetApiName()] = object.NewUserFunc(iswindows.GetApiName(), iswindows.UserIsWindows)
 	// is_linux: запущен ли бикон на linux
-	engine.UserFunctions[islinux.GetApiName()] = object.NewUserFunc(islinux.GetApiName(), islinux.UserIsLinux)
+	storage.UserFunctions[islinux.GetApiName()] = object.NewUserFunc(islinux.GetApiName(), islinux.UserIsLinux)
 	// is_macos: запущен ли бикон на macos
-	engine.UserFunctions[ismacos.GetApiName()] = object.NewUserFunc(ismacos.GetApiName(), ismacos.UserIsMacos)
+	storage.UserFunctions[ismacos.GetApiName()] = object.NewUserFunc(ismacos.GetApiName(), ismacos.UserIsMacos)
 	// is_x64: является ли архитектура процесса x64 (amd64)
-	engine.UserFunctions[isx64.GetApiName()] = object.NewUserFunc(isx64.GetApiName(), isx64.UserIsX64)
+	storage.UserFunctions[isx64.GetApiName()] = object.NewUserFunc(isx64.GetApiName(), isx64.UserIsX64)
 	// is_x86: является ли архитектура процесса x86
-	engine.UserFunctions[isx86.GetApiName()] = object.NewUserFunc(isx86.GetApiName(), isx86.UserIsX86)
+	storage.UserFunctions[isx86.GetApiName()] = object.NewUserFunc(isx86.GetApiName(), isx86.UserIsX86)
 	// is_arm64: является ли архитектура процесса arm64
-	engine.UserFunctions[isarm64.GetApiName()] = object.NewUserFunc(isarm64.GetApiName(), isarm64.UserIsArm64)
+	storage.UserFunctions[isarm64.GetApiName()] = object.NewUserFunc(isarm64.GetApiName(), isarm64.UserIsArm64)
 	// is_arm32: является ли архитектура процесса arm32
-	engine.UserFunctions[isarm32.GetApiName()] = object.NewUserFunc(isarm32.GetApiName(), isarm32.UserIsArm32)
+	storage.UserFunctions[isarm32.GetApiName()] = object.NewUserFunc(isarm32.GetApiName(), isarm32.UserIsArm32)
 }
 
 var (
@@ -140,13 +143,13 @@ func registerBuiltin() error {
 			return errors.Wrapf(err, "read %s", v.Name())
 		}
 		// строим AST дерево
-		tree, err := engine.CreateAST(string(data))
+		tree, err := mlanUtils.CreateAST(string(data))
 		if err != nil {
 			return errors.Wrap(err, v.Name())
 		}
 		// проходим по дереву
-		visitor := engine.NewVisitor()
-		if res := visitor.Visit(tree); res != engine.Success {
+		visitor := visitor.NewVisitor()
+		if res := visitor.Visit(tree); res != types.Success {
 			return errors.Wrapf(visitor.Error, "evaluation %s", v.Name())
 		}
 	}

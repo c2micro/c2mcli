@@ -1,6 +1,6 @@
 package constants
 
 const (
-	// MaxScopeDepth максимальная глубина рекурсии
+	// максимальная глубина рекурсии
 	MaxScopeDepth = 10000
 )
