@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// выход в базовую консоль
 func exitCommand(c *console.Console) *cobra.Command {
 	return &cobra.Command{
 		Use:                   "exit",

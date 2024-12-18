@@ -40,16 +40,12 @@ func useCommand(c *console.Console) *cobra.Command {
 		},
 	}
 	// генерация позиционного комплитера
-	carapace.Gen(useCmd).PositionalCompletion(useCommandCompleter())
-	return useCmd
-}
-
-func useCommandCompleter() carapace.Action {
-	return carapace.ActionCallback(func(c carapace.Context) carapace.Action {
+	carapace.Gen(useCmd).PositionalCompletion(carapace.ActionCallback(func(c carapace.Context) carapace.Action {
 		var suggestions []string
 		for _, v := range beacon.Beacons.Get() {
 			suggestions = append(suggestions, v.GetIdHex())
 		}
 		return carapace.ActionValues(suggestions...)
-	})
+	}))
+	return useCmd
 }

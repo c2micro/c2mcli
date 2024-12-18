@@ -6,6 +6,7 @@ import (
 	"github.com/reeflective/console"
 )
 
+// печать результатов таск группы
 func printTaskGroupData(c *console.Console, v task.TaskData) {
 	switch data := v.(type) {
 	case *task.Message:

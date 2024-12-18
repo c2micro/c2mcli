@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// регистрация скрипта
 func scriptsLoadCommand(*console.Console) *cobra.Command {
 	scriptsLoadCmd := &cobra.Command{
 		Use:                   "load",
@@ -23,10 +24,13 @@ func scriptsLoadCommand(*console.Console) *cobra.Command {
 		},
 	}
 	// генерация позиционного комплитера
-	carapace.Gen(scriptsLoadCmd).PositionalCompletion(scriptsLoadCommandCompleter())
+	carapace.Gen(scriptsLoadCmd).PositionalCompletion(carapace.ActionCallback(func(c carapace.Context) carapace.Action {
+		return carapace.ActionFiles()
+	}))
 	return scriptsLoadCmd
 }
 
+// листинг скриптов
 func scriptsListCommand(c *console.Console) *cobra.Command {
 	return &cobra.Command{
 		Use:                   "list",
@@ -49,6 +53,7 @@ func scriptsListCommand(c *console.Console) *cobra.Command {
 	}
 }
 
+// удаление скриптов
 func scriptsRemoveCommand(*console.Console) *cobra.Command {
 	scriptsRemoveCmd := &cobra.Command{
 		Use:                   "remove",
@@ -68,6 +73,7 @@ func scriptsRemoveCommand(*console.Console) *cobra.Command {
 	return scriptsRemoveCmd
 }
 
+// перезагрузка скриптов
 func scriptsReloadCommand(*console.Console) *cobra.Command {
 	scriptsReloadCmd := &cobra.Command{
 		Use:                   "reload",
@@ -96,6 +102,7 @@ func scriptsReloadCommand(*console.Console) *cobra.Command {
 	return scriptsReloadCmd
 }
 
+// работа со скриптам
 func scriptsCommand(c *console.Console) *cobra.Command {
 	scriptsCmd := &cobra.Command{
 		Use:                   "scripts",
@@ -103,6 +110,7 @@ func scriptsCommand(c *console.Console) *cobra.Command {
 		DisableFlagsInUseLine: true,
 	}
 
+	// добавление саб-команд
 	scriptsCmd.AddCommand(
 		scriptsLoadCommand(c),
 		scriptsListCommand(c),
@@ -120,11 +128,5 @@ func externalScriptsCompleter() carapace.Action {
 			suggestions = append(suggestions, v.GetPath())
 		}
 		return carapace.ActionValues(suggestions...)
-	})
-}
-
-func scriptsLoadCommandCompleter() carapace.Action {
-	return carapace.ActionCallback(func(c carapace.Context) carapace.Action {
-		return carapace.ActionFiles()
 	})
 }

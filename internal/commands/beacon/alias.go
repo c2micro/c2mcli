@@ -12,6 +12,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// регистрация алиасов
 func aliasCommands(*console.Console) []*cobra.Command {
 	cmds := make([]*cobra.Command, 0)
 	for k, v := range aliases.Aliases {

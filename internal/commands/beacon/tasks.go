@@ -46,6 +46,7 @@ func tasksDownloadCommand(*console.Console) *cobra.Command {
 			color.Green("output saved to %s", args[1])
 		},
 	}
+	// TODO: autocomplete
 	return tasksDownloadCmd
 }
 
@@ -74,11 +75,18 @@ func tasksGetCommand(c *console.Console) *cobra.Command {
 		},
 	}
 	// генерация позиционного комплитера
-	carapace.Gen(tasksGetCmd).PositionalCompletion(tasksCommandCompleter())
+	carapace.Gen(tasksGetCmd).PositionalCompletion(carapace.ActionCallback(func(c carapace.Context) carapace.Action {
+		var suggestions []string
+		for _, v := range task.TaskGroups.Get() {
+			suggestions = append(suggestions, strconv.Itoa(int(v.GetId())))
+		}
+		return carapace.ActionValues(suggestions...)
+	}))
 	return tasksGetCmd
 }
 
-func tasksListCommand(c *console.Console) *cobra.Command {
+// листинг тасков
+func tasksListCommand(*console.Console) *cobra.Command {
 	return &cobra.Command{
 		Use:                   "list",
 		Short:                 "list tasks for beacon",
@@ -97,6 +105,7 @@ func tasksListCommand(c *console.Console) *cobra.Command {
 	}
 }
 
+// обработка тасков для бикона
 func tasksCommand(c *console.Console) *cobra.Command {
 	tasksCmd := &cobra.Command{
 		Use:                   "tasks",
@@ -106,6 +115,7 @@ func tasksCommand(c *console.Console) *cobra.Command {
 		GroupID:               constants.CoreGroupId,
 	}
 
+	// добавление саб-команд
 	tasksCmd.AddCommand(
 		tasksGetCommand(c),
 		tasksDownloadCommand(c),
@@ -113,14 +123,4 @@ func tasksCommand(c *console.Console) *cobra.Command {
 	)
 
 	return tasksCmd
-}
-
-func tasksCommandCompleter() carapace.Action {
-	return carapace.ActionCallback(func(c carapace.Context) carapace.Action {
-		var suggestions []string
-		for _, v := range task.TaskGroups.Get() {
-			suggestions = append(suggestions, strconv.Itoa(int(v.GetId())))
-		}
-		return carapace.ActionValues(suggestions...)
-	})
 }

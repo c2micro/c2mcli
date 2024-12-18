@@ -2,6 +2,7 @@ package console
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"os"
 
@@ -10,6 +11,7 @@ import (
 	"github.com/c2micro/c2mcli/internal/constants"
 	"github.com/c2micro/c2mcli/internal/service"
 	"github.com/c2micro/c2mcli/internal/utils"
+	"github.com/fatih/color"
 	"github.com/reeflective/console"
 )
 
@@ -22,7 +24,7 @@ func Run(ctx context.Context) error {
 	base := app.NewMenu(constants.BaseMenuName)
 	base.Short = "base operator cli"
 	// кастомный промпт
-	base.Prompt().Primary = baseCommands.GetPrompt
+	base.Prompt().Primary = func() string { return fmt.Sprintf("[%s] > ", color.MagentaString("c2m")) }
 	// хендлер на обработку Ctrl+D
 	base.AddInterrupt(io.EOF, func(c *console.Console) {
 		if utils.ExitConsole(c) {

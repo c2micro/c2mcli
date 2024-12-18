@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// вывод результатов последней таск группы
 func lastCommand(c *console.Console) *cobra.Command {
 	return &cobra.Command{
 		Use:                   "last",

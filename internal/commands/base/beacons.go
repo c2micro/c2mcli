@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// листинг биконов
 func beaconsListCommand(*console.Console) *cobra.Command {
 	return &cobra.Command{
 		Use:                   "list",
@@ -42,6 +43,7 @@ func beaconsListCommand(*console.Console) *cobra.Command {
 	}
 }
 
+// работа с биконами
 func beaconsCommand(c *console.Console) *cobra.Command {
 	beaconsCmd := &cobra.Command{
 		Use:                   "beacons",
@@ -49,6 +51,7 @@ func beaconsCommand(c *console.Console) *cobra.Command {
 		DisableFlagsInUseLine: true,
 	}
 
+	// добавление саб-команд
 	beaconsCmd.AddCommand(
 		beaconsListCommand(c),
 	)
