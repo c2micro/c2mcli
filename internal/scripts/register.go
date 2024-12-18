@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/c2micro/c2mcli/internal/scripts/aliases/alias"
+	bls "github.com/c2micro/c2mcli/internal/scripts/aliases/b_ls"
 	bsleep "github.com/c2micro/c2mcli/internal/scripts/aliases/b_sleep"
 	merror "github.com/c2micro/c2mcli/internal/scripts/aliases/m_error"
 	minfo "github.com/c2micro/c2mcli/internal/scripts/aliases/m_info"
@@ -29,6 +30,8 @@ func registerApi() {
 	engine.UserFunctions[merror.GetApiName()] = object.NewUserFunc(merror.GetApiName(), merror.UserMessageError)
 	// b_sleep: изменение параметров sleep/jitter бикона
 	engine.UserFunctions[bsleep.GetApiName()] = object.NewUserFunc(bsleep.GetApiName(), bsleep.UserBeaconSleep)
+	// b_ls: получение листинга директорий
+	engine.UserFunctions[bls.GetApiName()] = object.NewUserFunc(bls.GetApiName(), bls.UserBeaconLs)
 }
 
 var (

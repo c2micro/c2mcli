@@ -11,6 +11,8 @@ func Commands(app *console.Console) console.Commands {
 			DisableFlagsInUseLine: true,
 		}
 
+		// last
+		rootCmd.AddCommand(lastCommand(app))
 		// tasks
 		rootCmd.AddCommand(tasksCommand(app))
 		// exit

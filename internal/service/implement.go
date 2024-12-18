@@ -194,30 +194,93 @@ func SubscribeTasks(ctx context.Context) error {
 		}
 		// новая таск группа
 		if msg.GetGroup() != nil {
-			t := &task.TaskGroup{}
+			tg := &task.TaskGroup{}
 			v := msg.GetGroup()
-			t.SetId(v.GetGid())
-			t.SetCmd(v.GetCmd())
-			t.SetCreatedAt(v.GetCreated().AsTime().Add(operatorConn.metadata.delta))
-			t.SetAuthor(v.GetAuthor())
+			tg.SetId(v.GetGid())
+			tg.SetCmd(v.GetCmd())
+			tg.SetCreatedAt(v.GetCreated().AsTime().Add(operatorConn.metadata.delta))
+			tg.SetAuthor(v.GetAuthor())
 			// добавление таск группы
-			task.TaskGroups.Add(t)
+			task.TaskGroups.Add(tg)
 			continue
 		}
 		// новое сообщение в таск группе
 		if msg.GetMessage() != nil {
+			m := &task.Message{}
+			v := msg.GetMessage()
+			// получаем таск группы
+			tg := task.TaskGroups.GetById(v.GetGid())
+			if tg == nil {
+				// не найдено таск группы
+				continue
+			}
+			m.SetId(v.GetMid())
+			m.SetKind(defaults.TaskMessage(v.Type))
+			m.SetMessage(v.GetMessage())
+			m.SetCreatedAt(v.Created.AsTime().Add(operatorConn.metadata.delta))
+			// добавляем сообщение в таск группу
+			tg.AddMessage(m)
 			continue
 		}
 		// новый таск в таск группе
 		if msg.GetTask() != nil {
+			t := &task.Task{}
+			v := msg.GetTask()
+			// получаем таск группу
+			tg := task.TaskGroups.GetById(v.GetGid())
+			if tg == nil {
+				// не найдено таск группы
+				continue
+			}
+			t.SetId(v.GetTid())
+			t.SetIsOutputBig(v.GetOutputBig())
+			t.SetCreatedAt(v.GetCreated().AsTime().Add(operatorConn.metadata.delta))
+			t.SetOutput(v.GetOutput().GetValue())
+			t.SetOutputLen(v.GetOutputLen())
+			t.SetStatus(defaults.TaskStatus(v.GetStatus()))
+			// добавляем таск в таск группу
+			tg.AddTask(t)
 			continue
 		}
 		// обновление статуса таска
 		if msg.GetTaskStatus() != nil {
+			v := msg.GetTaskStatus()
+			// получаем таск группу
+			tg := task.TaskGroups.GetById(v.GetGid())
+			if tg == nil {
+				// не найдено таск группы
+				continue
+			}
+			t := tg.GetTaskById(v.GetTid())
+			if t == nil {
+				// не найдено таска
+				continue
+			}
+			t.SetStatus(defaults.TaskStatus(v.GetStatus()))
+			// обновляем таск
+			tg.UpdateTask(t)
 			continue
 		}
 		// получение результатов выполненного таска
 		if msg.GetTaskDone() != nil {
+			v := msg.GetTaskDone()
+			// получаем таск группу
+			tg := task.TaskGroups.GetById(v.GetGid())
+			if tg == nil {
+				// не найдено таск группы
+				continue
+			}
+			t := tg.GetTaskById(v.GetTid())
+			if t == nil {
+				// не найдено таска
+				continue
+			}
+			t.SetStatus(defaults.TaskStatus(v.GetStatus()))
+			t.SetIsOutputBig(v.GetOutputBig())
+			t.SetOutput(v.GetOutput().GetValue())
+			t.SetOutputLen(v.GetOutputLen())
+			// обновляем таск
+			tg.UpdateTask(t)
 			continue
 		}
 	}

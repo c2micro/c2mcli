@@ -38,6 +38,6 @@ func UserMessageError(args ...object.Object) (object.Object, error) {
 }
 
 // отправка сообщения с типом ERROR
-func BackendMessageError(id uint32, message string, args ...string) error {
-	return service.NewTaskGroupMessage(id, defaults.ErrorMessage, fmt.Sprintf(message, args))
+func BackendMessageError(id uint32, message string) error {
+	return service.NewTaskGroupMessage(id, defaults.ErrorMessage, message)
 }

@@ -1,4 +1,4 @@
-package bsleep
+package bls
 
 import (
 	"fmt"
@@ -13,40 +13,36 @@ import (
 )
 
 // имя API
-const name = "b_sleep"
+const name = "b_ls"
 
 // получение имени API
 func GetApiName() string {
 	return name
 }
 
-func UserBeaconSleep(args ...object.Object) (object.Object, error) {
-	if len(args) < 2 || len(args) > 3 {
-		return nil, fmt.Errorf("expecting 2 or 3 arguments, got %d", len(args))
+func UserBeaconLs(args ...object.Object) (object.Object, error) {
+	if len(args) < 1 || len(args) > 2 {
+		return nil, fmt.Errorf("expecting 1 or 2 arguments, got %d", len(args))
 	}
 	id, ok := args[0].(*object.Int)
 	if !ok {
 		return nil, fmt.Errorf("expecting 1st argument int, got '%s'", args[0].TypeName())
 	}
-	sleep, ok := args[1].(*object.Int)
-	if !ok {
-		return nil, fmt.Errorf("expecting 2nd argument int, got '%s'", args[1].TypeName())
-	}
-	jitter := object.NewInt(0)
-	if len(args) == 3 {
-		jitter, ok = args[2].(*object.Int)
+	path := object.NewStr(".")
+	if len(args) == 2 {
+		path, ok = args[1].(*object.Str)
 		if !ok {
-			return nil, fmt.Errorf("expecting 3rd argument int, got '%s'", args[2].TypeName())
+			return nil, fmt.Errorf("expecting 2nd argument str, got '%s'", args[1].TypeName())
 		}
 	}
-	if err := BackendBeaconSleep(uint32(id.GetValue().(int64)), uint32(sleep.GetValue().(int64)), uint32(jitter.GetValue().(int64))); err != nil {
+	if err := BackendBeaconLs(uint32(id.GetValue().(int64)), path.GetValue().(string)); err != nil {
 		return nil, err
 	}
 	return object.NewNull(), nil
 }
 
-func BackendBeaconSleep(id uint32, sleep uint32, jitter uint32) error {
-	cap := defaults.CAP_SLEEP
+func BackendBeaconLs(id uint32, path string) error {
+	cap := defaults.CAP_LS
 
 	// проверка существования бикона
 	b := beacon.Beacons.GetById(id)
@@ -61,10 +57,9 @@ func BackendBeaconSleep(id uint32, sleep uint32, jitter uint32) error {
 
 	return service.NewTask(id, &operatorv1.NewTaskRequest{
 		Cap: uint32(cap),
-		Args: &operatorv1.NewTaskRequest_Sleep{
-			Sleep: &commonv1.CapSleep{
-				Sleep:  sleep,
-				Jitter: jitter,
+		Args: &operatorv1.NewTaskRequest_Ls{
+			Ls: &commonv1.CapLs{
+				Path: path,
 			},
 		},
 	})

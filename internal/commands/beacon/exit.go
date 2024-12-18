@@ -4,6 +4,7 @@ import (
 	"github.com/c2micro/c2mcli/internal/constants"
 	"github.com/c2micro/c2mcli/internal/service"
 	"github.com/c2micro/c2mcli/internal/storage/beacon"
+	"github.com/c2micro/c2mcli/internal/storage/task"
 	"github.com/fatih/color"
 	"github.com/reeflective/console"
 	"github.com/spf13/cobra"
@@ -18,6 +19,7 @@ func exitCommand(c *console.Console) *cobra.Command {
 			if err := service.UnpollBeaconTasks(beacon.ActiveBeacon); err != nil {
 				color.Yellow("unable stop polling tasks for beacon: %s", err.Error())
 			}
+			task.ResetStorage()
 			beacon.ActiveBeacon = nil
 			c.SwitchMenu(constants.BaseMenuName)
 		},
