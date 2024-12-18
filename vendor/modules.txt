@@ -6,7 +6,7 @@ github.com/antlr4-go/antlr/v4
 github.com/c2micro/c2mshr/defaults
 github.com/c2micro/c2mshr/proto/gen/common/v1
 github.com/c2micro/c2mshr/proto/gen/operator/v1
-# github.com/c2micro/mlan v0.0.0-20241216110041-cec12758e236
+# github.com/c2micro/mlan v0.0.0-20241218151639-6af2f5656c3c
 ## explicit; go 1.22.4
 github.com/c2micro/mlan/pkg/constants
 github.com/c2micro/mlan/pkg/engine

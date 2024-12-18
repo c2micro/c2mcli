@@ -3,8 +3,9 @@ module github.com/c2micro/c2mcli
 go 1.23.4
 
 require (
+	github.com/antlr4-go/antlr/v4 v4.13.1
 	github.com/c2micro/c2mshr v0.0.0-20241217122157-da2b71e6175c
-	github.com/c2micro/mlan v0.0.0-20241216110041-cec12758e236
+	github.com/c2micro/mlan v0.0.0-20241218151639-6af2f5656c3c
 	github.com/docker/go-units v0.5.0
 	github.com/fatih/color v1.18.0
 	github.com/go-faster/errors v0.7.1
@@ -22,7 +23,6 @@ require (
 )
 
 require (
-	github.com/antlr4-go/antlr/v4 v4.13.1 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/kballard/go-shellquote v0.0.0-20180428030007-95032a82bc51 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect

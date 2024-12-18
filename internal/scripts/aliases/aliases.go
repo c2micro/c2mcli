@@ -5,6 +5,11 @@ import "github.com/c2micro/mlan/pkg/engine/object"
 // хранилище всех алиасов
 var Aliases = make(map[string]*Alias)
 
+// очистка хранилища алиасов
+func Clear() {
+	Aliases = make(map[string]*Alias)
+}
+
 // существует ли алиас в мапе
 func IsAliasExists(n string) bool {
 	_, ok := Aliases[n]

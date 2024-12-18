@@ -127,7 +127,7 @@ var (
 )
 
 // регистрация встроенных скриптов с базовыми командами
-func registerBuilin() error {
+func registerBuiltin() error {
 	// список скриптов
 	e, err := builtinScriptsFS.ReadDir("builtin")
 	if err != nil {

@@ -20,6 +20,11 @@ const (
 
 // init инициализация рантайма для языка
 func init() {
+	Init()
+}
+
+// инициализация движка
+func Init() {
 	// инициализация глобального скоупа
 	scope.GlobalScope = scope.NewScope(
 		nil,
@@ -31,6 +36,18 @@ func init() {
 	scope.CurrentScope = scope.GlobalScope
 	// регистрация дефолтных функций
 	RegisterBuiltinFunctions()
+}
+
+// очистка движка и перерегистрация всех необходимых компонентов
+func Clear() {
+	// зануление хендлеров функций
+	BuiltinFunctions = make(map[string]*object.BuiltinFunc)
+	UserFunctions = make(map[string]*object.UserFunc)
+	NativeFunctions = make(map[string]*object.NativeFunc)
+	// зануление рета
+	retValue = nil
+	// инициализация
+	Init()
 }
 
 // Evaluate выполнение скрипта с указанием файла

@@ -11,16 +11,6 @@ func stripHexPrefix(s string) string {
 	return s
 }
 
-// intToBool int64 -> bool
-func intToBool(i int64) bool {
-	return i != 0
-}
-
-// floatToBool float64 -> bool
-func floatToBool(f float64) bool {
-	return f != 0
-}
-
 func floatToInt(f float64) int64 {
 	return int64(f)
 }
