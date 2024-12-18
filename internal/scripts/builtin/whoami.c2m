@@ -5,7 +5,7 @@ alias(
       return m_error(bid, "invalid number of arguments");
     }
 
-    m_notify(bid, "tmasked beacon to whoami");
+    m_notify(bid, "tasked beacon to whoami");
     return b_whoami(bid);
   },
   "print current beacon process user",
