@@ -332,12 +332,25 @@ func (t *taskGroupsMapper) Add(v *TaskGroup) {
 	t.Fill()
 }
 
-// получение списка отсортированных биконов
+// получение списка отсортированных таск групп
 func (t *taskGroupsMapper) Get() []*TaskGroup {
 	return t.sorted.taskGroups
 }
 
-// получение бикона по id
+// получение всех тасок в таск группах
+func (t *taskGroupsMapper) GetTasks() []*Task {
+	temp := make([]*Task, 0)
+	t.taskGroups.Range(func(k int64, v *TaskGroup) bool {
+		v.data.tasks.Range(func(key int64, value *Task) bool {
+			temp = append(temp, value)
+			return true
+		})
+		return true
+	})
+	return temp
+}
+
+// получение таск группы по id
 func (t *taskGroupsMapper) GetById(id int64) *TaskGroup {
 	if v, ok := t.taskGroups.Load(id); ok {
 		return v
@@ -345,19 +358,19 @@ func (t *taskGroupsMapper) GetById(id int64) *TaskGroup {
 	return nil
 }
 
-// получение количества биконов в мапе
+// получение количества таск групп в мапе
 func (t *taskGroupsMapper) Count() int {
 	return t.taskGroups.Count()
 }
 
-// сортировка списка с биконами
+// сортировка списка с таск группами
 func (t *taskGroups) Sort() {
 	sort.SliceStable(t.taskGroups, func(i, j int) bool {
 		return t.taskGroups[i].GetCreatedAt().Before(t.taskGroups[j].GetCreatedAt())
 	})
 }
 
-// заполнение списка с биконами на базе мапы с дефолтной сортировкой
+// заполнение списка с таск группами на базе мапы с дефолтной сортировкой
 func (t *taskGroupsMapper) Fill() {
 	temp := &taskGroups{
 		taskGroups: make([]*TaskGroup, 0),

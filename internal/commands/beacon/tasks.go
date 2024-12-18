@@ -46,7 +46,18 @@ func tasksDownloadCommand(*console.Console) *cobra.Command {
 			color.Green("output saved to %s", args[1])
 		},
 	}
-	// TODO: autocomplete
+	// автокомплит
+	// arg1: task id
+	// arg2: fs
+	carapace.Gen(tasksDownloadCmd).PositionalCompletion(carapace.ActionCallback(func(c carapace.Context) carapace.Action {
+		var suggestions []string
+		for _, v := range task.TaskGroups.GetTasks() {
+			suggestions = append(suggestions, strconv.Itoa(int(v.GetId())))
+		}
+		return carapace.ActionValues(suggestions...)
+	}), carapace.ActionCallback(func(c carapace.Context) carapace.Action {
+		return carapace.ActionFiles()
+	}))
 	return tasksDownloadCmd
 }
 
