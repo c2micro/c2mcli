@@ -399,3 +399,16 @@ func NewTask(id uint32, v *operatorv1.NewTaskRequest) error {
 		},
 	})
 }
+
+// отмена всех тасок, поставленных оператором
+func CancelTasks(id uint32) error {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+	_, err := getSvc().CancelTasks(ctx, &operatorv1.CancelTasksRequest{
+		Cookie: &operatorv1.SessionCookie{
+			Value: operatorConn.metadata.cookie,
+		},
+		Bid: id,
+	})
+	return err
+}

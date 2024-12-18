@@ -10,6 +10,7 @@ import (
 func lastCommand(c *console.Console) *cobra.Command {
 	return &cobra.Command{
 		Use:                   "last",
+		Aliases:               []string{"l"},
 		Short:                 "get output of last task",
 		DisableFlagsInUseLine: true,
 		Run: func(cmd *cobra.Command, args []string) {

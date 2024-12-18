@@ -60,6 +60,7 @@ func tasksCommand(c *console.Console) *cobra.Command {
 	tasksCmd := &cobra.Command{
 		Use:                   "tasks",
 		Short:                 "show tasks for beacon",
+		Aliases:               []string{"t"},
 		DisableFlagsInUseLine: true,
 		Run: func(cmd *cobra.Command, args []string) {
 			for _, v := range task.TaskGroups.Get() {
