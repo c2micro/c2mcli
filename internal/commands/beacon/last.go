@@ -22,23 +22,7 @@ func lastCommand(c *console.Console) *cobra.Command {
 				return
 			}
 			for _, v := range tg.GetData().Get() {
-				switch data := v.(type) {
-				case *task.Message:
-					c.Printf("%s\n", data.String())
-				case *task.Task:
-					preambule := data.StringStatus()
-					if preambule != "" {
-						c.Printf("%s\n", preambule)
-					}
-					if data.GetIsOutputBig() {
-						color.YellowString("output of task is to big. Download it directly (TODO)")
-						continue
-					}
-					output := data.GetOutputString()
-					if output != "" {
-						c.Printf("%s\n", output)
-					}
-				}
+				printTaskGroupData(c, v)
 			}
 		},
 	}

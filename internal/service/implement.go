@@ -412,3 +412,19 @@ func CancelTasks(id uint32) error {
 	})
 	return err
 }
+
+// получение output'a таска
+func GetTaskOutput(id int64) ([]byte, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+	rep, err := getSvc().GetTaskOutput(ctx, &operatorv1.GetTaskOutputRequest{
+		Cookie: &operatorv1.SessionCookie{
+			Value: operatorConn.metadata.cookie,
+		},
+		Tid: id,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return rep.GetOutput().GetValue(), nil
+}

@@ -1,7 +1,7 @@
 github.com/antlr4-go/antlr/v4 v4.13.1 h1:SqQKkuVZ+zWkMMNkjy5FZe5mr5WURWnlpmOuzYWrPrQ=
 github.com/antlr4-go/antlr/v4 v4.13.1/go.mod h1:GKmUxMtwp6ZgGwZSva4eWPC5mS6vUAmOABFgjdkM7Nw=
-github.com/c2micro/c2mshr v0.0.0-20241217122157-da2b71e6175c h1:ilNLRsvlyJU4omGRUkbGGa577w8NwkcN9LdhwFIDtQs=
-github.com/c2micro/c2mshr v0.0.0-20241217122157-da2b71e6175c/go.mod h1:1O107tF3CP+QYstt69dJ0FmctzykTwxOOgQkRoD15bc=
+github.com/c2micro/c2mshr v0.0.0-20241218163131-bc2ecc1fec9d h1:ct6dZqyv25+BFl82yyYiZ+dM835TtJ8Tgoks6Fnwbrg=
+github.com/c2micro/c2mshr v0.0.0-20241218163131-bc2ecc1fec9d/go.mod h1:1O107tF3CP+QYstt69dJ0FmctzykTwxOOgQkRoD15bc=
 github.com/c2micro/mlan v0.0.0-20241218151639-6af2f5656c3c h1:4mREAn1HjvZGHNczqtJXNFlWuefCSBnv7TXx7TFzth4=
 github.com/c2micro/mlan v0.0.0-20241218151639-6af2f5656c3c/go.mod h1:ux5C9JgcoMFke/+/HCuhZaYfRtE+PgDHcGhGRVW7gIM=
 github.com/cpuguy83/go-md2man/v2 v2.0.3/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46tRHOmNcaadrF8o=
