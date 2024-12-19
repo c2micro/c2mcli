@@ -2,7 +2,6 @@ package object
 
 import (
 	"fmt"
-	"reflect"
 	"strings"
 
 	"github.com/c2micro/mlan/pkg/parser"
@@ -11,11 +10,20 @@ import (
 // Dict мапа
 type Dict struct {
 	Impl
-	value map[string]Object
+	value   map[string]Object
+	methods map[string]*BuiltinFunc
 }
 
 func NewDict(v map[string]Object) *Dict {
-	return &Dict{value: v}
+	d := &Dict{value: v}
+	d.fillMethods()
+	return d
+}
+
+func (o *Dict) fillMethods() {
+	o.methods = make(map[string]*BuiltinFunc)
+	o.methods["len"] = NewBuiltinFunc("len", o.MethodLen)
+	o.methods["pop"] = NewBuiltinFunc("pop", o.MethodPop)
 }
 
 func (o *Dict) TypeName() string {
@@ -123,7 +131,22 @@ func (o *Dict) Equal(rs Object) (Object, error) {
 	case *Bool:
 		return NewBool(false), nil
 	case *Dict:
-		return NewBool(reflect.DeepEqual(o.value, rs.(*Dict).value)), nil
+		if len(o.value) != len(rs.(*Dict).value) {
+			return NewBool(false), nil
+		}
+		for k, v := range o.value {
+			if (rs.(*Dict).value)[k] == nil {
+				return NewBool(false), nil
+			}
+			val, err := v.Equal(rs.(*Dict).value[k])
+			if err != nil {
+				return nil, err
+			}
+			if !val.(*Bool).value {
+				return NewBool(false), nil
+			}
+		}
+		return NewBool(true), nil
 	case *Float:
 		return NewBool(false), nil
 	case *Int:
@@ -143,7 +166,22 @@ func (o *Dict) NotEqual(rs Object) (Object, error) {
 	case *Bool:
 		return NewBool(true), nil
 	case *Dict:
-		return NewBool(!reflect.DeepEqual(o.value, rs.(*Dict).value)), nil
+		if len(o.value) != len(rs.(*Dict).value) {
+			return NewBool(true), nil
+		}
+		for k, v := range o.value {
+			if (rs.(*Dict).value)[k] == nil {
+				return NewBool(true), nil
+			}
+			val, err := v.Equal(rs.(*Dict).value[k])
+			if err != nil {
+				return nil, err
+			}
+			if !val.(*Bool).value {
+				return NewBool(true), nil
+			}
+		}
+		return NewBool(false), nil
 	case *Float:
 		return NewBool(true), nil
 	case *Int:
@@ -156,4 +194,31 @@ func (o *Dict) NotEqual(rs Object) (Object, error) {
 		return NewBool(true), nil
 	}
 	return nil, ErrInvalidOp
+}
+
+func (o *Dict) MethodCall(name string, args ...Object) (Object, error) {
+	m := o.methods[name]
+	if m == nil {
+		return nil, ErrUnknownMethod
+	}
+	return m.Call(args...)
+}
+
+func (o *Dict) MethodLen(args ...Object) (Object, error) {
+	if len(args) > 0 {
+		return nil, fmt.Errorf("expecting 0 arguments, got %d", len(args))
+	}
+	return NewInt(int64(len(o.value))), nil
+}
+
+func (o *Dict) MethodPop(args ...Object) (Object, error) {
+	if len(args) != 1 {
+		return nil, fmt.Errorf("expecting 1 arguments, got %d", len(args))
+	}
+	key, ok := args[0].(*Str)
+	if !ok {
+		return nil, fmt.Errorf("expecting str as 1st argument, got '%s'", args[1].TypeName())
+	}
+	delete(o.value, key.GetValue().(string))
+	return NewNull(), nil
 }

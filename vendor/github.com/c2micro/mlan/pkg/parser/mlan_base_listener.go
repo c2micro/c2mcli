@@ -20,107 +20,95 @@ func (s *BaseMlanListener) EnterEveryRule(ctx antlr.ParserRuleContext) {}
 // ExitEveryRule is called when any rule is exited.
 func (s *BaseMlanListener) ExitEveryRule(ctx antlr.ParserRuleContext) {}
 
-// EnterProgram is called when production program is entered.
-func (s *BaseMlanListener) EnterProgram(ctx *ProgramContext) {}
+// EnterProg is called when production prog is entered.
+func (s *BaseMlanListener) EnterProg(ctx *ProgContext) {}
 
-// ExitProgram is called when production program is exited.
-func (s *BaseMlanListener) ExitProgram(ctx *ProgramContext) {}
+// ExitProg is called when production prog is exited.
+func (s *BaseMlanListener) ExitProg(ctx *ProgContext) {}
 
-// EnterBlock is called when production block is entered.
-func (s *BaseMlanListener) EnterBlock(ctx *BlockContext) {}
+// EnterStmt is called when production stmt is entered.
+func (s *BaseMlanListener) EnterStmt(ctx *StmtContext) {}
 
-// ExitBlock is called when production block is exited.
-func (s *BaseMlanListener) ExitBlock(ctx *BlockContext) {}
+// ExitStmt is called when production stmt is exited.
+func (s *BaseMlanListener) ExitStmt(ctx *StmtContext) {}
 
-// EnterStatement is called when production statement is entered.
-func (s *BaseMlanListener) EnterStatement(ctx *StatementContext) {}
+// EnterWhileStmt is called when production whileStmt is entered.
+func (s *BaseMlanListener) EnterWhileStmt(ctx *WhileStmtContext) {}
 
-// ExitStatement is called when production statement is exited.
-func (s *BaseMlanListener) ExitStatement(ctx *StatementContext) {}
+// ExitWhileStmt is called when production whileStmt is exited.
+func (s *BaseMlanListener) ExitWhileStmt(ctx *WhileStmtContext) {}
 
-// EnterWhileStatement is called when production whileStatement is entered.
-func (s *BaseMlanListener) EnterWhileStatement(ctx *WhileStatementContext) {}
+// EnterForStmt is called when production forStmt is entered.
+func (s *BaseMlanListener) EnterForStmt(ctx *ForStmtContext) {}
 
-// ExitWhileStatement is called when production whileStatement is exited.
-func (s *BaseMlanListener) ExitWhileStatement(ctx *WhileStatementContext) {}
+// ExitForStmt is called when production forStmt is exited.
+func (s *BaseMlanListener) ExitForStmt(ctx *ForStmtContext) {}
 
-// EnterForStatement is called when production forStatement is entered.
-func (s *BaseMlanListener) EnterForStatement(ctx *ForStatementContext) {}
+// EnterReturnStmt is called when production returnStmt is entered.
+func (s *BaseMlanListener) EnterReturnStmt(ctx *ReturnStmtContext) {}
 
-// ExitForStatement is called when production forStatement is exited.
-func (s *BaseMlanListener) ExitForStatement(ctx *ForStatementContext) {}
+// ExitReturnStmt is called when production returnStmt is exited.
+func (s *BaseMlanListener) ExitReturnStmt(ctx *ReturnStmtContext) {}
 
-// EnterReturnStatement is called when production returnStatement is entered.
-func (s *BaseMlanListener) EnterReturnStatement(ctx *ReturnStatementContext) {}
+// EnterContinueStmt is called when production continueStmt is entered.
+func (s *BaseMlanListener) EnterContinueStmt(ctx *ContinueStmtContext) {}
 
-// ExitReturnStatement is called when production returnStatement is exited.
-func (s *BaseMlanListener) ExitReturnStatement(ctx *ReturnStatementContext) {}
+// ExitContinueStmt is called when production continueStmt is exited.
+func (s *BaseMlanListener) ExitContinueStmt(ctx *ContinueStmtContext) {}
 
-// EnterContinueStatement is called when production continueStatement is entered.
-func (s *BaseMlanListener) EnterContinueStatement(ctx *ContinueStatementContext) {}
+// EnterBreakStmt is called when production breakStmt is entered.
+func (s *BaseMlanListener) EnterBreakStmt(ctx *BreakStmtContext) {}
 
-// ExitContinueStatement is called when production continueStatement is exited.
-func (s *BaseMlanListener) ExitContinueStatement(ctx *ContinueStatementContext) {}
+// ExitBreakStmt is called when production breakStmt is exited.
+func (s *BaseMlanListener) ExitBreakStmt(ctx *BreakStmtContext) {}
 
-// EnterBreakStatement is called when production breakStatement is entered.
-func (s *BaseMlanListener) EnterBreakStatement(ctx *BreakStatementContext) {}
+// EnterAssignRegular is called when production assignRegular is entered.
+func (s *BaseMlanListener) EnterAssignRegular(ctx *AssignRegularContext) {}
 
-// ExitBreakStatement is called when production breakStatement is exited.
-func (s *BaseMlanListener) ExitBreakStatement(ctx *BreakStatementContext) {}
+// ExitAssignRegular is called when production assignRegular is exited.
+func (s *BaseMlanListener) ExitAssignRegular(ctx *AssignRegularContext) {}
 
-// EnterAssignmentRegular is called when production assignmentRegular is entered.
-func (s *BaseMlanListener) EnterAssignmentRegular(ctx *AssignmentRegularContext) {}
+// EnterAssignSum is called when production assignSum is entered.
+func (s *BaseMlanListener) EnterAssignSum(ctx *AssignSumContext) {}
 
-// ExitAssignmentRegular is called when production assignmentRegular is exited.
-func (s *BaseMlanListener) ExitAssignmentRegular(ctx *AssignmentRegularContext) {}
+// ExitAssignSum is called when production assignSum is exited.
+func (s *BaseMlanListener) ExitAssignSum(ctx *AssignSumContext) {}
 
-// EnterAssignmentClosure is called when production assignmentClosure is entered.
-func (s *BaseMlanListener) EnterAssignmentClosure(ctx *AssignmentClosureContext) {}
+// EnterAssignSub is called when production assignSub is entered.
+func (s *BaseMlanListener) EnterAssignSub(ctx *AssignSubContext) {}
 
-// ExitAssignmentClosure is called when production assignmentClosure is exited.
-func (s *BaseMlanListener) ExitAssignmentClosure(ctx *AssignmentClosureContext) {}
+// ExitAssignSub is called when production assignSub is exited.
+func (s *BaseMlanListener) ExitAssignSub(ctx *AssignSubContext) {}
 
-// EnterAssignmentSum is called when production assignmentSum is entered.
-func (s *BaseMlanListener) EnterAssignmentSum(ctx *AssignmentSumContext) {}
+// EnterAssignMul is called when production assignMul is entered.
+func (s *BaseMlanListener) EnterAssignMul(ctx *AssignMulContext) {}
 
-// ExitAssignmentSum is called when production assignmentSum is exited.
-func (s *BaseMlanListener) ExitAssignmentSum(ctx *AssignmentSumContext) {}
+// ExitAssignMul is called when production assignMul is exited.
+func (s *BaseMlanListener) ExitAssignMul(ctx *AssignMulContext) {}
 
-// EnterAssignmentSub is called when production assignmentSub is entered.
-func (s *BaseMlanListener) EnterAssignmentSub(ctx *AssignmentSubContext) {}
+// EnterAssignDiv is called when production assignDiv is entered.
+func (s *BaseMlanListener) EnterAssignDiv(ctx *AssignDivContext) {}
 
-// ExitAssignmentSub is called when production assignmentSub is exited.
-func (s *BaseMlanListener) ExitAssignmentSub(ctx *AssignmentSubContext) {}
+// ExitAssignDiv is called when production assignDiv is exited.
+func (s *BaseMlanListener) ExitAssignDiv(ctx *AssignDivContext) {}
 
-// EnterAssignmentMul is called when production assignmentMul is entered.
-func (s *BaseMlanListener) EnterAssignmentMul(ctx *AssignmentMulContext) {}
+// EnterAssignMod is called when production assignMod is entered.
+func (s *BaseMlanListener) EnterAssignMod(ctx *AssignModContext) {}
 
-// ExitAssignmentMul is called when production assignmentMul is exited.
-func (s *BaseMlanListener) ExitAssignmentMul(ctx *AssignmentMulContext) {}
+// ExitAssignMod is called when production assignMod is exited.
+func (s *BaseMlanListener) ExitAssignMod(ctx *AssignModContext) {}
 
-// EnterAssignmentDiv is called when production assignmentDiv is entered.
-func (s *BaseMlanListener) EnterAssignmentDiv(ctx *AssignmentDivContext) {}
+// EnterAssignPow is called when production assignPow is entered.
+func (s *BaseMlanListener) EnterAssignPow(ctx *AssignPowContext) {}
 
-// ExitAssignmentDiv is called when production assignmentDiv is exited.
-func (s *BaseMlanListener) ExitAssignmentDiv(ctx *AssignmentDivContext) {}
+// ExitAssignPow is called when production assignPow is exited.
+func (s *BaseMlanListener) ExitAssignPow(ctx *AssignPowContext) {}
 
-// EnterAssignmentMod is called when production assignmentMod is entered.
-func (s *BaseMlanListener) EnterAssignmentMod(ctx *AssignmentModContext) {}
+// EnterAssignIdxRegular is called when production assignIdxRegular is entered.
+func (s *BaseMlanListener) EnterAssignIdxRegular(ctx *AssignIdxRegularContext) {}
 
-// ExitAssignmentMod is called when production assignmentMod is exited.
-func (s *BaseMlanListener) ExitAssignmentMod(ctx *AssignmentModContext) {}
-
-// EnterAssignmentPow is called when production assignmentPow is entered.
-func (s *BaseMlanListener) EnterAssignmentPow(ctx *AssignmentPowContext) {}
-
-// ExitAssignmentPow is called when production assignmentPow is exited.
-func (s *BaseMlanListener) ExitAssignmentPow(ctx *AssignmentPowContext) {}
-
-// EnterAssignmentIndexRegular is called when production assignmentIndexRegular is entered.
-func (s *BaseMlanListener) EnterAssignmentIndexRegular(ctx *AssignmentIndexRegularContext) {}
-
-// ExitAssignmentIndexRegular is called when production assignmentIndexRegular is exited.
-func (s *BaseMlanListener) ExitAssignmentIndexRegular(ctx *AssignmentIndexRegularContext) {}
+// ExitAssignIdxRegular is called when production assignIdxRegular is exited.
+func (s *BaseMlanListener) ExitAssignIdxRegular(ctx *AssignIdxRegularContext) {}
 
 // EnterList is called when production list is entered.
 func (s *BaseMlanListener) EnterList(ctx *ListContext) {}
@@ -140,212 +128,230 @@ func (s *BaseMlanListener) EnterDict(ctx *DictContext) {}
 // ExitDict is called when production dict is exited.
 func (s *BaseMlanListener) ExitDict(ctx *DictContext) {}
 
-// EnterIndex is called when production index is entered.
-func (s *BaseMlanListener) EnterIndex(ctx *IndexContext) {}
+// EnterIdx is called when production idx is entered.
+func (s *BaseMlanListener) EnterIdx(ctx *IdxContext) {}
 
-// ExitIndex is called when production index is exited.
-func (s *BaseMlanListener) ExitIndex(ctx *IndexContext) {}
+// ExitIdx is called when production idx is exited.
+func (s *BaseMlanListener) ExitIdx(ctx *IdxContext) {}
 
-// EnterIdentifierFunctionInvoke is called when production identifierFunctionInvoke is entered.
-func (s *BaseMlanListener) EnterIdentifierFunctionInvoke(ctx *IdentifierFunctionInvokeContext) {}
+// EnterIdentifierMethodInvoke is called when production identifierMethodInvoke is entered.
+func (s *BaseMlanListener) EnterIdentifierMethodInvoke(ctx *IdentifierMethodInvokeContext) {}
 
-// ExitIdentifierFunctionInvoke is called when production identifierFunctionInvoke is exited.
-func (s *BaseMlanListener) ExitIdentifierFunctionInvoke(ctx *IdentifierFunctionInvokeContext) {}
+// ExitIdentifierMethodInvoke is called when production identifierMethodInvoke is exited.
+func (s *BaseMlanListener) ExitIdentifierMethodInvoke(ctx *IdentifierMethodInvokeContext) {}
 
-// EnterIdentifierClosureInvoke is called when production identifierClosureInvoke is entered.
-func (s *BaseMlanListener) EnterIdentifierClosureInvoke(ctx *IdentifierClosureInvokeContext) {}
+// EnterIdentifierFnInvoke is called when production identifierFnInvoke is entered.
+func (s *BaseMlanListener) EnterIdentifierFnInvoke(ctx *IdentifierFnInvokeContext) {}
 
-// ExitIdentifierClosureInvoke is called when production identifierClosureInvoke is exited.
-func (s *BaseMlanListener) ExitIdentifierClosureInvoke(ctx *IdentifierClosureInvokeContext) {}
+// ExitIdentifierFnInvoke is called when production identifierFnInvoke is exited.
+func (s *BaseMlanListener) ExitIdentifierFnInvoke(ctx *IdentifierFnInvokeContext) {}
 
-// EnterExpressionIntegerHex is called when production expressionIntegerHex is entered.
-func (s *BaseMlanListener) EnterExpressionIntegerHex(ctx *ExpressionIntegerHexContext) {}
+// EnterIdentifierCsInvoke is called when production identifierCsInvoke is entered.
+func (s *BaseMlanListener) EnterIdentifierCsInvoke(ctx *IdentifierCsInvokeContext) {}
 
-// ExitExpressionIntegerHex is called when production expressionIntegerHex is exited.
-func (s *BaseMlanListener) ExitExpressionIntegerHex(ctx *ExpressionIntegerHexContext) {}
+// ExitIdentifierCsInvoke is called when production identifierCsInvoke is exited.
+func (s *BaseMlanListener) ExitIdentifierCsInvoke(ctx *IdentifierCsInvokeContext) {}
 
-// EnterExpressionFunctionInvoke is called when production expressionFunctionInvoke is entered.
-func (s *BaseMlanListener) EnterExpressionFunctionInvoke(ctx *ExpressionFunctionInvokeContext) {}
+// EnterExpBool is called when production expBool is entered.
+func (s *BaseMlanListener) EnterExpBool(ctx *ExpBoolContext) {}
 
-// ExitExpressionFunctionInvoke is called when production expressionFunctionInvoke is exited.
-func (s *BaseMlanListener) ExitExpressionFunctionInvoke(ctx *ExpressionFunctionInvokeContext) {}
+// ExitExpBool is called when production expBool is exited.
+func (s *BaseMlanListener) ExitExpBool(ctx *ExpBoolContext) {}
 
-// EnterExpressionUnaryNegation is called when production expressionUnaryNegation is entered.
-func (s *BaseMlanListener) EnterExpressionUnaryNegation(ctx *ExpressionUnaryNegationContext) {}
+// EnterExpComparison is called when production expComparison is entered.
+func (s *BaseMlanListener) EnterExpComparison(ctx *ExpComparisonContext) {}
 
-// ExitExpressionUnaryNegation is called when production expressionUnaryNegation is exited.
-func (s *BaseMlanListener) ExitExpressionUnaryNegation(ctx *ExpressionUnaryNegationContext) {}
+// ExitExpComparison is called when production expComparison is exited.
+func (s *BaseMlanListener) ExitExpComparison(ctx *ExpComparisonContext) {}
 
-// EnterExpressionBool is called when production expressionBool is entered.
-func (s *BaseMlanListener) EnterExpressionBool(ctx *ExpressionBoolContext) {}
+// EnterExpIdx is called when production expIdx is entered.
+func (s *BaseMlanListener) EnterExpIdx(ctx *ExpIdxContext) {}
 
-// ExitExpressionBool is called when production expressionBool is exited.
-func (s *BaseMlanListener) ExitExpressionBool(ctx *ExpressionBoolContext) {}
+// ExitExpIdx is called when production expIdx is exited.
+func (s *BaseMlanListener) ExitExpIdx(ctx *ExpIdxContext) {}
 
-// EnterExpressionPow is called when production expressionPow is entered.
-func (s *BaseMlanListener) EnterExpressionPow(ctx *ExpressionPowContext) {}
+// EnterExpString is called when production expString is entered.
+func (s *BaseMlanListener) EnterExpString(ctx *ExpStringContext) {}
 
-// ExitExpressionPow is called when production expressionPow is exited.
-func (s *BaseMlanListener) ExitExpressionPow(ctx *ExpressionPowContext) {}
+// ExitExpString is called when production expString is exited.
+func (s *BaseMlanListener) ExitExpString(ctx *ExpStringContext) {}
 
-// EnterExpressionXor is called when production expressionXor is entered.
-func (s *BaseMlanListener) EnterExpressionXor(ctx *ExpressionXorContext) {}
+// EnterExpCsInvoke is called when production expCsInvoke is entered.
+func (s *BaseMlanListener) EnterExpCsInvoke(ctx *ExpCsInvokeContext) {}
 
-// ExitExpressionXor is called when production expressionXor is exited.
-func (s *BaseMlanListener) ExitExpressionXor(ctx *ExpressionXorContext) {}
+// ExitExpCsInvoke is called when production expCsInvoke is exited.
+func (s *BaseMlanListener) ExitExpCsInvoke(ctx *ExpCsInvokeContext) {}
 
-// EnterExpressionEqual is called when production expressionEqual is entered.
-func (s *BaseMlanListener) EnterExpressionEqual(ctx *ExpressionEqualContext) {}
+// EnterExpFloat is called when production expFloat is entered.
+func (s *BaseMlanListener) EnterExpFloat(ctx *ExpFloatContext) {}
 
-// ExitExpressionEqual is called when production expressionEqual is exited.
-func (s *BaseMlanListener) ExitExpressionEqual(ctx *ExpressionEqualContext) {}
+// ExitExpFloat is called when production expFloat is exited.
+func (s *BaseMlanListener) ExitExpFloat(ctx *ExpFloatContext) {}
 
-// EnterExpressionClosure is called when production expressionClosure is entered.
-func (s *BaseMlanListener) EnterExpressionClosure(ctx *ExpressionClosureContext) {}
+// EnterExpPow is called when production expPow is entered.
+func (s *BaseMlanListener) EnterExpPow(ctx *ExpPowContext) {}
 
-// ExitExpressionClosure is called when production expressionClosure is exited.
-func (s *BaseMlanListener) ExitExpressionClosure(ctx *ExpressionClosureContext) {}
+// ExitExpPow is called when production expPow is exited.
+func (s *BaseMlanListener) ExitExpPow(ctx *ExpPowContext) {}
 
-// EnterExpressionDict is called when production expressionDict is entered.
-func (s *BaseMlanListener) EnterExpressionDict(ctx *ExpressionDictContext) {}
+// EnterExpDict is called when production expDict is entered.
+func (s *BaseMlanListener) EnterExpDict(ctx *ExpDictContext) {}
 
-// ExitExpressionDict is called when production expressionDict is exited.
-func (s *BaseMlanListener) ExitExpressionDict(ctx *ExpressionDictContext) {}
+// ExitExpDict is called when production expDict is exited.
+func (s *BaseMlanListener) ExitExpDict(ctx *ExpDictContext) {}
 
-// EnterExpressionIdentifier is called when production expressionIdentifier is entered.
-func (s *BaseMlanListener) EnterExpressionIdentifier(ctx *ExpressionIdentifierContext) {}
+// EnterExpXor is called when production expXor is entered.
+func (s *BaseMlanListener) EnterExpXor(ctx *ExpXorContext) {}
 
-// ExitExpressionIdentifier is called when production expressionIdentifier is exited.
-func (s *BaseMlanListener) ExitExpressionIdentifier(ctx *ExpressionIdentifierContext) {}
+// ExitExpXor is called when production expXor is exited.
+func (s *BaseMlanListener) ExitExpXor(ctx *ExpXorContext) {}
 
-// EnterExpressionList is called when production expressionList is entered.
-func (s *BaseMlanListener) EnterExpressionList(ctx *ExpressionListContext) {}
+// EnterExpNeg is called when production expNeg is entered.
+func (s *BaseMlanListener) EnterExpNeg(ctx *ExpNegContext) {}
 
-// ExitExpressionList is called when production expressionList is exited.
-func (s *BaseMlanListener) ExitExpressionList(ctx *ExpressionListContext) {}
+// ExitExpNeg is called when production expNeg is exited.
+func (s *BaseMlanListener) ExitExpNeg(ctx *ExpNegContext) {}
 
-// EnterExpressionSumSub is called when production expressionSumSub is entered.
-func (s *BaseMlanListener) EnterExpressionSumSub(ctx *ExpressionSumSubContext) {}
+// EnterExpInteger is called when production expInteger is entered.
+func (s *BaseMlanListener) EnterExpInteger(ctx *ExpIntegerContext) {}
 
-// ExitExpressionSumSub is called when production expressionSumSub is exited.
-func (s *BaseMlanListener) ExitExpressionSumSub(ctx *ExpressionSumSubContext) {}
+// ExitExpInteger is called when production expInteger is exited.
+func (s *BaseMlanListener) ExitExpInteger(ctx *ExpIntegerContext) {}
 
-// EnterExpressionComparison is called when production expressionComparison is entered.
-func (s *BaseMlanListener) EnterExpressionComparison(ctx *ExpressionComparisonContext) {}
+// EnterExpLogicalOr is called when production expLogicalOr is entered.
+func (s *BaseMlanListener) EnterExpLogicalOr(ctx *ExpLogicalOrContext) {}
 
-// ExitExpressionComparison is called when production expressionComparison is exited.
-func (s *BaseMlanListener) ExitExpressionComparison(ctx *ExpressionComparisonContext) {}
+// ExitExpLogicalOr is called when production expLogicalOr is exited.
+func (s *BaseMlanListener) ExitExpLogicalOr(ctx *ExpLogicalOrContext) {}
 
-// EnterExpressionLogicalOr is called when production expressionLogicalOr is entered.
-func (s *BaseMlanListener) EnterExpressionLogicalOr(ctx *ExpressionLogicalOrContext) {}
+// EnterExpCs is called when production expCs is entered.
+func (s *BaseMlanListener) EnterExpCs(ctx *ExpCsContext) {}
 
-// ExitExpressionLogicalOr is called when production expressionLogicalOr is exited.
-func (s *BaseMlanListener) ExitExpressionLogicalOr(ctx *ExpressionLogicalOrContext) {}
+// ExitExpCs is called when production expCs is exited.
+func (s *BaseMlanListener) ExitExpCs(ctx *ExpCsContext) {}
 
-// EnterExpressionIndex is called when production expressionIndex is entered.
-func (s *BaseMlanListener) EnterExpressionIndex(ctx *ExpressionIndexContext) {}
+// EnterExpMulDivMod is called when production expMulDivMod is entered.
+func (s *BaseMlanListener) EnterExpMulDivMod(ctx *ExpMulDivModContext) {}
 
-// ExitExpressionIndex is called when production expressionIndex is exited.
-func (s *BaseMlanListener) ExitExpressionIndex(ctx *ExpressionIndexContext) {}
+// ExitExpMulDivMod is called when production expMulDivMod is exited.
+func (s *BaseMlanListener) ExitExpMulDivMod(ctx *ExpMulDivModContext) {}
 
-// EnterExpressionLogicalNot is called when production expressionLogicalNot is entered.
-func (s *BaseMlanListener) EnterExpressionLogicalNot(ctx *ExpressionLogicalNotContext) {}
+// EnterExpNull is called when production expNull is entered.
+func (s *BaseMlanListener) EnterExpNull(ctx *ExpNullContext) {}
 
-// ExitExpressionLogicalNot is called when production expressionLogicalNot is exited.
-func (s *BaseMlanListener) ExitExpressionLogicalNot(ctx *ExpressionLogicalNotContext) {}
+// ExitExpNull is called when production expNull is exited.
+func (s *BaseMlanListener) ExitExpNull(ctx *ExpNullContext) {}
 
-// EnterExpressionClosureInvoke is called when production expressionClosureInvoke is entered.
-func (s *BaseMlanListener) EnterExpressionClosureInvoke(ctx *ExpressionClosureInvokeContext) {}
+// EnterExpFnInvoke is called when production expFnInvoke is entered.
+func (s *BaseMlanListener) EnterExpFnInvoke(ctx *ExpFnInvokeContext) {}
 
-// ExitExpressionClosureInvoke is called when production expressionClosureInvoke is exited.
-func (s *BaseMlanListener) ExitExpressionClosureInvoke(ctx *ExpressionClosureInvokeContext) {}
+// ExitExpFnInvoke is called when production expFnInvoke is exited.
+func (s *BaseMlanListener) ExitExpFnInvoke(ctx *ExpFnInvokeContext) {}
 
-// EnterExpressionParentheses is called when production expressionParentheses is entered.
-func (s *BaseMlanListener) EnterExpressionParentheses(ctx *ExpressionParenthesesContext) {}
+// EnterExpList is called when production expList is entered.
+func (s *BaseMlanListener) EnterExpList(ctx *ExpListContext) {}
 
-// ExitExpressionParentheses is called when production expressionParentheses is exited.
-func (s *BaseMlanListener) ExitExpressionParentheses(ctx *ExpressionParenthesesContext) {}
+// ExitExpList is called when production expList is exited.
+func (s *BaseMlanListener) ExitExpList(ctx *ExpListContext) {}
 
-// EnterExpressionMulDivMod is called when production expressionMulDivMod is entered.
-func (s *BaseMlanListener) EnterExpressionMulDivMod(ctx *ExpressionMulDivModContext) {}
+// EnterExpLogicalAnd is called when production expLogicalAnd is entered.
+func (s *BaseMlanListener) EnterExpLogicalAnd(ctx *ExpLogicalAndContext) {}
 
-// ExitExpressionMulDivMod is called when production expressionMulDivMod is exited.
-func (s *BaseMlanListener) ExitExpressionMulDivMod(ctx *ExpressionMulDivModContext) {}
+// ExitExpLogicalAnd is called when production expLogicalAnd is exited.
+func (s *BaseMlanListener) ExitExpLogicalAnd(ctx *ExpLogicalAndContext) {}
 
-// EnterExpressionLogicalAnd is called when production expressionLogicalAnd is entered.
-func (s *BaseMlanListener) EnterExpressionLogicalAnd(ctx *ExpressionLogicalAndContext) {}
+// EnterExpParentheses is called when production expParentheses is entered.
+func (s *BaseMlanListener) EnterExpParentheses(ctx *ExpParenthesesContext) {}
 
-// ExitExpressionLogicalAnd is called when production expressionLogicalAnd is exited.
-func (s *BaseMlanListener) ExitExpressionLogicalAnd(ctx *ExpressionLogicalAndContext) {}
+// ExitExpParentheses is called when production expParentheses is exited.
+func (s *BaseMlanListener) ExitExpParentheses(ctx *ExpParenthesesContext) {}
 
-// EnterExpressionFloat is called when production expressionFloat is entered.
-func (s *BaseMlanListener) EnterExpressionFloat(ctx *ExpressionFloatContext) {}
+// EnterExpEqual is called when production expEqual is entered.
+func (s *BaseMlanListener) EnterExpEqual(ctx *ExpEqualContext) {}
 
-// ExitExpressionFloat is called when production expressionFloat is exited.
-func (s *BaseMlanListener) ExitExpressionFloat(ctx *ExpressionFloatContext) {}
+// ExitExpEqual is called when production expEqual is exited.
+func (s *BaseMlanListener) ExitExpEqual(ctx *ExpEqualContext) {}
 
-// EnterExpressionInteger is called when production expressionInteger is entered.
-func (s *BaseMlanListener) EnterExpressionInteger(ctx *ExpressionIntegerContext) {}
+// EnterExpMethodInvoke is called when production expMethodInvoke is entered.
+func (s *BaseMlanListener) EnterExpMethodInvoke(ctx *ExpMethodInvokeContext) {}
 
-// ExitExpressionInteger is called when production expressionInteger is exited.
-func (s *BaseMlanListener) ExitExpressionInteger(ctx *ExpressionIntegerContext) {}
+// ExitExpMethodInvoke is called when production expMethodInvoke is exited.
+func (s *BaseMlanListener) ExitExpMethodInvoke(ctx *ExpMethodInvokeContext) {}
 
-// EnterExpressionNull is called when production expressionNull is entered.
-func (s *BaseMlanListener) EnterExpressionNull(ctx *ExpressionNullContext) {}
+// EnterExpLogicalNot is called when production expLogicalNot is entered.
+func (s *BaseMlanListener) EnterExpLogicalNot(ctx *ExpLogicalNotContext) {}
 
-// ExitExpressionNull is called when production expressionNull is exited.
-func (s *BaseMlanListener) ExitExpressionNull(ctx *ExpressionNullContext) {}
+// ExitExpLogicalNot is called when production expLogicalNot is exited.
+func (s *BaseMlanListener) ExitExpLogicalNot(ctx *ExpLogicalNotContext) {}
 
-// EnterExpressionString is called when production expressionString is entered.
-func (s *BaseMlanListener) EnterExpressionString(ctx *ExpressionStringContext) {}
+// EnterExpIntegerHex is called when production expIntegerHex is entered.
+func (s *BaseMlanListener) EnterExpIntegerHex(ctx *ExpIntegerHexContext) {}
 
-// ExitExpressionString is called when production expressionString is exited.
-func (s *BaseMlanListener) ExitExpressionString(ctx *ExpressionStringContext) {}
+// ExitExpIntegerHex is called when production expIntegerHex is exited.
+func (s *BaseMlanListener) ExitExpIntegerHex(ctx *ExpIntegerHexContext) {}
 
-// EnterIfBlockStatement is called when production ifBlockStatement is entered.
-func (s *BaseMlanListener) EnterIfBlockStatement(ctx *IfBlockStatementContext) {}
+// EnterExpIdentifier is called when production expIdentifier is entered.
+func (s *BaseMlanListener) EnterExpIdentifier(ctx *ExpIdentifierContext) {}
 
-// ExitIfBlockStatement is called when production ifBlockStatement is exited.
-func (s *BaseMlanListener) ExitIfBlockStatement(ctx *IfBlockStatementContext) {}
+// ExitExpIdentifier is called when production expIdentifier is exited.
+func (s *BaseMlanListener) ExitExpIdentifier(ctx *ExpIdentifierContext) {}
 
-// EnterElifBlockStatement is called when production elifBlockStatement is entered.
-func (s *BaseMlanListener) EnterElifBlockStatement(ctx *ElifBlockStatementContext) {}
+// EnterExpSumSub is called when production expSumSub is entered.
+func (s *BaseMlanListener) EnterExpSumSub(ctx *ExpSumSubContext) {}
 
-// ExitElifBlockStatement is called when production elifBlockStatement is exited.
-func (s *BaseMlanListener) ExitElifBlockStatement(ctx *ElifBlockStatementContext) {}
+// ExitExpSumSub is called when production expSumSub is exited.
+func (s *BaseMlanListener) ExitExpSumSub(ctx *ExpSumSubContext) {}
 
-// EnterElseBlockStatement is called when production elseBlockStatement is entered.
-func (s *BaseMlanListener) EnterElseBlockStatement(ctx *ElseBlockStatementContext) {}
+// EnterIfBlockStmt is called when production ifBlockStmt is entered.
+func (s *BaseMlanListener) EnterIfBlockStmt(ctx *IfBlockStmtContext) {}
 
-// ExitElseBlockStatement is called when production elseBlockStatement is exited.
-func (s *BaseMlanListener) ExitElseBlockStatement(ctx *ElseBlockStatementContext) {}
+// ExitIfBlockStmt is called when production ifBlockStmt is exited.
+func (s *BaseMlanListener) ExitIfBlockStmt(ctx *IfBlockStmtContext) {}
 
-// EnterIfStatement is called when production ifStatement is entered.
-func (s *BaseMlanListener) EnterIfStatement(ctx *IfStatementContext) {}
+// EnterElifBlockStmt is called when production elifBlockStmt is entered.
+func (s *BaseMlanListener) EnterElifBlockStmt(ctx *ElifBlockStmtContext) {}
 
-// ExitIfStatement is called when production ifStatement is exited.
-func (s *BaseMlanListener) ExitIfStatement(ctx *IfStatementContext) {}
+// ExitElifBlockStmt is called when production elifBlockStmt is exited.
+func (s *BaseMlanListener) ExitElifBlockStmt(ctx *ElifBlockStmtContext) {}
 
-// EnterFunctionParameters is called when production functionParameters is entered.
-func (s *BaseMlanListener) EnterFunctionParameters(ctx *FunctionParametersContext) {}
+// EnterElseBlockStmt is called when production elseBlockStmt is entered.
+func (s *BaseMlanListener) EnterElseBlockStmt(ctx *ElseBlockStmtContext) {}
 
-// ExitFunctionParameters is called when production functionParameters is exited.
-func (s *BaseMlanListener) ExitFunctionParameters(ctx *FunctionParametersContext) {}
+// ExitElseBlockStmt is called when production elseBlockStmt is exited.
+func (s *BaseMlanListener) ExitElseBlockStmt(ctx *ElseBlockStmtContext) {}
 
-// EnterFunctionDefinition is called when production functionDefinition is entered.
-func (s *BaseMlanListener) EnterFunctionDefinition(ctx *FunctionDefinitionContext) {}
+// EnterIfStmt is called when production ifStmt is entered.
+func (s *BaseMlanListener) EnterIfStmt(ctx *IfStmtContext) {}
 
-// ExitFunctionDefinition is called when production functionDefinition is exited.
-func (s *BaseMlanListener) ExitFunctionDefinition(ctx *FunctionDefinitionContext) {}
+// ExitIfStmt is called when production ifStmt is exited.
+func (s *BaseMlanListener) ExitIfStmt(ctx *IfStmtContext) {}
 
-// EnterClosureDefinition is called when production closureDefinition is entered.
-func (s *BaseMlanListener) EnterClosureDefinition(ctx *ClosureDefinitionContext) {}
+// EnterFnParams is called when production fnParams is entered.
+func (s *BaseMlanListener) EnterFnParams(ctx *FnParamsContext) {}
 
-// ExitClosureDefinition is called when production closureDefinition is exited.
-func (s *BaseMlanListener) ExitClosureDefinition(ctx *ClosureDefinitionContext) {}
+// ExitFnParams is called when production fnParams is exited.
+func (s *BaseMlanListener) ExitFnParams(ctx *FnParamsContext) {}
 
-// EnterIncludeSubmodule is called when production includeSubmodule is entered.
-func (s *BaseMlanListener) EnterIncludeSubmodule(ctx *IncludeSubmoduleContext) {}
+// EnterFnBody is called when production fnBody is entered.
+func (s *BaseMlanListener) EnterFnBody(ctx *FnBodyContext) {}
 
-// ExitIncludeSubmodule is called when production includeSubmodule is exited.
-func (s *BaseMlanListener) ExitIncludeSubmodule(ctx *IncludeSubmoduleContext) {}
+// ExitFnBody is called when production fnBody is exited.
+func (s *BaseMlanListener) ExitFnBody(ctx *FnBodyContext) {}
+
+// EnterFn is called when production fn is entered.
+func (s *BaseMlanListener) EnterFn(ctx *FnContext) {}
+
+// ExitFn is called when production fn is exited.
+func (s *BaseMlanListener) ExitFn(ctx *FnContext) {}
+
+// EnterClosure is called when production closure is entered.
+func (s *BaseMlanListener) EnterClosure(ctx *ClosureContext) {}
+
+// ExitClosure is called when production closure is exited.
+func (s *BaseMlanListener) ExitClosure(ctx *ClosureContext) {}
+
+// EnterInclude is called when production include is entered.
+func (s *BaseMlanListener) EnterInclude(ctx *IncludeContext) {}
+
+// ExitInclude is called when production include is exited.
+func (s *BaseMlanListener) ExitInclude(ctx *IncludeContext) {}

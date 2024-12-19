@@ -21,6 +21,7 @@ func aliasCommands(*console.Console) []*cobra.Command {
 			Short:                 v.GetDescription(),
 			GroupID:               constants.AliasGroupId,
 			DisableFlagsInUseLine: true,
+			DisableFlagParsing:    true,
 			Run: func(cmd *cobra.Command, args []string) {
 				rawCmd := k + " " + strings.Join(args, " ")
 				if err := scripts.ProcessCommand(beacon.ActiveBeacon.GetId(), rawCmd); err != nil {

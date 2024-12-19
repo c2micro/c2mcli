@@ -167,7 +167,7 @@ func processExternalScript(path string) (*Script, error) {
 	// проход по дереву
 	v := visitor.NewVisitor()
 	if res := v.Visit(temp.tree); res != types.Success {
-		return nil, v.Error
+		return nil, v.GetError()
 	}
 
 	return temp, nil

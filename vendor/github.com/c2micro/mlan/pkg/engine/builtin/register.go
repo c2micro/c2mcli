@@ -43,10 +43,6 @@ func Register() {
 	storage.BuiltinFunctions["is_null"] = object.NewBuiltinFunc("is_null", IsNull)
 	// is_str: является ли объект Str
 	storage.BuiltinFunctions["is_str"] = object.NewBuiltinFunc("is_str", IsStr)
-	// len: получение длины объекта
-	storage.BuiltinFunctions["len"] = object.NewBuiltinFunc("len", Len)
-	// str_len: получение длины строки (количество рун)
-	storage.BuiltinFunctions["str_len"] = object.NewBuiltinFunc("str_len", StrLen)
 	// bool: кастинг в Bool
 	storage.BuiltinFunctions["bool"] = object.NewBuiltinFunc("bool", Bool)
 	// float: кастинг в Float
@@ -55,18 +51,10 @@ func Register() {
 	storage.BuiltinFunctions["int"] = object.NewBuiltinFunc("int", Int)
 	// str: кастинг в Str
 	storage.BuiltinFunctions["str"] = object.NewBuiltinFunc("str", Str)
-	// reverse: разворот объекта задом-наперед
-	storage.BuiltinFunctions["reverse"] = object.NewBuiltinFunc("reverse", Reverse)
 	// chr: получение символа на базе int кода
 	storage.BuiltinFunctions["chr"] = object.NewBuiltinFunc("chr", Chr)
 	// ord: получение int кода символа
 	storage.BuiltinFunctions["ord"] = object.NewBuiltinFunc("ord", Ord)
-	// str_chr_at: получение руны в строке по индексу
-	storage.BuiltinFunctions["str_chr_at"] = object.NewBuiltinFunc("str_chr_at", StrChrAt)
-	// list_pop_index: убираем из списка значение по индексу
-	storage.BuiltinFunctions["list_pop_index"] = object.NewBuiltinFunc("list_pop_index", ListPopIndex)
-	// dict_pop_key: убираем из списка значение по ключу
-	storage.BuiltinFunctions["dict_pop_key"] = object.NewBuiltinFunc("dict_pop_key", DictPopKey)
 	// base64_enc: кодирование строки в base64
 	storage.BuiltinFunctions["base64_enc"] = object.NewBuiltinFunc("base64_enc", Base64Enc)
 	// base64_dec: декодирование строки из base64
@@ -191,32 +179,6 @@ func IsStr(args ...object.Object) (object.Object, error) {
 	return object.NewBool(false), nil
 }
 
-func Len(args ...object.Object) (object.Object, error) {
-	if len(args) != 1 {
-		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
-	}
-	switch args[0].(type) {
-	case *object.Dict:
-		return object.NewInt(int64(len(args[0].(*object.Dict).GetValue().(map[string]object.Object)))), nil
-	case *object.List:
-		return object.NewInt(int64(len(args[0].(*object.List).GetValue().([]object.Object)))), nil
-	case *object.Str:
-		return object.NewInt(int64(len(args[0].(*object.Str).GetValue().(string)))), nil
-	}
-	return nil, fmt.Errorf("unable get len of '%s' type", args[0].TypeName())
-}
-
-func StrLen(args ...object.Object) (object.Object, error) {
-	if len(args) != 1 {
-		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
-	}
-	switch args[0].(type) {
-	case *object.Str:
-		return object.NewInt(int64(utf8.RuneCountInString(args[0].(*object.Str).GetValue().(string)))), nil
-	}
-	return nil, fmt.Errorf("unable get str len of '%s' type", args[0].TypeName())
-}
-
 func Bool(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
@@ -314,22 +276,6 @@ func Str(args ...object.Object) (object.Object, error) {
 	return nil, fmt.Errorf("unknown type '%s'", args[0].TypeName())
 }
 
-func Reverse(args ...object.Object) (object.Object, error) {
-	if len(args) != 1 {
-		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
-	}
-	switch args[0].(type) {
-	case *object.List:
-		var temp []object.Object
-		l := args[0].(*object.List).GetValue().([]object.Object)
-		for i := len(l) - 1; i >= 0; i-- {
-			temp = append(temp, l[i])
-		}
-		return object.NewList(temp), nil
-	}
-	return nil, fmt.Errorf("unknown type '%s'", args[0].TypeName())
-}
-
 func Chr(args ...object.Object) (object.Object, error) {
 	if len(args) != 1 {
 		return nil, fmt.Errorf("expecting 1 argument, got %d", len(args))
@@ -356,81 +302,6 @@ func Ord(args ...object.Object) (object.Object, error) {
 		return object.NewInt(int64(r)), nil
 	}
 	return nil, fmt.Errorf("unknown type '%s'", args[0].TypeName())
-}
-
-func StrChrAt(args ...object.Object) (object.Object, error) {
-	if len(args) != 2 {
-		return nil, fmt.Errorf("expecting 2 arguments, got %d", len(args))
-	}
-	// 1ый аргумент - строка
-	str, ok := args[0].(*object.Str)
-	if !ok {
-		return nil, fmt.Errorf("expecting str as 1st argument, got '%s'", args[0].TypeName())
-	}
-	// 2ой аргумент - int/bool
-	var idx int64
-	switch args[1].(type) {
-	case *object.Bool:
-		idx = utils.BoolToInt(args[1].(*object.Bool).GetValue().(bool))
-	case *object.Int:
-		idx = args[1].(*object.Int).GetValue().(int64)
-	default:
-		return nil, fmt.Errorf("expecting int/bool as 2nd argument, got '%s'", args[1].TypeName())
-	}
-	// валидируем индекс
-	if idx < 0 || idx >= int64(utf8.RuneCountInString(str.GetValue().(string))) {
-		return nil, object.ErrIndexOutOfRange
-	}
-	// ширина руны (в количестве байт)
-	w := 0
-	// количество рун
-	c := 0
-	for i := 0; i < len(str.GetValue().(string)); i += w {
-		var o rune
-		o, w = utf8.DecodeRuneInString(str.GetValue().(string)[i:])
-		if c == int(idx) {
-			return object.NewStr(string(o)), nil
-		}
-		c++
-	}
-	return nil, object.ErrNotImplemented
-}
-
-func ListPopIndex(args ...object.Object) (object.Object, error) {
-	if len(args) != 2 {
-		return nil, fmt.Errorf("expecting 2 arguments, got %d", len(args))
-	}
-	list, ok := args[0].(*object.List)
-	if !ok {
-		return nil, fmt.Errorf("expecting list as 1st argument, got '%s'", args[0].TypeName())
-	}
-	idx, ok := args[1].(*object.Int)
-	if !ok {
-		return nil, fmt.Errorf("expecting int as 2nd argument, got '%s'", args[1].TypeName())
-	}
-	if idx.GetValue().(int64) < 0 || int(idx.GetValue().(int64)) >= len(list.GetValue().([]object.Object)) {
-		return nil, object.ErrIndexOutOfRange
-	}
-	l := list.GetValue().([]object.Object)
-	i := idx.GetValue().(int64)
-	return object.NewList(append(l[:i], l[i+1:]...)), nil
-}
-
-func DictPopKey(args ...object.Object) (object.Object, error) {
-	if len(args) != 2 {
-		return nil, fmt.Errorf("expecting 2 arguments, got %d", len(args))
-	}
-	dict, ok := args[0].(*object.Dict)
-	if !ok {
-		return nil, fmt.Errorf("expecting dict as 1st argument, got '%s'", args[0].TypeName())
-	}
-	key, ok := args[1].(*object.Str)
-	if !ok {
-		return nil, fmt.Errorf("expecting str as 2nd argument, got '%s'", args[1].TypeName())
-	}
-	d := dict.GetValue().(map[string]object.Object)
-	delete(d, key.GetValue().(string))
-	return object.NewDict(d), nil
 }
 
 func Base64Enc(args ...object.Object) (object.Object, error) {

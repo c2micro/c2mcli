@@ -1,14 +1,14 @@
 alias(
   "sleep",
   fn (bid, cmd, args, raw) {
-    if len(args) == 1 {
+    if args.len() == 1 {
       s = int(args[0]);
       if s < 0 {
         return m_error(bid, "invalid sleep value");
       }
       m_notify(bid, "tasked beacon to change sleep/jitter values");
       return b_sleep(bid, s);
-    } elif len(args) == 2 {
+    } elif args.len() == 2 {
       s = int(args[0]);
       j = int(args[1]);
       if s < 0 {

@@ -4,14 +4,13 @@ import (
 	"math"
 	"strconv"
 
-	"github.com/c2micro/mlan/pkg/parser"
 	"github.com/c2micro/mlan/pkg/engine/utils"
+	"github.com/c2micro/mlan/pkg/parser"
 )
 
 // Float тип с плавающей точкой
 type Float struct {
 	Impl
-	Arithmetic
 	value float64
 }
 
@@ -24,7 +23,7 @@ func (o *Float) TypeName() string {
 }
 
 func (o *Float) String() string {
-	return strconv.FormatFloat(o.value, 'g', -1, 64)
+	return strconv.FormatFloat(o.value, 'f', -1, 64)
 }
 
 func (o *Float) GetValue() any {
@@ -51,9 +50,11 @@ func (o *Float) BinaryOp(op int, rhs Object) (Object, error) {
 		return o.Lt(rhs)
 	case parser.MlanLexerAdd:
 		return o.Add(rhs)
-	case parser.MlanLexerAssignSum:
+	case parser.MlanLexerAssSum:
 		return o.Add(rhs)
 	case parser.MlanLexerSubtract:
+		return o.Sub(rhs)
+	case parser.MlanLexerAssSub:
 		return o.Sub(rhs)
 	case parser.MlanLexerPow:
 		return o.Pow(rhs)

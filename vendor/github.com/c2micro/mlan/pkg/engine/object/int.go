@@ -5,14 +5,13 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/c2micro/mlan/pkg/parser"
 	"github.com/c2micro/mlan/pkg/engine/utils"
+	"github.com/c2micro/mlan/pkg/parser"
 )
 
 // Int целочисленный тип
 type Int struct {
 	Impl
-	Arithmetic
 	value int64
 }
 
@@ -55,9 +54,11 @@ func (o *Int) BinaryOp(op int, rhs Object) (Object, error) {
 		return o.Lt(rhs)
 	case parser.MlanLexerAdd:
 		return o.Add(rhs)
-	case parser.MlanLexerAssignSum:
+	case parser.MlanLexerAssSum:
 		return o.Add(rhs)
 	case parser.MlanLexerSubtract:
+		return o.Sub(rhs)
+	case parser.MlanLexerAssSub:
 		return o.Sub(rhs)
 	case parser.MlanLexerPow:
 		return o.Pow(rhs)

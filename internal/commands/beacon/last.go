@@ -19,7 +19,7 @@ func lastCommand(c *console.Console) *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			tg := task.TaskGroups.GetLast()
 			if tg == nil {
-				color.YellowString("no tasks")
+				color.Yellow("no tasks")
 				return
 			}
 			for _, v := range tg.GetData().Get() {

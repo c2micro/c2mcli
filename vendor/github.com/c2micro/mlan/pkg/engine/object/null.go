@@ -7,7 +7,6 @@ import (
 // Null нулевой тип
 type Null struct {
 	Impl
-	Arithmetic
 }
 
 // NewNull создание нового объекта

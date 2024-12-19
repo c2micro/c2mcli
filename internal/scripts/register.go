@@ -150,7 +150,7 @@ func registerBuiltin() error {
 		// проходим по дереву
 		visitor := visitor.NewVisitor()
 		if res := visitor.Visit(tree); res != types.Success {
-			return errors.Wrapf(visitor.Error, "evaluation %s", v.Name())
+			return errors.Wrapf(visitor.GetError(), "evaluation %s", v.Name())
 		}
 	}
 	return nil

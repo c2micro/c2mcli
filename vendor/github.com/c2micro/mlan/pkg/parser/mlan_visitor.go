@@ -7,56 +7,50 @@ import "github.com/antlr4-go/antlr/v4"
 type MlanVisitor interface {
 	antlr.ParseTreeVisitor
 
-	// Visit a parse tree produced by MlanParser#program.
-	VisitProgram(ctx *ProgramContext) interface{}
+	// Visit a parse tree produced by MlanParser#prog.
+	VisitProg(ctx *ProgContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#block.
-	VisitBlock(ctx *BlockContext) interface{}
+	// Visit a parse tree produced by MlanParser#stmt.
+	VisitStmt(ctx *StmtContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#statement.
-	VisitStatement(ctx *StatementContext) interface{}
+	// Visit a parse tree produced by MlanParser#whileStmt.
+	VisitWhileStmt(ctx *WhileStmtContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#whileStatement.
-	VisitWhileStatement(ctx *WhileStatementContext) interface{}
+	// Visit a parse tree produced by MlanParser#forStmt.
+	VisitForStmt(ctx *ForStmtContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#forStatement.
-	VisitForStatement(ctx *ForStatementContext) interface{}
+	// Visit a parse tree produced by MlanParser#returnStmt.
+	VisitReturnStmt(ctx *ReturnStmtContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#returnStatement.
-	VisitReturnStatement(ctx *ReturnStatementContext) interface{}
+	// Visit a parse tree produced by MlanParser#continueStmt.
+	VisitContinueStmt(ctx *ContinueStmtContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#continueStatement.
-	VisitContinueStatement(ctx *ContinueStatementContext) interface{}
+	// Visit a parse tree produced by MlanParser#breakStmt.
+	VisitBreakStmt(ctx *BreakStmtContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#breakStatement.
-	VisitBreakStatement(ctx *BreakStatementContext) interface{}
+	// Visit a parse tree produced by MlanParser#assignRegular.
+	VisitAssignRegular(ctx *AssignRegularContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#assignmentRegular.
-	VisitAssignmentRegular(ctx *AssignmentRegularContext) interface{}
+	// Visit a parse tree produced by MlanParser#assignSum.
+	VisitAssignSum(ctx *AssignSumContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#assignmentClosure.
-	VisitAssignmentClosure(ctx *AssignmentClosureContext) interface{}
+	// Visit a parse tree produced by MlanParser#assignSub.
+	VisitAssignSub(ctx *AssignSubContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#assignmentSum.
-	VisitAssignmentSum(ctx *AssignmentSumContext) interface{}
+	// Visit a parse tree produced by MlanParser#assignMul.
+	VisitAssignMul(ctx *AssignMulContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#assignmentSub.
-	VisitAssignmentSub(ctx *AssignmentSubContext) interface{}
+	// Visit a parse tree produced by MlanParser#assignDiv.
+	VisitAssignDiv(ctx *AssignDivContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#assignmentMul.
-	VisitAssignmentMul(ctx *AssignmentMulContext) interface{}
+	// Visit a parse tree produced by MlanParser#assignMod.
+	VisitAssignMod(ctx *AssignModContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#assignmentDiv.
-	VisitAssignmentDiv(ctx *AssignmentDivContext) interface{}
+	// Visit a parse tree produced by MlanParser#assignPow.
+	VisitAssignPow(ctx *AssignPowContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#assignmentMod.
-	VisitAssignmentMod(ctx *AssignmentModContext) interface{}
-
-	// Visit a parse tree produced by MlanParser#assignmentPow.
-	VisitAssignmentPow(ctx *AssignmentPowContext) interface{}
-
-	// Visit a parse tree produced by MlanParser#assignmentIndexRegular.
-	VisitAssignmentIndexRegular(ctx *AssignmentIndexRegularContext) interface{}
+	// Visit a parse tree produced by MlanParser#assignIdxRegular.
+	VisitAssignIdxRegular(ctx *AssignIdxRegularContext) interface{}
 
 	// Visit a parse tree produced by MlanParser#list.
 	VisitList(ctx *ListContext) interface{}
@@ -67,108 +61,117 @@ type MlanVisitor interface {
 	// Visit a parse tree produced by MlanParser#dict.
 	VisitDict(ctx *DictContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#index.
-	VisitIndex(ctx *IndexContext) interface{}
+	// Visit a parse tree produced by MlanParser#idx.
+	VisitIdx(ctx *IdxContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#identifierFunctionInvoke.
-	VisitIdentifierFunctionInvoke(ctx *IdentifierFunctionInvokeContext) interface{}
+	// Visit a parse tree produced by MlanParser#identifierMethodInvoke.
+	VisitIdentifierMethodInvoke(ctx *IdentifierMethodInvokeContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#identifierClosureInvoke.
-	VisitIdentifierClosureInvoke(ctx *IdentifierClosureInvokeContext) interface{}
+	// Visit a parse tree produced by MlanParser#identifierFnInvoke.
+	VisitIdentifierFnInvoke(ctx *IdentifierFnInvokeContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#expressionIntegerHex.
-	VisitExpressionIntegerHex(ctx *ExpressionIntegerHexContext) interface{}
+	// Visit a parse tree produced by MlanParser#identifierCsInvoke.
+	VisitIdentifierCsInvoke(ctx *IdentifierCsInvokeContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#expressionFunctionInvoke.
-	VisitExpressionFunctionInvoke(ctx *ExpressionFunctionInvokeContext) interface{}
+	// Visit a parse tree produced by MlanParser#expBool.
+	VisitExpBool(ctx *ExpBoolContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#expressionUnaryNegation.
-	VisitExpressionUnaryNegation(ctx *ExpressionUnaryNegationContext) interface{}
+	// Visit a parse tree produced by MlanParser#expComparison.
+	VisitExpComparison(ctx *ExpComparisonContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#expressionBool.
-	VisitExpressionBool(ctx *ExpressionBoolContext) interface{}
+	// Visit a parse tree produced by MlanParser#expIdx.
+	VisitExpIdx(ctx *ExpIdxContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#expressionPow.
-	VisitExpressionPow(ctx *ExpressionPowContext) interface{}
+	// Visit a parse tree produced by MlanParser#expString.
+	VisitExpString(ctx *ExpStringContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#expressionXor.
-	VisitExpressionXor(ctx *ExpressionXorContext) interface{}
+	// Visit a parse tree produced by MlanParser#expCsInvoke.
+	VisitExpCsInvoke(ctx *ExpCsInvokeContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#expressionEqual.
-	VisitExpressionEqual(ctx *ExpressionEqualContext) interface{}
+	// Visit a parse tree produced by MlanParser#expFloat.
+	VisitExpFloat(ctx *ExpFloatContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#expressionClosure.
-	VisitExpressionClosure(ctx *ExpressionClosureContext) interface{}
+	// Visit a parse tree produced by MlanParser#expPow.
+	VisitExpPow(ctx *ExpPowContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#expressionDict.
-	VisitExpressionDict(ctx *ExpressionDictContext) interface{}
+	// Visit a parse tree produced by MlanParser#expDict.
+	VisitExpDict(ctx *ExpDictContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#expressionIdentifier.
-	VisitExpressionIdentifier(ctx *ExpressionIdentifierContext) interface{}
+	// Visit a parse tree produced by MlanParser#expXor.
+	VisitExpXor(ctx *ExpXorContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#expressionList.
-	VisitExpressionList(ctx *ExpressionListContext) interface{}
+	// Visit a parse tree produced by MlanParser#expNeg.
+	VisitExpNeg(ctx *ExpNegContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#expressionSumSub.
-	VisitExpressionSumSub(ctx *ExpressionSumSubContext) interface{}
+	// Visit a parse tree produced by MlanParser#expInteger.
+	VisitExpInteger(ctx *ExpIntegerContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#expressionComparison.
-	VisitExpressionComparison(ctx *ExpressionComparisonContext) interface{}
+	// Visit a parse tree produced by MlanParser#expLogicalOr.
+	VisitExpLogicalOr(ctx *ExpLogicalOrContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#expressionLogicalOr.
-	VisitExpressionLogicalOr(ctx *ExpressionLogicalOrContext) interface{}
+	// Visit a parse tree produced by MlanParser#expCs.
+	VisitExpCs(ctx *ExpCsContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#expressionIndex.
-	VisitExpressionIndex(ctx *ExpressionIndexContext) interface{}
+	// Visit a parse tree produced by MlanParser#expMulDivMod.
+	VisitExpMulDivMod(ctx *ExpMulDivModContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#expressionLogicalNot.
-	VisitExpressionLogicalNot(ctx *ExpressionLogicalNotContext) interface{}
+	// Visit a parse tree produced by MlanParser#expNull.
+	VisitExpNull(ctx *ExpNullContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#expressionClosureInvoke.
-	VisitExpressionClosureInvoke(ctx *ExpressionClosureInvokeContext) interface{}
+	// Visit a parse tree produced by MlanParser#expFnInvoke.
+	VisitExpFnInvoke(ctx *ExpFnInvokeContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#expressionParentheses.
-	VisitExpressionParentheses(ctx *ExpressionParenthesesContext) interface{}
+	// Visit a parse tree produced by MlanParser#expList.
+	VisitExpList(ctx *ExpListContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#expressionMulDivMod.
-	VisitExpressionMulDivMod(ctx *ExpressionMulDivModContext) interface{}
+	// Visit a parse tree produced by MlanParser#expLogicalAnd.
+	VisitExpLogicalAnd(ctx *ExpLogicalAndContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#expressionLogicalAnd.
-	VisitExpressionLogicalAnd(ctx *ExpressionLogicalAndContext) interface{}
+	// Visit a parse tree produced by MlanParser#expParentheses.
+	VisitExpParentheses(ctx *ExpParenthesesContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#expressionFloat.
-	VisitExpressionFloat(ctx *ExpressionFloatContext) interface{}
+	// Visit a parse tree produced by MlanParser#expEqual.
+	VisitExpEqual(ctx *ExpEqualContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#expressionInteger.
-	VisitExpressionInteger(ctx *ExpressionIntegerContext) interface{}
+	// Visit a parse tree produced by MlanParser#expMethodInvoke.
+	VisitExpMethodInvoke(ctx *ExpMethodInvokeContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#expressionNull.
-	VisitExpressionNull(ctx *ExpressionNullContext) interface{}
+	// Visit a parse tree produced by MlanParser#expLogicalNot.
+	VisitExpLogicalNot(ctx *ExpLogicalNotContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#expressionString.
-	VisitExpressionString(ctx *ExpressionStringContext) interface{}
+	// Visit a parse tree produced by MlanParser#expIntegerHex.
+	VisitExpIntegerHex(ctx *ExpIntegerHexContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#ifBlockStatement.
-	VisitIfBlockStatement(ctx *IfBlockStatementContext) interface{}
+	// Visit a parse tree produced by MlanParser#expIdentifier.
+	VisitExpIdentifier(ctx *ExpIdentifierContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#elifBlockStatement.
-	VisitElifBlockStatement(ctx *ElifBlockStatementContext) interface{}
+	// Visit a parse tree produced by MlanParser#expSumSub.
+	VisitExpSumSub(ctx *ExpSumSubContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#elseBlockStatement.
-	VisitElseBlockStatement(ctx *ElseBlockStatementContext) interface{}
+	// Visit a parse tree produced by MlanParser#ifBlockStmt.
+	VisitIfBlockStmt(ctx *IfBlockStmtContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#ifStatement.
-	VisitIfStatement(ctx *IfStatementContext) interface{}
+	// Visit a parse tree produced by MlanParser#elifBlockStmt.
+	VisitElifBlockStmt(ctx *ElifBlockStmtContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#functionParameters.
-	VisitFunctionParameters(ctx *FunctionParametersContext) interface{}
+	// Visit a parse tree produced by MlanParser#elseBlockStmt.
+	VisitElseBlockStmt(ctx *ElseBlockStmtContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#functionDefinition.
-	VisitFunctionDefinition(ctx *FunctionDefinitionContext) interface{}
+	// Visit a parse tree produced by MlanParser#ifStmt.
+	VisitIfStmt(ctx *IfStmtContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#closureDefinition.
-	VisitClosureDefinition(ctx *ClosureDefinitionContext) interface{}
+	// Visit a parse tree produced by MlanParser#fnParams.
+	VisitFnParams(ctx *FnParamsContext) interface{}
 
-	// Visit a parse tree produced by MlanParser#includeSubmodule.
-	VisitIncludeSubmodule(ctx *IncludeSubmoduleContext) interface{}
+	// Visit a parse tree produced by MlanParser#fnBody.
+	VisitFnBody(ctx *FnBodyContext) interface{}
+
+	// Visit a parse tree produced by MlanParser#fn.
+	VisitFn(ctx *FnContext) interface{}
+
+	// Visit a parse tree produced by MlanParser#closure.
+	VisitClosure(ctx *ClosureContext) interface{}
+
+	// Visit a parse tree produced by MlanParser#include.
+	VisitInclude(ctx *IncludeContext) interface{}
 }

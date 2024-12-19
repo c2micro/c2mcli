@@ -4,14 +4,13 @@ import (
 	"math"
 	"strings"
 
-	"github.com/c2micro/mlan/pkg/parser"
 	"github.com/c2micro/mlan/pkg/engine/utils"
+	"github.com/c2micro/mlan/pkg/parser"
 )
 
 // Bool булевый тип
 type Bool struct {
 	Impl
-	ArithmeticImpl
 	value bool
 }
 
@@ -55,8 +54,10 @@ func (o *Bool) BinaryOp(op int, rhs Object) (Object, error) {
 		return o.Lt(rhs)
 	case parser.MlanLexerAdd:
 		return o.Add(rhs)
-	case parser.MlanLexerAssignSum:
+	case parser.MlanLexerAssSum:
 		return o.Add(rhs)
+	case parser.MlanLexerAssSub:
+		return o.Sub(rhs)
 	case parser.MlanLexerSubtract:
 		return o.Sub(rhs)
 	case parser.MlanLexerPow:

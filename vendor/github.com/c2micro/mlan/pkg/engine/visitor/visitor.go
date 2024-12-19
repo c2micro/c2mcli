@@ -1,7 +1,6 @@
 package visitor
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"reflect"
@@ -16,141 +15,179 @@ import (
 	"github.com/c2micro/mlan/pkg/engine/types"
 	"github.com/c2micro/mlan/pkg/engine/utils"
 	"github.com/c2micro/mlan/pkg/parser"
+	"github.com/go-faster/errors"
 )
 
-// Visitor реализация базового визитора
-type Visitor struct {
-	parser.BaseMlanVisitor
-	Error error
-}
-
-func (v *Visitor) LineError(token antlr.Token, err error) {
-	v.Error = fmt.Errorf("line %d: %v", token.GetLine(), err)
-}
-
-// NewVisitor создание нового визитора
 func NewVisitor() *Visitor {
 	return &Visitor{
-		Error: nil,
+		err: nil,
 	}
 }
 
-// Visit зацикленный энтри-поинт для визитора
+type Visitor struct {
+	parser.BaseMlanVisitor
+	// line number of executed script
+	line int
+	// visitor error
+	err error
+}
+
+func (v *Visitor) SetError(err error) {
+	v.err = errors.Wrap(err, fmt.Sprintf("line %d", v.line))
+}
+
+func (v *Visitor) GetError() error {
+	return v.err
+}
+
+func (v *Visitor) GetLine() int {
+	return v.line
+}
+
+/*
+func (v *BaseMlanVisitor) VisitAssignMul(ctx *AssignMulContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMlanVisitor) VisitAssignDiv(ctx *AssignDivContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMlanVisitor) VisitAssignMod(ctx *AssignModContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMlanVisitor) VisitAssignPow(ctx *AssignPowContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+*/
+
+// loop entry-point for visitor
 func (v *Visitor) Visit(tree antlr.ParseTree) any {
 	if retValue != nil {
-		// выходим из программы, если есть возвращаемое значение
+		// exit from AST in case of return value existance
 		return types.Success
 	}
 
+	// set line number
+	v.line = tree.(antlr.ParserRuleContext).GetStart().GetLine()
+
 	if scope.CurrentScope.Depth() > constants.MaxScopeDepth {
-		// если вложенность превышает допустимый максимум
-		v.Error = fmt.Errorf("max depth reached")
+		v.err = fmt.Errorf("max depth reached")
 		return types.Failure
 	}
 
-	//fmt.Println(reflect.ValueOf(tree).String())
 	switch val := tree.(type) {
-	case *parser.ProgramContext:
-		return v.VisitProgram(val)
-	case *parser.BlockContext:
-		return v.VisitBlock(val)
-	case *parser.StatementContext:
-		return v.VisitStatement(val)
-	case *parser.AssignmentRegularContext:
-		return v.VisitAssignmentRegular(val)
-	case *parser.ExpressionBoolContext:
-		return v.VisitExpressionBool(val)
-	case *parser.IdentifierFunctionInvokeContext:
-		return v.VisitIdentifierFunctionInvoke(val)
-	case *parser.ExpressionIdentifierContext:
-		return v.VisitExpressionIdentifier(val)
-	case *parser.ExpressionIntegerContext:
-		return v.VisitExpressionInteger(val)
-	case *parser.ExpressionIntegerHexContext:
-		return v.VisitExpressionIntegerHex(val)
-	case *parser.ExpressionNullContext:
-		return v.VisitExpressionNull(val)
-	case *parser.ExpressionFloatContext:
-		return v.VisitExpressionFloat(val)
-	case *parser.ExpressionStringContext:
-		return v.VisitExpressionString(val)
-	case *parser.ExpressionListContext:
-		return v.VisitExpressionList(val)
-	case *parser.ExpressionDictContext:
-		return v.VisitExpressionDict(val)
-	case *parser.ExpressionLogicalNotContext:
-		return v.VisitExpressionLogicalNot(val)
-	case *parser.ExpressionLogicalOrContext:
-		return v.VisitExpressionLogicalOr(val)
-	case *parser.ExpressionLogicalAndContext:
-		return v.VisitExpressionLogicalAnd(val)
-	case *parser.ExpressionParenthesesContext:
-		return v.VisitExpressionParentheses(val)
-	case *parser.ExpressionEqualContext:
-		return v.VisitExpressionEqual(val)
-	case *parser.ExpressionUnaryNegationContext:
-		return v.VisitExpressionUnaryNegation(val)
-	case *parser.ExpressionComparisonContext:
-		return v.VisitExpressionComparison(val)
-	case *parser.ExpressionSumSubContext:
-		return v.VisitExpressionSumSub(val)
-	case *parser.ExpressionPowContext:
-		return v.VisitExpressionPow(val)
-	case *parser.ExpressionMulDivModContext:
-		return v.VisitExpressionMulDivMod(val)
-	case *parser.ExpressionXorContext:
-		return v.VisitExpressionXor(val)
-	case *parser.ForStatementContext:
-		return v.VisitForStatement(val)
-	case *parser.AssignmentSumContext:
-		return v.VisitAssignmentSum(val)
-	case *parser.BreakStatementContext:
-		return v.VisitBreakStatement(val)
-	case *parser.ContinueStatementContext:
-		return v.VisitContinueStatement(val)
-	case *parser.WhileStatementContext:
-		return v.VisitWhileStatement(val)
-	case *parser.IfStatementContext:
-		return v.VisitIfStatement(val)
-	case *parser.IfBlockStatementContext:
-		return v.VisitIfBlockStatement(val)
-	case *parser.ElseBlockStatementContext:
-		return v.VisitElseBlockStatement(val)
-	case *parser.ElifBlockStatementContext:
-		return v.VisitElifBlockStatement(val)
-	case *parser.FunctionDefinitionContext:
-		return v.VisitFunctionDefinition(val)
-	case *parser.ExpressionFunctionInvokeContext:
-		return v.VisitExpressionFunctionInvoke(val)
-	case *parser.ReturnStatementContext:
-		return v.VisitReturnStatement(val)
-	case *parser.ExpressionIndexContext:
-		return v.VisitExpressionIndex(val)
-	case *parser.AssignmentIndexRegularContext:
-		return v.VisitAssignmentIndexRegular(val)
-	case *parser.AssignmentClosureContext:
-		return v.VisitAssignmentClosure(val)
-	case *parser.ExpressionClosureInvokeContext:
-		return v.VisitExpressionClosureInvoke(val)
-	case *parser.IdentifierClosureInvokeContext:
-		return v.VisitIdentifierClosureInvoke(val)
-	case *parser.IncludeSubmoduleContext:
-		return v.VisitIncludeSubmodule(val)
-	case *parser.ExpressionClosureContext:
-		return v.VisitExpressionClosure(val)
+	case *parser.ProgContext:
+		return v.VisitProg(val)
+	case *parser.StmtContext:
+		return v.VisitStmt(val)
+	case *parser.AssignRegularContext:
+		return v.VisitAssignRegular(val)
+	case *parser.ExpBoolContext:
+		return v.VisitExpBool(val)
+	case *parser.IdentifierFnInvokeContext:
+		return v.VisitIdentifierFnInvoke(val)
+	case *parser.ExpIdentifierContext:
+		return v.VisitExpIdentifier(val)
+	case *parser.ExpIntegerContext:
+		return v.VisitExpInteger(val)
+	case *parser.ExpIntegerHexContext:
+		return v.VisitExpIntegerHex(val)
+	case *parser.ExpNullContext:
+		return v.VisitExpNull(val)
+	case *parser.ExpFloatContext:
+		return v.VisitExpFloat(val)
+	case *parser.ExpStringContext:
+		return v.VisitExpString(val)
+	case *parser.ExpListContext:
+		return v.VisitExpList(val)
+	case *parser.ListContext:
+		return v.VisitList(val)
+	case *parser.ExpDictContext:
+		return v.VisitExpDict(val)
+	case *parser.ExpLogicalNotContext:
+		return v.VisitExpLogicalNot(val)
+	case *parser.ExpLogicalOrContext:
+		return v.VisitExpLogicalOr(val)
+	case *parser.ExpLogicalAndContext:
+		return v.VisitExpLogicalAnd(val)
+	case *parser.ExpParenthesesContext:
+		return v.VisitExpParentheses(val)
+	case *parser.ExpEqualContext:
+		return v.VisitExpEqual(val)
+	case *parser.ExpNegContext:
+		return v.VisitExpNeg(val)
+	case *parser.ExpComparisonContext:
+		return v.VisitExpComparison(val)
+	case *parser.ExpSumSubContext:
+		return v.VisitExpSumSub(val)
+	case *parser.ExpPowContext:
+		return v.VisitExpPow(val)
+	case *parser.ExpMulDivModContext:
+		return v.VisitExpMulDivMod(val)
+	case *parser.ExpXorContext:
+		return v.VisitExpXor(val)
+	case *parser.ForStmtContext:
+		return v.VisitForStmt(val)
+	case *parser.BreakStmtContext:
+		return v.VisitBreakStmt(val)
+	case *parser.ContinueStmtContext:
+		return v.VisitContinueStmt(val)
+	case *parser.WhileStmtContext:
+		return v.VisitWhileStmt(val)
+	case *parser.IfStmtContext:
+		return v.VisitIfStmt(val)
+	case *parser.IfBlockStmtContext:
+		return v.VisitIfBlockStmt(val)
+	case *parser.ElseBlockStmtContext:
+		return v.VisitElseBlockStmt(val)
+	case *parser.ElifBlockStmtContext:
+		return v.VisitElifBlockStmt(val)
+	case *parser.ExpFnInvokeContext:
+		return v.VisitExpFnInvoke(val)
+	case *parser.ReturnStmtContext:
+		return v.VisitReturnStmt(val)
+	case *parser.ExpIdxContext:
+		return v.VisitExpIdx(val)
+	case *parser.AssignIdxRegularContext:
+		return v.VisitAssignIdxRegular(val)
+	case *parser.ExpCsInvokeContext:
+		return v.VisitExpCsInvoke(val)
+	case *parser.IdentifierCsInvokeContext:
+		return v.VisitIdentifierCsInvoke(val)
+	case *parser.IncludeContext:
+		return v.VisitInclude(val)
+	case *parser.FnContext:
+		return v.VisitFn(val)
+	case *parser.FnBodyContext:
+		return v.VisitFnBody(val)
+	case *parser.AssignSumContext:
+		return v.VisitAssignSum(val)
+	case *parser.AssignSubContext:
+		return v.VisitAssignSub(val)
+	case *parser.ExpMethodInvokeContext:
+		return v.VisitExpMethodInvoke(val)
+	case *parser.IdentifierMethodInvokeContext:
+		return v.VisitIdentifierMethodInvoke(val)
+	case *parser.ExpCsContext:
+		return v.VisitExpCs(val)
+	case *parser.ClosureContext:
+		return v.VisitClosure(val)
+	case *parser.IdxContext:
+		return v.VisitIdx(val)
+	case *parser.DictContext:
+		return v.VisitDict(val)
 	default:
-		v.Error = fmt.Errorf("unknown context %s on visit", reflect.TypeOf(val).String())
+		v.SetError(fmt.Errorf("unknown context '%s' on visit", reflect.TypeOf(val).String()))
 		return types.Failure
 	}
 }
 
-func (v *Visitor) VisitProgram(ctx *parser.ProgramContext) any {
-	return v.Visit(ctx.Block())
-}
-
-func (v *Visitor) VisitBlock(ctx *parser.BlockContext) any {
+func (v *Visitor) VisitProg(ctx *parser.ProgContext) any {
 	// резолв инклудов
-	for _, item := range ctx.AllIncludeSubmodule() {
+	for _, item := range ctx.AllInclude() {
 		tree, ok := v.Visit(item).(antlr.ParseTree)
 		if !ok {
 			return types.Failure
@@ -161,14 +198,14 @@ func (v *Visitor) VisitBlock(ctx *parser.BlockContext) any {
 	}
 
 	// регистрация функций
-	for _, item := range ctx.AllFunctionDefinition() {
+	for _, item := range ctx.AllFn() {
 		if ok := v.Visit(item).(types.VisitResultType); !ok {
 			return types.Failure
 		}
 	}
 
 	// выполнение стейтментов
-	for _, item := range ctx.AllStatement() {
+	for _, item := range ctx.AllStmt() {
 		if ok := v.Visit(item).(types.VisitResultType); !ok {
 			return types.Failure
 		}
@@ -177,7 +214,7 @@ func (v *Visitor) VisitBlock(ctx *parser.BlockContext) any {
 	return types.Success
 }
 
-func (v *Visitor) VisitStatement(ctx *parser.StatementContext) any {
+func (v *Visitor) VisitStmt(ctx *parser.StmtContext) any {
 	// присвоение
 	if ctx.Assignment() != nil {
 		if ok := v.Visit(ctx.Assignment()).(types.VisitResultType); !ok {
@@ -186,7 +223,7 @@ func (v *Visitor) VisitStatement(ctx *parser.StatementContext) any {
 	}
 
 	// if/elif/else
-	if ctx.IfStatement() != nil {
+	if ctx.IfStmt() != nil {
 		scope.CurrentScope = scope.NewScope(
 			scope.CurrentScope,
 			scope.CurrentScope.Depth()+1,
@@ -195,7 +232,7 @@ func (v *Visitor) VisitStatement(ctx *parser.StatementContext) any {
 			make(map[string]object.Object),
 		)
 		// стейтменты внутри if блока
-		if ok := v.Visit(ctx.IfStatement()).(types.VisitResultType); !ok {
+		if ok := v.Visit(ctx.IfStmt()).(types.VisitResultType); !ok {
 			scope.CurrentScope = scope.CurrentScope.Parent()
 			return types.Failure
 		}
@@ -204,7 +241,7 @@ func (v *Visitor) VisitStatement(ctx *parser.StatementContext) any {
 	}
 
 	// while цикл
-	if ctx.WhileStatement() != nil {
+	if ctx.WhileStmt() != nil {
 		scope.CurrentScope = scope.NewScope(
 			scope.CurrentScope,
 			scope.CurrentScope.Depth()+1,
@@ -213,7 +250,7 @@ func (v *Visitor) VisitStatement(ctx *parser.StatementContext) any {
 			make(map[string]object.Object),
 		)
 		// стейтменты внутри цикла
-		if ok := v.Visit(ctx.WhileStatement()).(types.VisitResultType); !ok {
+		if ok := v.Visit(ctx.WhileStmt()).(types.VisitResultType); !ok {
 			scope.CurrentScope = scope.CurrentScope.Parent()
 			return types.Failure
 		}
@@ -222,7 +259,7 @@ func (v *Visitor) VisitStatement(ctx *parser.StatementContext) any {
 	}
 
 	// for цикл
-	if ctx.ForStatement() != nil {
+	if ctx.ForStmt() != nil {
 		scope.CurrentScope = scope.NewScope(
 			scope.CurrentScope,
 			scope.CurrentScope.Depth()+1,
@@ -231,7 +268,7 @@ func (v *Visitor) VisitStatement(ctx *parser.StatementContext) any {
 			make(map[string]object.Object),
 		)
 		// стейтменты внутри цикла
-		if ok := v.Visit(ctx.ForStatement()).(types.VisitResultType); !ok {
+		if ok := v.Visit(ctx.ForStmt()).(types.VisitResultType); !ok {
 			scope.CurrentScope = scope.CurrentScope.Parent()
 			return types.Failure
 		}
@@ -240,8 +277,8 @@ func (v *Visitor) VisitStatement(ctx *parser.StatementContext) any {
 	}
 
 	// вызов функции
-	if ctx.FunctionInvoke() != nil {
-		if res, ok := v.Visit(ctx.FunctionInvoke()).(types.VisitResultType); ok {
+	if ctx.FnInvoke() != nil {
+		if res, ok := v.Visit(ctx.FnInvoke()).(types.VisitResultType); ok {
 			if !res {
 				return types.Failure
 			}
@@ -249,8 +286,17 @@ func (v *Visitor) VisitStatement(ctx *parser.StatementContext) any {
 	}
 
 	// вызов кложура
-	if ctx.ClosureInvoke() != nil {
-		if res, ok := v.Visit(ctx.ClosureInvoke()).(types.VisitResultType); ok {
+	if ctx.CsInvoke() != nil {
+		if res, ok := v.Visit(ctx.CsInvoke()).(types.VisitResultType); ok {
+			if !res {
+				return types.Failure
+			}
+		}
+	}
+
+	// вызов метода
+	if ctx.MethodInvoke() != nil {
+		if res, ok := v.Visit(ctx.MethodInvoke()).(types.VisitResultType); ok {
 			if !res {
 				return types.Failure
 			}
@@ -258,22 +304,22 @@ func (v *Visitor) VisitStatement(ctx *parser.StatementContext) any {
 	}
 
 	// break для цикла
-	if ctx.BreakStatement() != nil {
-		if ok := v.Visit(ctx.BreakStatement()).(types.VisitResultType); !ok {
+	if ctx.BreakStmt() != nil {
+		if ok := v.Visit(ctx.BreakStmt()).(types.VisitResultType); !ok {
 			return types.Failure
 		}
 	}
 
 	// continue для цикла
-	if ctx.ContinueStatement() != nil {
-		if ok := v.Visit(ctx.ContinueStatement()).(types.VisitResultType); !ok {
+	if ctx.ContinueStmt() != nil {
+		if ok := v.Visit(ctx.ContinueStmt()).(types.VisitResultType); !ok {
 			return types.Failure
 		}
 	}
 
 	// return
-	if ctx.ReturnStatement() != nil {
-		if ok := v.Visit(ctx.ReturnStatement()).(types.VisitResultType); !ok {
+	if ctx.ReturnStmt() != nil {
+		if ok := v.Visit(ctx.ReturnStmt()).(types.VisitResultType); !ok {
 			return types.Failure
 		}
 	}
@@ -281,34 +327,34 @@ func (v *Visitor) VisitStatement(ctx *parser.StatementContext) any {
 	return types.Success
 }
 
-func (v *Visitor) VisitAssignmentRegular(ctx *parser.AssignmentRegularContext) any {
+func (v *Visitor) VisitAssignRegular(ctx *parser.AssignRegularContext) any {
 	// получение значения выражения
-	val, ok := v.Visit(ctx.Expression()).(object.Object)
+	val, ok := v.Visit(ctx.Exp()).(object.Object)
 	if !ok {
 		return types.Failure
 	}
 
 	// сохранение объекта
-	scope.CurrentScope.Put(ctx.GetVarScalarName().GetText(), val)
+	scope.CurrentScope.Put(ctx.GetName().GetText(), val)
 
 	return types.Success
 }
 
-func (v *Visitor) VisitExpressionBool(ctx *parser.ExpressionBoolContext) any {
+func (v *Visitor) VisitExpBool(ctx *parser.ExpBoolContext) any {
 	switch ctx.GetText() {
 	case "true":
 		return object.NewBool(true)
 	case "false":
 		return object.NewBool(false)
 	}
-	v.LineError(ctx.GetStart(), fmt.Errorf("unable get bool from %s", ctx.GetText()))
+	v.SetError(fmt.Errorf("unable get bool from '%s'", ctx.GetText()))
 	return types.Failure
 }
 
-func (v *Visitor) VisitIdentifierFunctionInvoke(ctx *parser.IdentifierFunctionInvokeContext) any {
+func (v *Visitor) VisitIdentifierFnInvoke(ctx *parser.IdentifierFnInvokeContext) any {
 	var params []object.Object
 
-	for _, item := range ctx.AllExpression() {
+	for _, item := range ctx.AllExp() {
 		// собираем аргументы для функции
 		res, ok := v.Visit(item).(object.Object)
 		if !ok {
@@ -317,62 +363,66 @@ func (v *Visitor) VisitIdentifierFunctionInvoke(ctx *parser.IdentifierFunctionIn
 		params = append(params, res)
 	}
 
-	return v.invokeFunc(ctx.GetStart(), ctx.GetVarFunctionName().GetText(), params...)
+	return v.invokeFunc(ctx.GetName().GetText(), params...)
 }
 
-func (v *Visitor) VisitExpressionIdentifier(ctx *parser.ExpressionIdentifierContext) any {
+func (v *Visitor) VisitExpIdentifier(ctx *parser.ExpIdentifierContext) any {
 	val := scope.CurrentScope.Get(ctx.GetText(), true)
 	if val == nil {
-		v.LineError(ctx.GetStart(), fmt.Errorf("undefined variable '%s'", ctx.GetText()))
+		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetText()))
 		return types.Failure
 	}
 	return val
 }
 
-func (v *Visitor) VisitExpressionInteger(ctx *parser.ExpressionIntegerContext) any {
+func (v *Visitor) VisitExpInteger(ctx *parser.ExpIntegerContext) any {
 	val, err := strconv.ParseInt(ctx.GetText(), 10, 64)
 	if err != nil {
-		v.LineError(ctx.GetStart(), fmt.Errorf("unable get int from %s", ctx.GetText()))
+		v.SetError(fmt.Errorf("unable get int from '%s'", ctx.GetText()))
 		return types.Failure
 	}
 	return object.NewInt(val)
 }
 
-func (v *Visitor) VisitExpressionIntegerHex(ctx *parser.ExpressionIntegerHexContext) any {
+func (v *Visitor) VisitExpIntegerHex(ctx *parser.ExpIntegerHexContext) any {
 	// парсим в int64
 	val, err := strconv.ParseInt(utils.StripHexPrefix(ctx.GetText()), 16, 64)
 	if err != nil {
-		v.LineError(ctx.GetStart(), fmt.Errorf("unable get int from %s", ctx.GetText()))
+		v.SetError(fmt.Errorf("unable get int from '%s'", ctx.GetText()))
 		return types.Failure
 	}
 	return object.NewInt(val)
 }
 
-func (v *Visitor) VisitExpressionNull(_ *parser.ExpressionNullContext) any {
+func (v *Visitor) VisitExpNull(_ *parser.ExpNullContext) any {
 	return object.NewNull()
 }
 
-func (v *Visitor) VisitExpressionFloat(ctx *parser.ExpressionFloatContext) any {
+func (v *Visitor) VisitExpFloat(ctx *parser.ExpFloatContext) any {
 	val, err := strconv.ParseFloat(ctx.GetText(), 64)
 	if err != nil {
-		v.LineError(ctx.GetStart(), fmt.Errorf("unable get float from %s", ctx.GetText()))
+		v.SetError(fmt.Errorf("unable get float from '%s'", ctx.GetText()))
 		return types.Failure
 	}
 	return object.NewFloat(val)
 }
 
-func (v *Visitor) VisitExpressionString(ctx *parser.ExpressionStringContext) any {
+func (v *Visitor) VisitExpString(ctx *parser.ExpStringContext) any {
 	val, err := strconv.Unquote(ctx.GetText())
 	if err != nil {
-		v.LineError(ctx.GetStart(), fmt.Errorf("unable get str from %s", ctx.GetText()))
+		v.SetError(fmt.Errorf("unable get str from '%s'", ctx.GetText()))
 		return types.Failure
 	}
 	return object.NewStr(val)
 }
 
-func (v *Visitor) VisitExpressionList(ctx *parser.ExpressionListContext) any {
+func (v *Visitor) VisitExpList(ctx *parser.ExpListContext) any {
+	return v.Visit(ctx.List())
+}
+
+func (v *Visitor) VisitList(ctx *parser.ListContext) any {
 	var list []object.Object
-	for _, item := range ctx.List().AllExpression() {
+	for _, item := range ctx.AllExp() {
 		val, ok := v.Visit(item).(object.Object)
 		if !ok {
 			return types.Failure
@@ -382,12 +432,19 @@ func (v *Visitor) VisitExpressionList(ctx *parser.ExpressionListContext) any {
 	return object.NewList(list)
 }
 
-func (v *Visitor) VisitExpressionDict(ctx *parser.ExpressionDictContext) any {
-	dict := make(map[string]object.Object)
+func (v *Visitor) VisitExpDict(ctx *parser.ExpDictContext) any {
+	dict, ok := v.Visit(ctx.Dict()).(map[string]object.Object)
+	if !ok {
+		return types.Failure
+	}
+	return object.NewDict(dict)
+}
 
-	for _, item := range ctx.Dict().AllDictUnit() {
+func (v *Visitor) VisitDict(ctx *parser.DictContext) any {
+	dict := make(map[string]object.Object)
+	for _, item := range ctx.AllDictUnit() {
 		// получение ключа
-		key, ok := v.Visit(item.AllExpression()[0]).(object.Object)
+		key, ok := v.Visit(item.AllExp()[0]).(object.Object)
 		if !ok {
 			return types.Failure
 		}
@@ -396,233 +453,233 @@ func (v *Visitor) VisitExpressionDict(ctx *parser.ExpressionDictContext) any {
 		switch key.(type) {
 		case *object.Str:
 		default:
-			v.LineError(ctx.GetStart(), fmt.Errorf("key of dict must be str"))
+			v.SetError(fmt.Errorf("key of dict must be str"))
 			return types.Failure
 		}
 
 		// проверка на дубликат
 		if _, ok = dict[key.GetValue().(string)]; ok {
-			v.LineError(ctx.GetStart(), fmt.Errorf("duplicated key '%s' in dict", key.GetValue().(string)))
+			v.SetError(fmt.Errorf("duplicated key '%s' in dict", key.GetValue().(string)))
 			return types.Failure
 		}
 
 		// получение значения
-		val, ok := v.Visit(item.AllExpression()[1]).(object.Object)
+		val, ok := v.Visit(item.AllExp()[1]).(object.Object)
 		if !ok {
 			return types.Failure
 		}
 		dict[key.GetValue().(string)] = val
 	}
-	return object.NewDict(dict)
+	return dict
 }
 
-func (v *Visitor) VisitExpressionLogicalNot(ctx *parser.ExpressionLogicalNotContext) any {
-	val, ok := v.Visit(ctx.Expression()).(object.Object)
+func (v *Visitor) VisitExpLogicalNot(ctx *parser.ExpLogicalNotContext) any {
+	val, ok := v.Visit(ctx.Exp()).(object.Object)
 	if !ok {
 		return types.Failure
 	}
 	val, err := val.UnaryOp(parser.MlanParserNot)
 	if err != nil {
 		if errors.Is(err, object.ErrInvalidOp) {
-			v.LineError(ctx.GetStart(), fmt.Errorf("unsupported expression: !%s", val.TypeName()))
+			v.SetError(fmt.Errorf("unsupported expression: !%s", val.TypeName()))
 		} else {
-			v.LineError(ctx.GetStart(), err)
+			v.SetError(err)
 		}
 		return types.Failure
 	}
 	return val
 }
 
-func (v *Visitor) VisitExpressionLogicalOr(ctx *parser.ExpressionLogicalOrContext) any {
-	lhs, ok := v.Visit(ctx.Expression(0)).(object.Object)
+func (v *Visitor) VisitExpLogicalOr(ctx *parser.ExpLogicalOrContext) any {
+	lhs, ok := v.Visit(ctx.Exp(0)).(object.Object)
 	if !ok {
 		return types.Failure
 	}
-	rhs, ok := v.Visit(ctx.Expression(1)).(object.Object)
+	rhs, ok := v.Visit(ctx.Exp(1)).(object.Object)
 	if !ok {
 		return types.Failure
 	}
 	val, err := lhs.BinaryOp(parser.MlanLexerOr, rhs)
 	if err != nil {
 		if errors.Is(err, object.ErrInvalidOp) {
-			v.LineError(ctx.GetStart(), fmt.Errorf("unsupported expression: %s || %s", lhs.TypeName(), rhs.TypeName()))
+			v.SetError(fmt.Errorf("unsupported expression: %s || %s", lhs.TypeName(), rhs.TypeName()))
 		} else {
-			v.LineError(ctx.GetStart(), err)
+			v.SetError(err)
 		}
 		return types.Failure
 	}
 	return val
 }
 
-func (v *Visitor) VisitExpressionLogicalAnd(ctx *parser.ExpressionLogicalAndContext) any {
-	lhs, ok := v.Visit(ctx.Expression(0)).(object.Object)
+func (v *Visitor) VisitExpLogicalAnd(ctx *parser.ExpLogicalAndContext) any {
+	lhs, ok := v.Visit(ctx.Exp(0)).(object.Object)
 	if !ok {
 		return types.Failure
 	}
-	rhs, ok := v.Visit(ctx.Expression(1)).(object.Object)
+	rhs, ok := v.Visit(ctx.Exp(1)).(object.Object)
 	if !ok {
 		return types.Failure
 	}
 	val, err := lhs.BinaryOp(parser.MlanLexerAnd, rhs)
 	if err != nil {
 		if errors.Is(err, object.ErrInvalidOp) {
-			v.LineError(ctx.GetStart(), fmt.Errorf("unsupported expression: %s && %s", lhs.TypeName(), rhs.TypeName()))
+			v.SetError(fmt.Errorf("unsupported expression: %s && %s", lhs.TypeName(), rhs.TypeName()))
 		} else {
-			v.LineError(ctx.GetStart(), err)
+			v.SetError(err)
 		}
 		return types.Failure
 	}
 	return val
 }
 
-func (v *Visitor) VisitExpressionParentheses(ctx *parser.ExpressionParenthesesContext) any {
-	return v.Visit(ctx.Expression())
+func (v *Visitor) VisitExpParentheses(ctx *parser.ExpParenthesesContext) any {
+	return v.Visit(ctx.Exp())
 }
 
-func (v *Visitor) VisitExpressionEqual(ctx *parser.ExpressionEqualContext) any {
-	lhs, ok := v.Visit(ctx.Expression(0)).(object.Object)
+func (v *Visitor) VisitExpEqual(ctx *parser.ExpEqualContext) any {
+	lhs, ok := v.Visit(ctx.Exp(0)).(object.Object)
 	if !ok {
 		return types.Failure
 	}
-	rhs, ok := v.Visit(ctx.Expression(1)).(object.Object)
+	rhs, ok := v.Visit(ctx.Exp(1)).(object.Object)
 	if !ok {
 		return types.Failure
 	}
 	val, err := lhs.BinaryOp(ctx.GetOp().GetTokenType(), rhs)
 	if err != nil {
 		if errors.Is(err, object.ErrInvalidOp) {
-			v.LineError(ctx.GetStart(), fmt.Errorf("unsupported expression: %s %s %s", lhs.TypeName(), ctx.GetOp().GetText(), rhs.TypeName()))
+			v.SetError(fmt.Errorf("unsupported expression: %s %s %s", lhs.TypeName(), ctx.GetOp().GetText(), rhs.TypeName()))
 		} else {
-			v.LineError(ctx.GetStart(), err)
+			v.SetError(err)
 		}
 		return types.Failure
 	}
 	return val
 }
 
-func (v *Visitor) VisitExpressionUnaryNegation(ctx *parser.ExpressionUnaryNegationContext) any {
-	val, ok := v.Visit(ctx.Expression()).(object.Object)
+func (v *Visitor) VisitExpNeg(ctx *parser.ExpNegContext) any {
+	val, ok := v.Visit(ctx.Exp()).(object.Object)
 	if !ok {
 		return types.Failure
 	}
 	val, err := val.UnaryOp(parser.MlanLexerSubtract)
 	if err != nil {
 		if errors.Is(err, object.ErrInvalidOp) {
-			v.LineError(ctx.GetStart(), fmt.Errorf("unsupported expression: -%s", val.TypeName()))
+			v.SetError(fmt.Errorf("unsupported expression: -%s", val.TypeName()))
 		} else {
-			v.LineError(ctx.GetStart(), err)
+			v.SetError(err)
 		}
 		return types.Failure
 	}
 	return val
 }
 
-func (v *Visitor) VisitExpressionComparison(ctx *parser.ExpressionComparisonContext) any {
-	lhs, ok := v.Visit(ctx.Expression(0)).(object.Object)
+func (v *Visitor) VisitExpComparison(ctx *parser.ExpComparisonContext) any {
+	lhs, ok := v.Visit(ctx.Exp(0)).(object.Object)
 	if !ok {
 		return types.Failure
 	}
-	rhs, ok := v.Visit(ctx.Expression(1)).(object.Object)
+	rhs, ok := v.Visit(ctx.Exp(1)).(object.Object)
 	if !ok {
 		return types.Failure
 	}
 	val, err := lhs.BinaryOp(ctx.GetOp().GetTokenType(), rhs)
 	if err != nil {
 		if errors.Is(err, object.ErrInvalidOp) {
-			v.LineError(ctx.GetStart(), fmt.Errorf("unsupported expression: %s %s %s", lhs.TypeName(), ctx.GetOp().GetText(), rhs.TypeName()))
+			v.SetError(fmt.Errorf("unsupported expression: %s %s %s", lhs.TypeName(), ctx.GetOp().GetText(), rhs.TypeName()))
 		} else {
-			v.LineError(ctx.GetStart(), err)
+			v.SetError(err)
 		}
 		return types.Failure
 	}
 	return val
 }
 
-func (v *Visitor) VisitExpressionSumSub(ctx *parser.ExpressionSumSubContext) any {
-	lhs, ok := v.Visit(ctx.Expression(0)).(object.Object)
+func (v *Visitor) VisitExpSumSub(ctx *parser.ExpSumSubContext) any {
+	lhs, ok := v.Visit(ctx.Exp(0)).(object.Object)
 	if !ok {
 		return types.Failure
 	}
-	rhs, ok := v.Visit(ctx.Expression(1)).(object.Object)
+	rhs, ok := v.Visit(ctx.Exp(1)).(object.Object)
 	if !ok {
 		return types.Failure
 	}
 	val, err := lhs.BinaryOp(ctx.GetOp().GetTokenType(), rhs)
 	if err != nil {
 		if errors.Is(err, object.ErrInvalidOp) {
-			v.LineError(ctx.GetStart(), fmt.Errorf("unsupported expression: %s %s %s", lhs.TypeName(), ctx.GetOp().GetText(), rhs.TypeName()))
+			v.SetError(fmt.Errorf("unsupported expression: %s %s %s", lhs.TypeName(), ctx.GetOp().GetText(), rhs.TypeName()))
 		} else {
-			v.LineError(ctx.GetStart(), err)
+			v.SetError(err)
 		}
 		return types.Failure
 	}
 	return val
 }
 
-func (v *Visitor) VisitExpressionPow(ctx *parser.ExpressionPowContext) any {
-	lhs, ok := v.Visit(ctx.Expression(0)).(object.Object)
+func (v *Visitor) VisitExpPow(ctx *parser.ExpPowContext) any {
+	lhs, ok := v.Visit(ctx.Exp(0)).(object.Object)
 	if !ok {
 		return types.Failure
 	}
-	rhs, ok := v.Visit(ctx.Expression(1)).(object.Object)
+	rhs, ok := v.Visit(ctx.Exp(1)).(object.Object)
 	if !ok {
 		return types.Failure
 	}
 	val, err := lhs.BinaryOp(parser.MlanLexerPow, rhs)
 	if err != nil {
 		if errors.Is(err, object.ErrInvalidOp) {
-			v.LineError(ctx.GetStart(), fmt.Errorf("unsupported expression: %s ** %s", lhs.TypeName(), rhs.TypeName()))
+			v.SetError(fmt.Errorf("unsupported expression: %s ** %s", lhs.TypeName(), rhs.TypeName()))
 		} else {
-			v.LineError(ctx.GetStart(), err)
+			v.SetError(err)
 		}
 		return types.Failure
 	}
 	return val
 }
 
-func (v *Visitor) VisitExpressionMulDivMod(ctx *parser.ExpressionMulDivModContext) any {
-	lhs, ok := v.Visit(ctx.Expression(0)).(object.Object)
+func (v *Visitor) VisitExpMulDivMod(ctx *parser.ExpMulDivModContext) any {
+	lhs, ok := v.Visit(ctx.Exp(0)).(object.Object)
 	if !ok {
 		return types.Failure
 	}
-	rhs, ok := v.Visit(ctx.Expression(1)).(object.Object)
+	rhs, ok := v.Visit(ctx.Exp(1)).(object.Object)
 	if !ok {
 		return types.Failure
 	}
 	val, err := lhs.BinaryOp(ctx.GetOp().GetTokenType(), rhs)
 	if err != nil {
 		if errors.Is(err, object.ErrInvalidOp) {
-			v.LineError(ctx.GetStart(), fmt.Errorf("unsupported expression: %s %s %s", lhs.TypeName(), ctx.GetOp().GetText(), rhs.TypeName()))
+			v.SetError(fmt.Errorf("unsupported expression: %s %s %s", lhs.TypeName(), ctx.GetOp().GetText(), rhs.TypeName()))
 		} else {
-			v.LineError(ctx.GetStart(), err)
+			v.SetError(err)
 		}
 		return types.Failure
 	}
 	return val
 }
 
-func (v *Visitor) VisitExpressionXor(ctx *parser.ExpressionXorContext) any {
-	lhs, ok := v.Visit(ctx.Expression(0)).(object.Object)
+func (v *Visitor) VisitExpXor(ctx *parser.ExpXorContext) any {
+	lhs, ok := v.Visit(ctx.Exp(0)).(object.Object)
 	if !ok {
 		return types.Failure
 	}
-	rhs, ok := v.Visit(ctx.Expression(1)).(object.Object)
+	rhs, ok := v.Visit(ctx.Exp(1)).(object.Object)
 	if !ok {
 		return types.Failure
 	}
 	val, err := lhs.BinaryOp(parser.MlanParserXor, rhs)
 	if err != nil {
 		if errors.Is(err, object.ErrInvalidOp) {
-			v.LineError(ctx.GetStart(), fmt.Errorf("unsupported expression: %s ^ %s", lhs.TypeName(), rhs.TypeName()))
+			v.SetError(fmt.Errorf("unsupported expression: %s ^ %s", lhs.TypeName(), rhs.TypeName()))
 		} else {
-			v.LineError(ctx.GetStart(), err)
+			v.SetError(err)
 		}
 		return types.Failure
 	}
 	return val
 }
 
-func (v *Visitor) VisitForStatement(ctx *parser.ForStatementContext) any {
+func (v *Visitor) VisitForStmt(ctx *parser.ForStmtContext) any {
 	// левая часть присвоения (изначальное значение счетчика)
 	if ok := v.Visit(ctx.Assignment(0)).(types.VisitResultType); !ok {
 		return types.Failure
@@ -630,15 +687,19 @@ func (v *Visitor) VisitForStatement(ctx *parser.ForStatementContext) any {
 
 	for {
 		// условие выхода из цикла
-		res, ok := v.Visit(ctx.Expression()).(object.Object)
+		res, ok := v.Visit(ctx.Exp()).(object.Object)
 		if !ok {
-			v.LineError(ctx.GetStart(), fmt.Errorf("invalid expression for loop"))
+			if v.GetError() != nil {
+				v.SetError(fmt.Errorf("invalid expression for loop: %s", v.GetError()))
+			} else {
+				v.SetError(fmt.Errorf("invalid expression for loop"))
+			}
 			return types.Failure
 		}
 
 		// проверяем, что тип результата - булева
 		if _, ok = res.(*object.Bool); !ok {
-			v.LineError(ctx.GetStart(), fmt.Errorf("non-bool (%s) expression in for loop", res.TypeName()))
+			v.SetError(fmt.Errorf("non-bool (%s) expression in for loop", res.TypeName()))
 			return types.Failure
 		}
 
@@ -649,15 +710,15 @@ func (v *Visitor) VisitForStatement(ctx *parser.ForStatementContext) any {
 		}
 
 		// выполняем все выражения внутри блока цикла
-		for _, item := range ctx.AllStatement() {
+		for _, item := range ctx.AllStmt() {
 			// обработка break
 			if scope.CurrentScope.IsBreak() {
-				scope.CurrentScope.SetLoopBreak(false)
+				scope.CurrentScope.UnsetLoopBreak()
 				return types.Success
 			}
 			// обработка continue
 			if scope.CurrentScope.IsContinue() {
-				scope.CurrentScope.SetLoopContinue(false)
+				scope.CurrentScope.UnsetLoopContinue()
 				break
 			}
 			if ok := v.Visit(item).(types.VisitResultType); !ok {
@@ -678,59 +739,35 @@ func (v *Visitor) VisitForStatement(ctx *parser.ForStatementContext) any {
 	return types.Success
 }
 
-func (v *Visitor) VisitAssignmentSum(ctx *parser.AssignmentSumContext) any {
-	// получение значения переменной из скоупа
-	val := scope.CurrentScope.Get(ctx.GetVarScalarName().GetText(), true)
-	if val == nil {
-		v.LineError(ctx.GetStart(), fmt.Errorf("undefined variable '%s'", ctx.GetVarScalarName().GetText()))
-		return types.Failure
-	}
-	// получение результата выражения (справа)
-	rhs, ok := v.Visit(ctx.Expression()).(object.Object)
-	if !ok {
-		return types.Failure
-	}
-	// получаем итоговый скаляр
-	res, err := val.BinaryOp(parser.MlanLexerAssignSum, rhs)
-	if err != nil {
-		v.LineError(ctx.GetStart(), err)
-		return types.Failure
-	}
-	// сохраняем новый скаляр
-	scope.CurrentScope.Put(ctx.GetVarScalarName().GetText(), res)
-
-	return types.Success
-}
-
-func (v *Visitor) VisitBreakStatement(ctx *parser.BreakStatementContext) any {
+func (v *Visitor) VisitBreakStmt(ctx *parser.BreakStmtContext) any {
 	if scope.CurrentScope.IsInLoop() {
-		scope.CurrentScope.SetLoopBreak(true)
+		scope.CurrentScope.SetLoopBreak()
 		return types.Success
 	}
-	v.LineError(ctx.GetStart(), fmt.Errorf("break outside of loop"))
+	v.SetError(fmt.Errorf("break outside of loop"))
 	return types.Failure
 }
 
-func (v *Visitor) VisitContinueStatement(ctx *parser.ContinueStatementContext) any {
+func (v *Visitor) VisitContinueStmt(ctx *parser.ContinueStmtContext) any {
 	if scope.CurrentScope.IsInLoop() {
-		scope.CurrentScope.SetLoopContinue(true)
+		scope.CurrentScope.SetLoopContinue()
 		return types.Success
 	}
-	v.LineError(ctx.GetStart(), fmt.Errorf("continue outside of loop"))
+	v.SetError(fmt.Errorf("continue outside of loop"))
 	return types.Failure
 }
 
-func (v *Visitor) VisitWhileStatement(ctx *parser.WhileStatementContext) any {
+func (v *Visitor) VisitWhileStmt(ctx *parser.WhileStmtContext) any {
 	for {
 		// условие выхода из цикла
-		res, ok := v.Visit(ctx.Expression()).(object.Object)
+		res, ok := v.Visit(ctx.Exp()).(object.Object)
 		if !ok {
 			return types.Failure
 		}
 
 		// проверяем, что условие булева
 		if _, ok = res.(*object.Bool); !ok {
-			v.LineError(ctx.GetStart(), fmt.Errorf("non-bool (%s) expression in for loop", res.TypeName()))
+			v.SetError(fmt.Errorf("non-bool (%s) expression in for loop", res.TypeName()))
 			return types.Failure
 		}
 
@@ -740,19 +777,19 @@ func (v *Visitor) VisitWhileStatement(ctx *parser.WhileStatementContext) any {
 			break
 		}
 
-		for _, item := range ctx.AllStatement() {
+		for _, item := range ctx.AllStmt() {
+			if ok := v.Visit(item).(types.VisitResultType); !ok {
+				return types.Failure
+			}
 			// обработка break
 			if scope.CurrentScope.IsBreak() {
-				scope.CurrentScope.SetLoopBreak(false)
+				scope.CurrentScope.UnsetLoopBreak()
 				return types.Success
 			}
 			// обработка continue
 			if scope.CurrentScope.IsContinue() {
-				scope.CurrentScope.SetLoopContinue(false)
+				scope.CurrentScope.UnsetLoopContinue()
 				break
-			}
-			if ok := v.Visit(item).(types.VisitResultType); !ok {
-				return types.Failure
 			}
 			// обработка return
 			if retValue != nil {
@@ -764,7 +801,7 @@ func (v *Visitor) VisitWhileStatement(ctx *parser.WhileStatementContext) any {
 	return types.Success
 }
 
-func (v *Visitor) VisitIfStatement(ctx *parser.IfStatementContext) any {
+func (v *Visitor) VisitIfStmt(ctx *parser.IfStmtContext) any {
 	// if
 	if ctx.IfBlock() != nil {
 		// результат if блока
@@ -801,21 +838,21 @@ func (v *Visitor) VisitIfStatement(ctx *parser.IfStatementContext) any {
 	return types.Success
 }
 
-func (v *Visitor) VisitIfBlockStatement(ctx *parser.IfBlockStatementContext) any {
-	res, ok := v.Visit(ctx.Expression()).(object.Object)
+func (v *Visitor) VisitIfBlockStmt(ctx *parser.IfBlockStmtContext) any {
+	res, ok := v.Visit(ctx.Exp()).(object.Object)
 	if !ok {
 		return types.Failure
 	}
 	// кастим в бул
 	res, err := builtin.Bool(res)
 	if err != nil {
-		v.LineError(ctx.GetStart(), err)
+		v.SetError(err)
 		return types.Failure
 	}
 
 	if res.(*object.Bool).GetValue().(bool) {
 		// если булевый объект true -> выполняем блок
-		for _, item := range ctx.AllStatement() {
+		for _, item := range ctx.AllStmt() {
 			if ok := v.Visit(item).(types.VisitResultType); !ok {
 				return types.Failure
 			}
@@ -825,8 +862,8 @@ func (v *Visitor) VisitIfBlockStatement(ctx *parser.IfBlockStatementContext) any
 	return res
 }
 
-func (v *Visitor) VisitElseBlockStatement(ctx *parser.ElseBlockStatementContext) any {
-	for _, item := range ctx.AllStatement() {
+func (v *Visitor) VisitElseBlockStmt(ctx *parser.ElseBlockStmtContext) any {
+	for _, item := range ctx.AllStmt() {
 		if ok := v.Visit(item).(types.VisitResultType); !ok {
 			return types.Failure
 		}
@@ -834,21 +871,21 @@ func (v *Visitor) VisitElseBlockStatement(ctx *parser.ElseBlockStatementContext)
 	return types.Success
 }
 
-func (v *Visitor) VisitElifBlockStatement(ctx *parser.ElifBlockStatementContext) any {
-	res, ok := v.Visit(ctx.Expression()).(object.Object)
+func (v *Visitor) VisitElifBlockStmt(ctx *parser.ElifBlockStmtContext) any {
+	res, ok := v.Visit(ctx.Exp()).(object.Object)
 	if !ok {
 		return types.Failure
 	}
 	// кастим в бул
 	res, err := builtin.Bool(res)
 	if err != nil {
-		v.LineError(ctx.GetStart(), err)
+		v.SetError(err)
 		return types.Failure
 	}
 
 	if res.(*object.Bool).GetValue().(bool) {
 		// если булевый объект true -> выполняем блок
-		for _, item := range ctx.AllStatement() {
+		for _, item := range ctx.AllStmt() {
 			if ok := v.Visit(item).(types.VisitResultType); !ok {
 				return types.Failure
 			}
@@ -858,37 +895,49 @@ func (v *Visitor) VisitElifBlockStatement(ctx *parser.ElifBlockStatementContext)
 	return res
 }
 
-func (v *Visitor) VisitFunctionDefinition(ctx *parser.FunctionDefinitionContext) any {
-	// получение аргументов
-	var args []string
-	if ctx.FunctionParameters() != nil {
-		for _, item := range ctx.FunctionParameters().AllIdentifier() {
-			args = append(args, item.GetText())
-		}
-	}
-
-	// проверяем, что функция еще не существует
-	if _, ok := storage.NativeFunctions[ctx.GetVarFunctionName().GetText()]; ok {
-		v.LineError(ctx.GetStart(), fmt.Errorf("function '%s' already defined", ctx.GetVarFunctionName().GetText()))
+func (v *Visitor) VisitFn(ctx *parser.FnContext) any {
+	// проверяем, что функции не существует
+	if _, ok := storage.NativeFunctions[ctx.GetName().GetText()]; ok {
+		v.SetError(fmt.Errorf("function '%s' already defined", ctx.GetName().GetText()))
 		return types.Failure
 	}
 
-	// создаем новую нативную функцию
-	storage.NativeFunctions[ctx.GetVarFunctionName().GetText()] = object.NewNativeFunc(
-		ctx.GetVarFunctionName().GetText(),
-		args,
-		len(args),
-		ctx.AllStatement(),
-	)
+	// получение объекта нативной функции
+	fn, ok := v.Visit(ctx.FnBody()).(*object.NativeFunc)
+	if !ok {
+		return types.Failure
+	}
+
+	// установка имени функции
+	fn.SetName(ctx.GetName().GetText())
+
+	// сохранение функции
+	storage.NativeFunctions[ctx.GetName().GetText()] = fn
 
 	return types.Success
 }
 
-func (v *Visitor) VisitExpressionFunctionInvoke(ctx *parser.ExpressionFunctionInvokeContext) any {
-	res, ok := v.Visit(ctx.FunctionInvoke()).(object.Object)
+func (v *Visitor) VisitFnBody(ctx *parser.FnBodyContext) any {
+	// аргументы
+	args := make([]string, 0)
+	if ctx.FnParams() != nil {
+		for _, item := range ctx.FnParams().AllIdentifier() {
+			args = append(args, item.GetText())
+		}
+	}
+	// сохдание объекта функции
+	return object.NewNativeFunc(
+		args,
+		len(args),
+		ctx.AllStmt(),
+	)
+}
+
+func (v *Visitor) VisitExpFnInvoke(ctx *parser.ExpFnInvokeContext) any {
+	res, ok := v.Visit(ctx.FnInvoke()).(object.Object)
 	if !ok {
 		// значит вернулся статус
-		if v.Error == nil {
+		if v.GetError() == nil {
 			return object.NewNull()
 		}
 		return types.Failure
@@ -896,14 +945,14 @@ func (v *Visitor) VisitExpressionFunctionInvoke(ctx *parser.ExpressionFunctionIn
 	return res
 }
 
-func (v *Visitor) VisitReturnStatement(ctx *parser.ReturnStatementContext) any {
+func (v *Visitor) VisitReturnStmt(ctx *parser.ReturnStmtContext) any {
 	if !scope.CurrentScope.IsInFunc() {
-		v.LineError(ctx.GetStart(), fmt.Errorf("return outside of function"))
+		v.SetError(fmt.Errorf("return outside of function"))
 		return types.Failure
 	}
 	// получаем результат return
-	if ctx.Expression() != nil {
-		res, ok := v.Visit(ctx.Expression()).(object.Object)
+	if ctx.Exp() != nil {
+		res, ok := v.Visit(ctx.Exp()).(object.Object)
 		if !ok {
 			return types.Failure
 		}
@@ -915,84 +964,61 @@ func (v *Visitor) VisitReturnStatement(ctx *parser.ReturnStatementContext) any {
 	}
 }
 
-func (v *Visitor) VisitExpressionIndex(ctx *parser.ExpressionIndexContext) any {
-	lhs, ok := v.Visit(ctx.Expression()).(object.Object)
+func (v *Visitor) VisitExpIdx(ctx *parser.ExpIdxContext) any {
+	lhs, ok := v.Visit(ctx.Exp()).(object.Object)
 	if !ok {
 		return types.Failure
 	}
-	idx, ok := v.Visit(ctx.Index().Expression()).(object.Object)
+	idx, ok := v.Visit(ctx.Idx()).(object.Object)
 	if !ok {
 		return types.Failure
 	}
 	res, err := lhs.IndexGet(idx)
 	if err != nil {
 		if errors.Is(err, object.ErrInvalidOp) {
-			v.LineError(ctx.GetStart(), fmt.Errorf("unsupported expression: %s[%s]", lhs.TypeName(), idx.TypeName()))
+			v.SetError(fmt.Errorf("unsupported expression: %s[%s]", lhs.TypeName(), idx.TypeName()))
 		} else {
-			v.LineError(ctx.GetStart(), err)
+			v.SetError(err)
 		}
 		return types.Failure
 	}
 	return res
 }
 
-func (v *Visitor) VisitAssignmentIndexRegular(ctx *parser.AssignmentIndexRegularContext) any {
+func (v *Visitor) VisitIdx(ctx *parser.IdxContext) any {
+	return v.Visit(ctx.Exp())
+}
+
+func (v *Visitor) VisitAssignIdxRegular(ctx *parser.AssignIdxRegularContext) any {
 	// забираем из скоупа переменную
-	lhs := scope.CurrentScope.Get(ctx.GetVarScalarName().GetText(), true)
+	lhs := scope.CurrentScope.Get(ctx.GetName().GetText(), true)
 	if lhs == nil {
-		v.LineError(ctx.GetStart(), fmt.Errorf("undefined variable '%s'", ctx.GetVarScalarName().GetText()))
+		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
 		return types.Failure
 	}
 	// получаем индекс
-	idx, ok := v.Visit(ctx.Index().Expression()).(object.Object)
+	idx, ok := v.Visit(ctx.Idx().Exp()).(object.Object)
 	if !ok {
 		return types.Failure
 	}
 	// получаем значение
-	val, ok := v.Visit(ctx.Expression()).(object.Object)
+	val, ok := v.Visit(ctx.Exp()).(object.Object)
 	if !ok {
 		return types.Failure
 	}
 	// проставляем значение по индексу
 	if err := lhs.IndexSet(idx, val); err != nil {
-		v.LineError(ctx.GetStart(), err)
+		v.SetError(err)
 		return types.Failure
 	}
 	return types.Success
 }
 
-func (v *Visitor) VisitAssignmentClosure(ctx *parser.AssignmentClosureContext) any {
-	// формируем объект функции
-	if ctx.ClosureDefinition() == nil {
-		v.LineError(ctx.GetStart(), fmt.Errorf("no definition of closure"))
-		return types.Failure
-	}
-	// получаем аргументы
-	var args []string
-	if ctx.ClosureDefinition().FunctionParameters() != nil {
-		for _, item := range ctx.ClosureDefinition().FunctionParameters().AllIdentifier() {
-			args = append(args, item.GetText())
-		}
-	}
-	// формируем объект функции
-	fn := object.NewNativeFunc(
-		ctx.GetVarScalarName().GetText(),
-		args,
-		len(args),
-		ctx.ClosureDefinition().AllStatement(),
-	)
-
-	// сохраняем в переменные
-	scope.CurrentScope.Put(ctx.GetVarScalarName().GetText(), fn)
-
-	return types.Success
-}
-
-func (v *Visitor) VisitExpressionClosureInvoke(ctx *parser.ExpressionClosureInvokeContext) any {
-	res, ok := v.Visit(ctx.ClosureInvoke()).(object.Object)
+func (v *Visitor) VisitExpCsInvoke(ctx *parser.ExpCsInvokeContext) any {
+	res, ok := v.Visit(ctx.CsInvoke()).(object.Object)
 	if !ok {
 		// значит вернулся статус
-		if v.Error == nil {
+		if v.GetError() == nil {
 			return object.NewNull()
 		}
 		return types.Failure
@@ -1000,10 +1026,10 @@ func (v *Visitor) VisitExpressionClosureInvoke(ctx *parser.ExpressionClosureInvo
 	return res
 }
 
-func (v *Visitor) VisitIdentifierClosureInvoke(ctx *parser.IdentifierClosureInvokeContext) any {
+func (v *Visitor) VisitIdentifierCsInvoke(ctx *parser.IdentifierCsInvokeContext) any {
 	var params []object.Object
 
-	for _, item := range ctx.AllExpression() {
+	for _, item := range ctx.AllExp() {
 		// собираем аргументы для функции
 		res, ok := v.Visit(item).(object.Object)
 		if !ok {
@@ -1012,52 +1038,113 @@ func (v *Visitor) VisitIdentifierClosureInvoke(ctx *parser.IdentifierClosureInvo
 		params = append(params, res)
 	}
 
-	return v.invokeClosureFunc(ctx.GetStart(), ctx.GetVarClosureName().GetText(), params...)
+	return v.invokeClosureFunc(ctx.GetName().GetText(), params...)
 }
 
-func (v *Visitor) VisitIncludeSubmodule(ctx *parser.IncludeSubmoduleContext) any {
-	val, ok := v.Visit(ctx.Expression()).(object.Object)
+func (v *Visitor) VisitInclude(ctx *parser.IncludeContext) any {
+	val, ok := v.Visit(ctx.Exp()).(object.Object)
 	if !ok {
 		return types.Failure
 	}
 	path, ok := val.(*object.Str)
 	if !ok {
-		v.LineError(ctx.GetStart(), fmt.Errorf("invalid argument of type '%s'", val.TypeName()))
+		v.SetError(fmt.Errorf("invalid argument of type '%s'", val.TypeName()))
 		return types.Failure
 	}
 	data, err := os.ReadFile(path.GetValue().(string))
 	if err != nil {
-		v.LineError(ctx.GetStart(), err)
+		v.SetError(err)
 		return types.Failure
 	}
 	tree, err := utils.CreateAST(string(data))
 	if err != nil {
-		v.LineError(ctx.GetStart(), err)
+		v.SetError(err)
 		return types.Failure
 	}
 	return tree
 }
 
-func (v *Visitor) VisitExpressionClosure(ctx *parser.ExpressionClosureContext) any {
-	// формируем объект функции
-	if ctx.ClosureDefinition() == nil {
-		v.LineError(ctx.GetStart(), fmt.Errorf("no definition of closure"))
+func (v *Visitor) VisitExpCs(ctx *parser.ExpCsContext) any {
+	return v.Visit(ctx.Closure())
+}
+
+func (v *Visitor) VisitClosure(ctx *parser.ClosureContext) interface{} {
+	return v.Visit(ctx.FnBody())
+}
+
+func (v *Visitor) VisitAssignSum(ctx *parser.AssignSumContext) any {
+	// значение переменной из скоупа
+	val := scope.CurrentScope.Get(ctx.GetName().GetText(), true)
+	if val == nil {
+		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
 		return types.Failure
 	}
-	// получаем аргументы
-	var args []string
-	if ctx.ClosureDefinition().FunctionParameters() != nil {
-		for _, item := range ctx.ClosureDefinition().FunctionParameters().AllIdentifier() {
-			args = append(args, item.GetText())
-		}
+	// результат выражения справа
+	rhs, ok := v.Visit(ctx.Exp()).(object.Object)
+	if !ok {
+		return types.Failure
 	}
-	// формируем объект функции
-	fn := object.NewNativeFunc(
-		"unknown",
-		args,
-		len(args),
-		ctx.ClosureDefinition().AllStatement(),
-	)
+	// итоговый объект
+	res, err := val.BinaryOp(parser.MlanLexerAssSum, rhs)
+	if err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	// сохраняем новый объект
+	scope.CurrentScope.Put(ctx.GetName().GetText(), res)
 
-	return fn
+	return types.Success
+}
+
+func (v *Visitor) VisitAssignSub(ctx *parser.AssignSubContext) any {
+	// значение переменной из скоупа
+	val := scope.CurrentScope.Get(ctx.GetName().GetText(), true)
+	if val == nil {
+		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetName().GetText()))
+		return types.Failure
+	}
+	// результат выражения справа
+	rhs, ok := v.Visit(ctx.Exp()).(object.Object)
+	if !ok {
+		return types.Failure
+	}
+	// итоговый объект
+	res, err := val.BinaryOp(parser.MlanLexerAssSub, rhs)
+	if err != nil {
+		v.SetError(err)
+		return types.Failure
+	}
+	// сохраняем новый объект
+	scope.CurrentScope.Put(ctx.GetName().GetText(), res)
+
+	return types.Success
+}
+
+func (v *Visitor) VisitExpMethodInvoke(ctx *parser.ExpMethodInvokeContext) interface{} {
+	return v.Visit(ctx.MethodInvoke())
+}
+
+func (v *Visitor) VisitIdentifierMethodInvoke(ctx *parser.IdentifierMethodInvokeContext) interface{} {
+	// значение переменной из скоупа
+	val := scope.CurrentScope.Get(ctx.GetVar_().GetText(), true)
+	if val == nil {
+		v.SetError(fmt.Errorf("undefined variable '%s'", ctx.GetVar_().GetText()))
+		return types.Failure
+	}
+	// собираем аргументы для метода
+	var params []object.Object
+	for _, item := range ctx.AllExp() {
+		res, ok := v.Visit(item).(object.Object)
+		if !ok {
+			return types.Failure
+		}
+		params = append(params, res)
+	}
+	// вызываем метод
+	obj, err := val.MethodCall(ctx.GetName().GetText(), params...)
+	if err != nil {
+		v.err = err
+		return types.Failure
+	}
+	return obj
 }

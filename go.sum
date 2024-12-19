@@ -2,8 +2,8 @@ github.com/antlr4-go/antlr/v4 v4.13.1 h1:SqQKkuVZ+zWkMMNkjy5FZe5mr5WURWnlpmOuzYW
 github.com/antlr4-go/antlr/v4 v4.13.1/go.mod h1:GKmUxMtwp6ZgGwZSva4eWPC5mS6vUAmOABFgjdkM7Nw=
 github.com/c2micro/c2mshr v0.0.0-20241218163131-bc2ecc1fec9d h1:ct6dZqyv25+BFl82yyYiZ+dM835TtJ8Tgoks6Fnwbrg=
 github.com/c2micro/c2mshr v0.0.0-20241218163131-bc2ecc1fec9d/go.mod h1:1O107tF3CP+QYstt69dJ0FmctzykTwxOOgQkRoD15bc=
-github.com/c2micro/mlan v0.0.0-20241218222148-7c883299085d h1:h/O6KIsgLuH/bOMqP6casiahmK/sjBPQOpCsMVdiw/s=
-github.com/c2micro/mlan v0.0.0-20241218222148-7c883299085d/go.mod h1:bkbufdt060jV9HlOLMeVrnTGsVdTTc9sUW9UXSKTj0w=
+github.com/c2micro/mlan v0.0.0-20241219155036-3dc94c8e7c9e h1:x4JZYRQfBt37xl0xIOygzuzyOcwCXmtJdUmV+5EK98s=
+github.com/c2micro/mlan v0.0.0-20241219155036-3dc94c8e7c9e/go.mod h1:bkbufdt060jV9HlOLMeVrnTGsVdTTc9sUW9UXSKTj0w=
 github.com/cpuguy83/go-md2man/v2 v2.0.3/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46tRHOmNcaadrF8o=
 github.com/cpuguy83/go-md2man/v2 v2.0.4/go.mod h1:tgQtvFlXSQOSOSIRvRPT7W67SCa46tRHOmNcaadrF8o=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=

@@ -1,6 +1,13 @@
 alias(
   "rm",
-  fn (bid, cmd, args, raw) {},
+  fn (bid, cmd, args, raw) {
+    if args.len() != 1 {
+      return m_error(bid, "invalid number of arguments");
+    }
+
+    m_notify(bid, "tasked beacon to remove file/directory");
+    return b_rm(bid, args[0]);
+  },
   "remove file/dir recursively",
   "Usage:\n\trm [path]",
   true

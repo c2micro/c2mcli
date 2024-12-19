@@ -1,15 +1,15 @@
 alias(
   "caps",
   fn (bid, cmd, args, raw) {
-    if len(args) != 0 {
+    if args.len() != 0 {
       return m_error(bid, "invalid number of arguments");
     }
 
     l = b_caps(bid);
     s = "supported list of capabilities:\n";
 
-    for i = 0; i < len(l); i += 1 {
-      if i != len(l) - 1 {
+    for i = 0; i < l.len(); i += 1 {
+      if i != l.len() - 1 {
         s += "- " + l[i] + "\n";
       } else {
         s += "- " + l[i];

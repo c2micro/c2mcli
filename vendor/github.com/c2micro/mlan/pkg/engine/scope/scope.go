@@ -102,14 +102,56 @@ func (s *Scope) IsContinue() bool {
 	return s.isLoopContinue
 }
 
-// SetLoopBreak установка индикатора необходимости выхода из цикла
-func (s *Scope) SetLoopBreak(b bool) {
-	s.isLoopBreak = b
+// установка индикатора необходимости выхода из цикла
+func (s *Scope) SetLoopBreak() {
+	t := s
+	for {
+		if t.isLoop {
+			// set break on first loop context
+			t.isLoopBreak = true
+			break
+		}
+		t = t.parent
+	}
 }
 
-// SetLoopContinue установка индикатора необходимости пропыга блока цикла
-func (s *Scope) SetLoopContinue(b bool) {
-	s.isLoopContinue = b
+// снятие индикатора необходимости выхода из цикла
+func (s *Scope) UnsetLoopBreak() {
+	t := s
+	for {
+		if t.isLoop {
+			// set break on first loop context
+			t.isLoopBreak = false
+			break
+		}
+		t = t.parent
+	}
+}
+
+// установка индикатора необходимости пропыга блока цикла
+func (s *Scope) SetLoopContinue() {
+	t := s
+	for {
+		if t.isLoop {
+			// set continue on first loop context
+			t.isLoopContinue = true
+			break
+		}
+		t = t.parent
+	}
+}
+
+// снятие индикатора необходимости пропыга блока цикла
+func (s *Scope) UnsetLoopContinue() {
+	t := s
+	for {
+		if t.isLoop {
+			// set continue on first loop context
+			t.isLoopContinue = false
+			break
+		}
+		t = t.parent
+	}
 }
 
 // Depth возвращение текущей вложенности

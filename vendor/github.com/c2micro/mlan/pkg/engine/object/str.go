@@ -3,20 +3,32 @@ package object
 import (
 	"fmt"
 	"strings"
+	"unicode/utf8"
 
-	"github.com/c2micro/mlan/pkg/parser"
 	"github.com/c2micro/mlan/pkg/engine/utils"
+	"github.com/c2micro/mlan/pkg/parser"
 )
 
 // Str тип с плавающей точкой
 type Str struct {
 	Impl
-	Arithmetic
-	value string
+	value   string
+	methods map[string]*BuiltinFunc
 }
 
 func NewStr(v string) *Str {
-	return &Str{value: v}
+	s := &Str{
+		value: v,
+	}
+	s.fillMethods()
+	return s
+}
+
+func (o *Str) fillMethods() {
+	o.methods = make(map[string]*BuiltinFunc)
+	o.methods["len"] = NewBuiltinFunc("len", o.MethodLen)
+	o.methods["reverse"] = NewBuiltinFunc("reverse", o.MethodReverse)
+	o.methods["split"] = NewBuiltinFunc("split", o.MethodSplit)
 }
 
 func (o *Str) TypeName() string {
@@ -32,10 +44,22 @@ func (o *Str) IndexGet(rs Object) (Object, error) {
 	if !ok {
 		return nil, ErrInvalidIndexType
 	}
-	if idx.value < 0 || idx.value >= int64(len(o.value)) {
+	if idx.value < 0 || idx.value >= int64(utf8.RuneCountInString(o.value)) {
 		return nil, ErrIndexOutOfRange
 	}
-	return NewStr(string(o.value[idx.value])), nil
+	// ширина руны (в количестве байт)
+	w := 0
+	// количество рун
+	c := 0
+	for i := 0; i < len(o.value); i += w {
+		var r rune
+		r, w = utf8.DecodeRuneInString(o.value[i:])
+		if c == int(idx.value) {
+			return NewStr(string(r)), nil
+		}
+		c++
+	}
+	return nil, ErrNotImplemented
 }
 
 func (o *Str) IndexSet(idx Object, rs Object) error {
@@ -47,13 +71,28 @@ func (o *Str) IndexSet(idx Object, rs Object) error {
 	if !ok {
 		return fmt.Errorf("invalid type '%s' of assignment to str", rs.TypeName())
 	}
-	if idxInt.value < 0 || int(idxInt.value) >= len(o.value) {
+	if idxInt.value < 0 || idxInt.value >= int64(utf8.RuneCountInString(o.value)) {
 		return ErrIndexOutOfRange
 	}
-	if len(rsStr.value) != 1 {
+	if utf8.RuneCountInString(rsStr.value) != 1 {
 		return fmt.Errorf("expected str with length of 1, got %d", len(rsStr.value))
 	}
-	o.value = o.value[:idxInt.value] + rsStr.value + o.value[idxInt.value+1:]
+	res := ""
+	// ширина руны (в количестве байт)
+	w := 0
+	// количество рун
+	c := 0
+	for i := 0; i < len(o.value); i += w {
+		var r rune
+		r, w = utf8.DecodeRuneInString(o.value[i:])
+		if c == int(idxInt.value) {
+			res += rsStr.value
+		} else {
+			res += string(r)
+		}
+		c++
+	}
+	o.value = res
 	return nil
 }
 
@@ -77,7 +116,7 @@ func (o *Str) BinaryOp(op int, rhs Object) (Object, error) {
 		return o.Lt(rhs)
 	case parser.MlanLexerAdd:
 		return o.Add(rhs)
-	case parser.MlanLexerAssignSum:
+	case parser.MlanLexerAssSum:
 		return o.Add(rhs)
 	case parser.MlanLexerMultiply:
 		return o.Mul(rhs)
@@ -206,7 +245,58 @@ func (o *Str) Mul(rs Object) (Object, error) {
 	case *Bool:
 		return NewStr(strings.Repeat(o.value, int(utils.BoolToInt(rs.(*Bool).value)))), nil
 	case *Int:
-		return NewStr(strings.Repeat(o.value, int(rs.(*Int).value))), nil
+		// in case of negative value
+		count := 0
+		if int(rs.(*Int).value) > 0 {
+			count = int(rs.(*Int).value)
+		}
+		return NewStr(strings.Repeat(o.value, count)), nil
 	}
 	return nil, ErrInvalidOp
+}
+
+func (o *Str) MethodCall(name string, args ...Object) (Object, error) {
+	m := o.methods[name]
+	if m == nil {
+		return nil, ErrUnknownMethod
+	}
+	return m.Call(args...)
+}
+
+func (o *Str) MethodLen(args ...Object) (Object, error) {
+	if len(args) > 0 {
+		return nil, fmt.Errorf("expecting 0 arguments, got %d", len(args))
+	}
+	return NewInt(int64(utf8.RuneCountInString(o.value))), nil
+}
+
+func (o *Str) MethodReverse(args ...Object) (Object, error) {
+	if len(args) > 0 {
+		return nil, fmt.Errorf("expecting 0 arguments, got %d", len(args))
+	}
+	size := len(o.value)
+	buf := make([]byte, size)
+	for start := 0; start < size; {
+		r, n := utf8.DecodeRuneInString(o.value[start:])
+		start += n
+		utf8.EncodeRune(buf[size-start:], r)
+	}
+	o.value = string(buf)
+	return NewNull(), nil
+}
+
+func (o *Str) MethodSplit(args ...Object) (Object, error) {
+	if len(args) != 1 {
+		return nil, fmt.Errorf("expecting 1 arguments, got %d", len(args))
+	}
+	key, ok := args[0].(*Str)
+	if !ok {
+		return nil, fmt.Errorf("expecting str as 1st argument, got '%s'", args[1].TypeName())
+	}
+	temp := strings.Split(o.value, key.value)
+	result := make([]Object, 0)
+	for _, v := range temp {
+		result = append(result, NewStr(v))
+	}
+	return NewList(result), nil
 }

@@ -7,71 +7,63 @@ type BaseMlanVisitor struct {
 	*antlr.BaseParseTreeVisitor
 }
 
-func (v *BaseMlanVisitor) VisitProgram(ctx *ProgramContext) interface{} {
+func (v *BaseMlanVisitor) VisitProg(ctx *ProgContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitBlock(ctx *BlockContext) interface{} {
+func (v *BaseMlanVisitor) VisitStmt(ctx *StmtContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitStatement(ctx *StatementContext) interface{} {
+func (v *BaseMlanVisitor) VisitWhileStmt(ctx *WhileStmtContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitWhileStatement(ctx *WhileStatementContext) interface{} {
+func (v *BaseMlanVisitor) VisitForStmt(ctx *ForStmtContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitForStatement(ctx *ForStatementContext) interface{} {
+func (v *BaseMlanVisitor) VisitReturnStmt(ctx *ReturnStmtContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitReturnStatement(ctx *ReturnStatementContext) interface{} {
+func (v *BaseMlanVisitor) VisitContinueStmt(ctx *ContinueStmtContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitContinueStatement(ctx *ContinueStatementContext) interface{} {
+func (v *BaseMlanVisitor) VisitBreakStmt(ctx *BreakStmtContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitBreakStatement(ctx *BreakStatementContext) interface{} {
+func (v *BaseMlanVisitor) VisitAssignRegular(ctx *AssignRegularContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitAssignmentRegular(ctx *AssignmentRegularContext) interface{} {
+func (v *BaseMlanVisitor) VisitAssignSum(ctx *AssignSumContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitAssignmentClosure(ctx *AssignmentClosureContext) interface{} {
+func (v *BaseMlanVisitor) VisitAssignSub(ctx *AssignSubContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitAssignmentSum(ctx *AssignmentSumContext) interface{} {
+func (v *BaseMlanVisitor) VisitAssignMul(ctx *AssignMulContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitAssignmentSub(ctx *AssignmentSubContext) interface{} {
+func (v *BaseMlanVisitor) VisitAssignDiv(ctx *AssignDivContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitAssignmentMul(ctx *AssignmentMulContext) interface{} {
+func (v *BaseMlanVisitor) VisitAssignMod(ctx *AssignModContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitAssignmentDiv(ctx *AssignmentDivContext) interface{} {
+func (v *BaseMlanVisitor) VisitAssignPow(ctx *AssignPowContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitAssignmentMod(ctx *AssignmentModContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseMlanVisitor) VisitAssignmentPow(ctx *AssignmentPowContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseMlanVisitor) VisitAssignmentIndexRegular(ctx *AssignmentIndexRegularContext) interface{} {
+func (v *BaseMlanVisitor) VisitAssignIdxRegular(ctx *AssignIdxRegularContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -87,142 +79,154 @@ func (v *BaseMlanVisitor) VisitDict(ctx *DictContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitIndex(ctx *IndexContext) interface{} {
+func (v *BaseMlanVisitor) VisitIdx(ctx *IdxContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitIdentifierFunctionInvoke(ctx *IdentifierFunctionInvokeContext) interface{} {
+func (v *BaseMlanVisitor) VisitIdentifierMethodInvoke(ctx *IdentifierMethodInvokeContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitIdentifierClosureInvoke(ctx *IdentifierClosureInvokeContext) interface{} {
+func (v *BaseMlanVisitor) VisitIdentifierFnInvoke(ctx *IdentifierFnInvokeContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitExpressionIntegerHex(ctx *ExpressionIntegerHexContext) interface{} {
+func (v *BaseMlanVisitor) VisitIdentifierCsInvoke(ctx *IdentifierCsInvokeContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitExpressionFunctionInvoke(ctx *ExpressionFunctionInvokeContext) interface{} {
+func (v *BaseMlanVisitor) VisitExpBool(ctx *ExpBoolContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitExpressionUnaryNegation(ctx *ExpressionUnaryNegationContext) interface{} {
+func (v *BaseMlanVisitor) VisitExpComparison(ctx *ExpComparisonContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitExpressionBool(ctx *ExpressionBoolContext) interface{} {
+func (v *BaseMlanVisitor) VisitExpIdx(ctx *ExpIdxContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitExpressionPow(ctx *ExpressionPowContext) interface{} {
+func (v *BaseMlanVisitor) VisitExpString(ctx *ExpStringContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitExpressionXor(ctx *ExpressionXorContext) interface{} {
+func (v *BaseMlanVisitor) VisitExpCsInvoke(ctx *ExpCsInvokeContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitExpressionEqual(ctx *ExpressionEqualContext) interface{} {
+func (v *BaseMlanVisitor) VisitExpFloat(ctx *ExpFloatContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitExpressionClosure(ctx *ExpressionClosureContext) interface{} {
+func (v *BaseMlanVisitor) VisitExpPow(ctx *ExpPowContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitExpressionDict(ctx *ExpressionDictContext) interface{} {
+func (v *BaseMlanVisitor) VisitExpDict(ctx *ExpDictContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitExpressionIdentifier(ctx *ExpressionIdentifierContext) interface{} {
+func (v *BaseMlanVisitor) VisitExpXor(ctx *ExpXorContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitExpressionList(ctx *ExpressionListContext) interface{} {
+func (v *BaseMlanVisitor) VisitExpNeg(ctx *ExpNegContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitExpressionSumSub(ctx *ExpressionSumSubContext) interface{} {
+func (v *BaseMlanVisitor) VisitExpInteger(ctx *ExpIntegerContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitExpressionComparison(ctx *ExpressionComparisonContext) interface{} {
+func (v *BaseMlanVisitor) VisitExpLogicalOr(ctx *ExpLogicalOrContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitExpressionLogicalOr(ctx *ExpressionLogicalOrContext) interface{} {
+func (v *BaseMlanVisitor) VisitExpCs(ctx *ExpCsContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitExpressionIndex(ctx *ExpressionIndexContext) interface{} {
+func (v *BaseMlanVisitor) VisitExpMulDivMod(ctx *ExpMulDivModContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitExpressionLogicalNot(ctx *ExpressionLogicalNotContext) interface{} {
+func (v *BaseMlanVisitor) VisitExpNull(ctx *ExpNullContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitExpressionClosureInvoke(ctx *ExpressionClosureInvokeContext) interface{} {
+func (v *BaseMlanVisitor) VisitExpFnInvoke(ctx *ExpFnInvokeContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitExpressionParentheses(ctx *ExpressionParenthesesContext) interface{} {
+func (v *BaseMlanVisitor) VisitExpList(ctx *ExpListContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitExpressionMulDivMod(ctx *ExpressionMulDivModContext) interface{} {
+func (v *BaseMlanVisitor) VisitExpLogicalAnd(ctx *ExpLogicalAndContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitExpressionLogicalAnd(ctx *ExpressionLogicalAndContext) interface{} {
+func (v *BaseMlanVisitor) VisitExpParentheses(ctx *ExpParenthesesContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitExpressionFloat(ctx *ExpressionFloatContext) interface{} {
+func (v *BaseMlanVisitor) VisitExpEqual(ctx *ExpEqualContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitExpressionInteger(ctx *ExpressionIntegerContext) interface{} {
+func (v *BaseMlanVisitor) VisitExpMethodInvoke(ctx *ExpMethodInvokeContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitExpressionNull(ctx *ExpressionNullContext) interface{} {
+func (v *BaseMlanVisitor) VisitExpLogicalNot(ctx *ExpLogicalNotContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitExpressionString(ctx *ExpressionStringContext) interface{} {
+func (v *BaseMlanVisitor) VisitExpIntegerHex(ctx *ExpIntegerHexContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitIfBlockStatement(ctx *IfBlockStatementContext) interface{} {
+func (v *BaseMlanVisitor) VisitExpIdentifier(ctx *ExpIdentifierContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitElifBlockStatement(ctx *ElifBlockStatementContext) interface{} {
+func (v *BaseMlanVisitor) VisitExpSumSub(ctx *ExpSumSubContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitElseBlockStatement(ctx *ElseBlockStatementContext) interface{} {
+func (v *BaseMlanVisitor) VisitIfBlockStmt(ctx *IfBlockStmtContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitIfStatement(ctx *IfStatementContext) interface{} {
+func (v *BaseMlanVisitor) VisitElifBlockStmt(ctx *ElifBlockStmtContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitFunctionParameters(ctx *FunctionParametersContext) interface{} {
+func (v *BaseMlanVisitor) VisitElseBlockStmt(ctx *ElseBlockStmtContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitFunctionDefinition(ctx *FunctionDefinitionContext) interface{} {
+func (v *BaseMlanVisitor) VisitIfStmt(ctx *IfStmtContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitClosureDefinition(ctx *ClosureDefinitionContext) interface{} {
+func (v *BaseMlanVisitor) VisitFnParams(ctx *FnParamsContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseMlanVisitor) VisitIncludeSubmodule(ctx *IncludeSubmoduleContext) interface{} {
+func (v *BaseMlanVisitor) VisitFnBody(ctx *FnBodyContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMlanVisitor) VisitFn(ctx *FnContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMlanVisitor) VisitClosure(ctx *ClosureContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseMlanVisitor) VisitInclude(ctx *IncludeContext) interface{} {
 	return v.VisitChildren(ctx)
 }

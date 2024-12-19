@@ -1,7 +1,7 @@
 alias(
   "jobkill",
   fn (bid, cmd, args, raw) {
-    if len(args) != 1 {
+    if args.len() != 1 {
       return m_error(bid, "invalid number of arguments");
     }
 

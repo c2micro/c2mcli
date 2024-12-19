@@ -1,7 +1,7 @@
 alias(
   "ps",
   fn (bid, cmd, args, raw) {
-    if len(args) != 0 {
+    if args.len() != 0 {
       return m_error(bid, "invalid number of arguments");
     }
 

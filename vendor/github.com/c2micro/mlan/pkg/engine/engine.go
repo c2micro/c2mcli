@@ -57,7 +57,7 @@ func Evaluate(file string) error {
 	v := visitor.NewVisitor()
 	res := v.Visit(tree)
 	if res != types.Success {
-		return errors.Wrap(v.Error, "runtime failure")
+		return errors.Wrap(v.GetError(), "runtime failure")
 	}
 
 	return nil

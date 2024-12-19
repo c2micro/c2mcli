@@ -5,7 +5,7 @@ go 1.23.4
 require (
 	github.com/antlr4-go/antlr/v4 v4.13.1
 	github.com/c2micro/c2mshr v0.0.0-20241218163131-bc2ecc1fec9d
-	github.com/c2micro/mlan v0.0.0-20241218222148-7c883299085d
+	github.com/c2micro/mlan v0.0.0-20241219155036-3dc94c8e7c9e
 	github.com/docker/go-units v0.5.0
 	github.com/fatih/color v1.18.0
 	github.com/go-faster/errors v0.7.1

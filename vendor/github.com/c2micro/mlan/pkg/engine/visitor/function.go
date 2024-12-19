@@ -3,7 +3,6 @@ package visitor
 import (
 	"fmt"
 
-	"github.com/antlr4-go/antlr/v4"
 	"github.com/c2micro/mlan/pkg/engine/object"
 	"github.com/c2micro/mlan/pkg/engine/scope"
 	"github.com/c2micro/mlan/pkg/engine/storage"
@@ -12,7 +11,6 @@ import (
 
 // invokeFunc вызов функции
 func (v *Visitor) invokeFunc(
-	token antlr.Token,
 	name string,
 	params ...object.Object,
 ) any {
@@ -25,7 +23,7 @@ func (v *Visitor) invokeFunc(
 		if !ok {
 			val, ok = storage.NativeFunctions[name]
 			if !ok {
-				v.LineError(token, fmt.Errorf("undefined function '%s'", name))
+				v.SetError(fmt.Errorf("undefined function '%s'", name))
 				return types.Failure
 			}
 		}
@@ -33,7 +31,7 @@ func (v *Visitor) invokeFunc(
 
 	// проверяем, что объект callable
 	if !val.CanCall() {
-		v.LineError(token, fmt.Errorf("unable call function '%s'", name))
+		v.SetError(fmt.Errorf("unable call function '%s'", name))
 		return types.Failure
 	}
 
@@ -52,7 +50,7 @@ func (v *Visitor) invokeFunc(
 	switch val.(type) {
 	case *object.NativeFunc:
 		if val.(*object.NativeFunc).GetArgsLen() != len(params) {
-			v.LineError(token, fmt.Errorf("function '%s' expected %d arguments, got %d", name, val.(*object.NativeFunc).GetArgsLen(), len(params)))
+			v.SetError(fmt.Errorf("function '%s' expected %d arguments, got %d", name, val.(*object.NativeFunc).GetArgsLen(), len(params)))
 			return types.Failure
 		}
 		// сохраняем аргументы в скоуп
@@ -78,27 +76,26 @@ func (v *Visitor) invokeFunc(
 	// вызов функции
 	res, err := val.Call(params...)
 	if err != nil {
-		v.LineError(token, err)
+		v.SetError(err)
 		return types.Failure
 	}
 	return res
 }
 
 func (v *Visitor) invokeClosureFunc(
-	token antlr.Token,
 	name string,
 	params ...object.Object,
 ) any {
 	// получаем из скоупа переменную
 	fn := scope.CurrentScope.Get(name, true)
 	if fn == nil {
-		v.LineError(token, fmt.Errorf("undefined closure '%s'", name))
+		v.SetError(fmt.Errorf("undefined closure '%s'", name))
 		return types.Failure
 	}
 
 	// проверяем, что объект callable
 	if !fn.CanCall() {
-		v.LineError(token, fmt.Errorf("unable call closure '%s'", name))
+		v.SetError(fmt.Errorf("unable call closure '%s'", name))
 		return types.Failure
 	}
 
@@ -117,7 +114,7 @@ func (v *Visitor) invokeClosureFunc(
 	switch fn.(type) {
 	case *object.NativeFunc:
 		if fn.(*object.NativeFunc).GetArgsLen() != len(params) {
-			v.LineError(token, fmt.Errorf("closure '%s' expected %d arguments, got %d", name, fn.(*object.NativeFunc).GetArgsLen(), len(params)))
+			v.SetError(fmt.Errorf("closure '%s' expected %d arguments, got %d", name, fn.(*object.NativeFunc).GetArgsLen(), len(params)))
 			return types.Failure
 		}
 		// сохраняем аргументы в скоуп
@@ -160,7 +157,7 @@ func (v *Visitor) InvokeNativeFunc(
 	}()
 
 	if fn.GetArgsLen() != len(params) {
-		v.Error = fmt.Errorf("invalid number of args, expecting %d arguments, got %d", fn.GetArgsLen(), len(params))
+		v.SetError(fmt.Errorf("invalid number of args, expecting %d arguments, got %d", fn.GetArgsLen(), len(params)))
 		return types.Failure
 	}
 	// сохраняем аргументы в скоуп

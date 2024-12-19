@@ -1,16 +1,16 @@
 alias(
   "exec-assembly",
   fn (bid, cmd, args, raw) {
-    if len(args) == 0 {
+    if args.len() == 0 {
       return m_error(bid, "invalid number of arguments");
-    } elif len(args) == 1 {
+    } elif args.len() == 1 {
       m_notify(bid, "tasked beacon to execute .NET in memory");
       return b_exec_assembly(bid, args[0]);
     } else {
-      splitted = str_split(raw, " ");
+      splitted = raw.split(" ");
       r = "";
-      for i = 1; i < len(splitted); i += 1 {
-        if i != len(splitted) -1 {
+      for i = 1; i < splitted.len(); i += 1 {
+        if i != splitted.len() -1 {
           r += splitted[i] + " ";
         } else {
           r += splitted[i];

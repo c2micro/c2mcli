@@ -22,6 +22,6 @@ func CreateAST(data string) (antlr.ParseTree, error) {
 	p.RemoveErrorListeners()
 	p.AddErrorListener(errorParser)
 	// создание AST древа
-	tree := p.Program()
+	tree := p.Prog()
 	return tree, errorParser.Err
 }

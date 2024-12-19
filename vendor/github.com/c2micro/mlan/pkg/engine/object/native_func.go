@@ -10,21 +10,24 @@ type NativeFunc struct {
 	name    string
 	args    []string
 	argsLen int
-	code    []parser.IStatementContext
+	code    []parser.IStmtContext
 }
 
 func NewNativeFunc(
-	name string,
 	args []string,
 	argsLen int,
-	code []parser.IStatementContext,
+	code []parser.IStmtContext,
 ) *NativeFunc {
 	return &NativeFunc{
-		name:    name,
+		name:    "<unknown>",
 		args:    args,
 		argsLen: argsLen,
 		code:    code,
 	}
+}
+
+func (o *NativeFunc) SetName(name string) {
+	o.name = name
 }
 
 func (o *NativeFunc) TypeName() string {
@@ -39,7 +42,7 @@ func (o *NativeFunc) CanCall() bool {
 	return true
 }
 
-func (o *NativeFunc) GetCode() []parser.IStatementContext {
+func (o *NativeFunc) GetCode() []parser.IStmtContext {
 	return o.code
 }
 

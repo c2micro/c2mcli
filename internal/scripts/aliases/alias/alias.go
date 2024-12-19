@@ -108,8 +108,8 @@ func BackendAlias(id uint32, cmd string) error {
 	// вызов нативной функции (по факту кложура)
 	v := visitor.NewVisitor()
 	v.InvokeNativeFunc(al.GetClosure(), arg0, arg1, arg2, arg3)
-	if v.Error != nil {
-		return v.Error
+	if v.GetError() != nil {
+		return v.GetError()
 	}
 	return nil
 }

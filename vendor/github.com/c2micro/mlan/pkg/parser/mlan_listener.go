@@ -7,56 +7,50 @@ import "github.com/antlr4-go/antlr/v4"
 type MlanListener interface {
 	antlr.ParseTreeListener
 
-	// EnterProgram is called when entering the program production.
-	EnterProgram(c *ProgramContext)
+	// EnterProg is called when entering the prog production.
+	EnterProg(c *ProgContext)
 
-	// EnterBlock is called when entering the block production.
-	EnterBlock(c *BlockContext)
+	// EnterStmt is called when entering the stmt production.
+	EnterStmt(c *StmtContext)
 
-	// EnterStatement is called when entering the statement production.
-	EnterStatement(c *StatementContext)
+	// EnterWhileStmt is called when entering the whileStmt production.
+	EnterWhileStmt(c *WhileStmtContext)
 
-	// EnterWhileStatement is called when entering the whileStatement production.
-	EnterWhileStatement(c *WhileStatementContext)
+	// EnterForStmt is called when entering the forStmt production.
+	EnterForStmt(c *ForStmtContext)
 
-	// EnterForStatement is called when entering the forStatement production.
-	EnterForStatement(c *ForStatementContext)
+	// EnterReturnStmt is called when entering the returnStmt production.
+	EnterReturnStmt(c *ReturnStmtContext)
 
-	// EnterReturnStatement is called when entering the returnStatement production.
-	EnterReturnStatement(c *ReturnStatementContext)
+	// EnterContinueStmt is called when entering the continueStmt production.
+	EnterContinueStmt(c *ContinueStmtContext)
 
-	// EnterContinueStatement is called when entering the continueStatement production.
-	EnterContinueStatement(c *ContinueStatementContext)
+	// EnterBreakStmt is called when entering the breakStmt production.
+	EnterBreakStmt(c *BreakStmtContext)
 
-	// EnterBreakStatement is called when entering the breakStatement production.
-	EnterBreakStatement(c *BreakStatementContext)
+	// EnterAssignRegular is called when entering the assignRegular production.
+	EnterAssignRegular(c *AssignRegularContext)
 
-	// EnterAssignmentRegular is called when entering the assignmentRegular production.
-	EnterAssignmentRegular(c *AssignmentRegularContext)
+	// EnterAssignSum is called when entering the assignSum production.
+	EnterAssignSum(c *AssignSumContext)
 
-	// EnterAssignmentClosure is called when entering the assignmentClosure production.
-	EnterAssignmentClosure(c *AssignmentClosureContext)
+	// EnterAssignSub is called when entering the assignSub production.
+	EnterAssignSub(c *AssignSubContext)
 
-	// EnterAssignmentSum is called when entering the assignmentSum production.
-	EnterAssignmentSum(c *AssignmentSumContext)
+	// EnterAssignMul is called when entering the assignMul production.
+	EnterAssignMul(c *AssignMulContext)
 
-	// EnterAssignmentSub is called when entering the assignmentSub production.
-	EnterAssignmentSub(c *AssignmentSubContext)
+	// EnterAssignDiv is called when entering the assignDiv production.
+	EnterAssignDiv(c *AssignDivContext)
 
-	// EnterAssignmentMul is called when entering the assignmentMul production.
-	EnterAssignmentMul(c *AssignmentMulContext)
+	// EnterAssignMod is called when entering the assignMod production.
+	EnterAssignMod(c *AssignModContext)
 
-	// EnterAssignmentDiv is called when entering the assignmentDiv production.
-	EnterAssignmentDiv(c *AssignmentDivContext)
+	// EnterAssignPow is called when entering the assignPow production.
+	EnterAssignPow(c *AssignPowContext)
 
-	// EnterAssignmentMod is called when entering the assignmentMod production.
-	EnterAssignmentMod(c *AssignmentModContext)
-
-	// EnterAssignmentPow is called when entering the assignmentPow production.
-	EnterAssignmentPow(c *AssignmentPowContext)
-
-	// EnterAssignmentIndexRegular is called when entering the assignmentIndexRegular production.
-	EnterAssignmentIndexRegular(c *AssignmentIndexRegularContext)
+	// EnterAssignIdxRegular is called when entering the assignIdxRegular production.
+	EnterAssignIdxRegular(c *AssignIdxRegularContext)
 
 	// EnterList is called when entering the list production.
 	EnterList(c *ListContext)
@@ -67,161 +61,164 @@ type MlanListener interface {
 	// EnterDict is called when entering the dict production.
 	EnterDict(c *DictContext)
 
-	// EnterIndex is called when entering the index production.
-	EnterIndex(c *IndexContext)
+	// EnterIdx is called when entering the idx production.
+	EnterIdx(c *IdxContext)
 
-	// EnterIdentifierFunctionInvoke is called when entering the identifierFunctionInvoke production.
-	EnterIdentifierFunctionInvoke(c *IdentifierFunctionInvokeContext)
+	// EnterIdentifierMethodInvoke is called when entering the identifierMethodInvoke production.
+	EnterIdentifierMethodInvoke(c *IdentifierMethodInvokeContext)
 
-	// EnterIdentifierClosureInvoke is called when entering the identifierClosureInvoke production.
-	EnterIdentifierClosureInvoke(c *IdentifierClosureInvokeContext)
+	// EnterIdentifierFnInvoke is called when entering the identifierFnInvoke production.
+	EnterIdentifierFnInvoke(c *IdentifierFnInvokeContext)
 
-	// EnterExpressionIntegerHex is called when entering the expressionIntegerHex production.
-	EnterExpressionIntegerHex(c *ExpressionIntegerHexContext)
+	// EnterIdentifierCsInvoke is called when entering the identifierCsInvoke production.
+	EnterIdentifierCsInvoke(c *IdentifierCsInvokeContext)
 
-	// EnterExpressionFunctionInvoke is called when entering the expressionFunctionInvoke production.
-	EnterExpressionFunctionInvoke(c *ExpressionFunctionInvokeContext)
+	// EnterExpBool is called when entering the expBool production.
+	EnterExpBool(c *ExpBoolContext)
 
-	// EnterExpressionUnaryNegation is called when entering the expressionUnaryNegation production.
-	EnterExpressionUnaryNegation(c *ExpressionUnaryNegationContext)
+	// EnterExpComparison is called when entering the expComparison production.
+	EnterExpComparison(c *ExpComparisonContext)
 
-	// EnterExpressionBool is called when entering the expressionBool production.
-	EnterExpressionBool(c *ExpressionBoolContext)
+	// EnterExpIdx is called when entering the expIdx production.
+	EnterExpIdx(c *ExpIdxContext)
 
-	// EnterExpressionPow is called when entering the expressionPow production.
-	EnterExpressionPow(c *ExpressionPowContext)
+	// EnterExpString is called when entering the expString production.
+	EnterExpString(c *ExpStringContext)
 
-	// EnterExpressionXor is called when entering the expressionXor production.
-	EnterExpressionXor(c *ExpressionXorContext)
+	// EnterExpCsInvoke is called when entering the expCsInvoke production.
+	EnterExpCsInvoke(c *ExpCsInvokeContext)
 
-	// EnterExpressionEqual is called when entering the expressionEqual production.
-	EnterExpressionEqual(c *ExpressionEqualContext)
+	// EnterExpFloat is called when entering the expFloat production.
+	EnterExpFloat(c *ExpFloatContext)
 
-	// EnterExpressionClosure is called when entering the expressionClosure production.
-	EnterExpressionClosure(c *ExpressionClosureContext)
+	// EnterExpPow is called when entering the expPow production.
+	EnterExpPow(c *ExpPowContext)
 
-	// EnterExpressionDict is called when entering the expressionDict production.
-	EnterExpressionDict(c *ExpressionDictContext)
+	// EnterExpDict is called when entering the expDict production.
+	EnterExpDict(c *ExpDictContext)
 
-	// EnterExpressionIdentifier is called when entering the expressionIdentifier production.
-	EnterExpressionIdentifier(c *ExpressionIdentifierContext)
+	// EnterExpXor is called when entering the expXor production.
+	EnterExpXor(c *ExpXorContext)
 
-	// EnterExpressionList is called when entering the expressionList production.
-	EnterExpressionList(c *ExpressionListContext)
+	// EnterExpNeg is called when entering the expNeg production.
+	EnterExpNeg(c *ExpNegContext)
 
-	// EnterExpressionSumSub is called when entering the expressionSumSub production.
-	EnterExpressionSumSub(c *ExpressionSumSubContext)
+	// EnterExpInteger is called when entering the expInteger production.
+	EnterExpInteger(c *ExpIntegerContext)
 
-	// EnterExpressionComparison is called when entering the expressionComparison production.
-	EnterExpressionComparison(c *ExpressionComparisonContext)
+	// EnterExpLogicalOr is called when entering the expLogicalOr production.
+	EnterExpLogicalOr(c *ExpLogicalOrContext)
 
-	// EnterExpressionLogicalOr is called when entering the expressionLogicalOr production.
-	EnterExpressionLogicalOr(c *ExpressionLogicalOrContext)
+	// EnterExpCs is called when entering the expCs production.
+	EnterExpCs(c *ExpCsContext)
 
-	// EnterExpressionIndex is called when entering the expressionIndex production.
-	EnterExpressionIndex(c *ExpressionIndexContext)
+	// EnterExpMulDivMod is called when entering the expMulDivMod production.
+	EnterExpMulDivMod(c *ExpMulDivModContext)
 
-	// EnterExpressionLogicalNot is called when entering the expressionLogicalNot production.
-	EnterExpressionLogicalNot(c *ExpressionLogicalNotContext)
+	// EnterExpNull is called when entering the expNull production.
+	EnterExpNull(c *ExpNullContext)
 
-	// EnterExpressionClosureInvoke is called when entering the expressionClosureInvoke production.
-	EnterExpressionClosureInvoke(c *ExpressionClosureInvokeContext)
+	// EnterExpFnInvoke is called when entering the expFnInvoke production.
+	EnterExpFnInvoke(c *ExpFnInvokeContext)
 
-	// EnterExpressionParentheses is called when entering the expressionParentheses production.
-	EnterExpressionParentheses(c *ExpressionParenthesesContext)
+	// EnterExpList is called when entering the expList production.
+	EnterExpList(c *ExpListContext)
 
-	// EnterExpressionMulDivMod is called when entering the expressionMulDivMod production.
-	EnterExpressionMulDivMod(c *ExpressionMulDivModContext)
+	// EnterExpLogicalAnd is called when entering the expLogicalAnd production.
+	EnterExpLogicalAnd(c *ExpLogicalAndContext)
 
-	// EnterExpressionLogicalAnd is called when entering the expressionLogicalAnd production.
-	EnterExpressionLogicalAnd(c *ExpressionLogicalAndContext)
+	// EnterExpParentheses is called when entering the expParentheses production.
+	EnterExpParentheses(c *ExpParenthesesContext)
 
-	// EnterExpressionFloat is called when entering the expressionFloat production.
-	EnterExpressionFloat(c *ExpressionFloatContext)
+	// EnterExpEqual is called when entering the expEqual production.
+	EnterExpEqual(c *ExpEqualContext)
 
-	// EnterExpressionInteger is called when entering the expressionInteger production.
-	EnterExpressionInteger(c *ExpressionIntegerContext)
+	// EnterExpMethodInvoke is called when entering the expMethodInvoke production.
+	EnterExpMethodInvoke(c *ExpMethodInvokeContext)
 
-	// EnterExpressionNull is called when entering the expressionNull production.
-	EnterExpressionNull(c *ExpressionNullContext)
+	// EnterExpLogicalNot is called when entering the expLogicalNot production.
+	EnterExpLogicalNot(c *ExpLogicalNotContext)
 
-	// EnterExpressionString is called when entering the expressionString production.
-	EnterExpressionString(c *ExpressionStringContext)
+	// EnterExpIntegerHex is called when entering the expIntegerHex production.
+	EnterExpIntegerHex(c *ExpIntegerHexContext)
 
-	// EnterIfBlockStatement is called when entering the ifBlockStatement production.
-	EnterIfBlockStatement(c *IfBlockStatementContext)
+	// EnterExpIdentifier is called when entering the expIdentifier production.
+	EnterExpIdentifier(c *ExpIdentifierContext)
 
-	// EnterElifBlockStatement is called when entering the elifBlockStatement production.
-	EnterElifBlockStatement(c *ElifBlockStatementContext)
+	// EnterExpSumSub is called when entering the expSumSub production.
+	EnterExpSumSub(c *ExpSumSubContext)
 
-	// EnterElseBlockStatement is called when entering the elseBlockStatement production.
-	EnterElseBlockStatement(c *ElseBlockStatementContext)
+	// EnterIfBlockStmt is called when entering the ifBlockStmt production.
+	EnterIfBlockStmt(c *IfBlockStmtContext)
 
-	// EnterIfStatement is called when entering the ifStatement production.
-	EnterIfStatement(c *IfStatementContext)
+	// EnterElifBlockStmt is called when entering the elifBlockStmt production.
+	EnterElifBlockStmt(c *ElifBlockStmtContext)
 
-	// EnterFunctionParameters is called when entering the functionParameters production.
-	EnterFunctionParameters(c *FunctionParametersContext)
+	// EnterElseBlockStmt is called when entering the elseBlockStmt production.
+	EnterElseBlockStmt(c *ElseBlockStmtContext)
 
-	// EnterFunctionDefinition is called when entering the functionDefinition production.
-	EnterFunctionDefinition(c *FunctionDefinitionContext)
+	// EnterIfStmt is called when entering the ifStmt production.
+	EnterIfStmt(c *IfStmtContext)
 
-	// EnterClosureDefinition is called when entering the closureDefinition production.
-	EnterClosureDefinition(c *ClosureDefinitionContext)
+	// EnterFnParams is called when entering the fnParams production.
+	EnterFnParams(c *FnParamsContext)
 
-	// EnterIncludeSubmodule is called when entering the includeSubmodule production.
-	EnterIncludeSubmodule(c *IncludeSubmoduleContext)
+	// EnterFnBody is called when entering the fnBody production.
+	EnterFnBody(c *FnBodyContext)
 
-	// ExitProgram is called when exiting the program production.
-	ExitProgram(c *ProgramContext)
+	// EnterFn is called when entering the fn production.
+	EnterFn(c *FnContext)
 
-	// ExitBlock is called when exiting the block production.
-	ExitBlock(c *BlockContext)
+	// EnterClosure is called when entering the closure production.
+	EnterClosure(c *ClosureContext)
 
-	// ExitStatement is called when exiting the statement production.
-	ExitStatement(c *StatementContext)
+	// EnterInclude is called when entering the include production.
+	EnterInclude(c *IncludeContext)
 
-	// ExitWhileStatement is called when exiting the whileStatement production.
-	ExitWhileStatement(c *WhileStatementContext)
+	// ExitProg is called when exiting the prog production.
+	ExitProg(c *ProgContext)
 
-	// ExitForStatement is called when exiting the forStatement production.
-	ExitForStatement(c *ForStatementContext)
+	// ExitStmt is called when exiting the stmt production.
+	ExitStmt(c *StmtContext)
 
-	// ExitReturnStatement is called when exiting the returnStatement production.
-	ExitReturnStatement(c *ReturnStatementContext)
+	// ExitWhileStmt is called when exiting the whileStmt production.
+	ExitWhileStmt(c *WhileStmtContext)
 
-	// ExitContinueStatement is called when exiting the continueStatement production.
-	ExitContinueStatement(c *ContinueStatementContext)
+	// ExitForStmt is called when exiting the forStmt production.
+	ExitForStmt(c *ForStmtContext)
 
-	// ExitBreakStatement is called when exiting the breakStatement production.
-	ExitBreakStatement(c *BreakStatementContext)
+	// ExitReturnStmt is called when exiting the returnStmt production.
+	ExitReturnStmt(c *ReturnStmtContext)
 
-	// ExitAssignmentRegular is called when exiting the assignmentRegular production.
-	ExitAssignmentRegular(c *AssignmentRegularContext)
+	// ExitContinueStmt is called when exiting the continueStmt production.
+	ExitContinueStmt(c *ContinueStmtContext)
 
-	// ExitAssignmentClosure is called when exiting the assignmentClosure production.
-	ExitAssignmentClosure(c *AssignmentClosureContext)
+	// ExitBreakStmt is called when exiting the breakStmt production.
+	ExitBreakStmt(c *BreakStmtContext)
 
-	// ExitAssignmentSum is called when exiting the assignmentSum production.
-	ExitAssignmentSum(c *AssignmentSumContext)
+	// ExitAssignRegular is called when exiting the assignRegular production.
+	ExitAssignRegular(c *AssignRegularContext)
 
-	// ExitAssignmentSub is called when exiting the assignmentSub production.
-	ExitAssignmentSub(c *AssignmentSubContext)
+	// ExitAssignSum is called when exiting the assignSum production.
+	ExitAssignSum(c *AssignSumContext)
 
-	// ExitAssignmentMul is called when exiting the assignmentMul production.
-	ExitAssignmentMul(c *AssignmentMulContext)
+	// ExitAssignSub is called when exiting the assignSub production.
+	ExitAssignSub(c *AssignSubContext)
 
-	// ExitAssignmentDiv is called when exiting the assignmentDiv production.
-	ExitAssignmentDiv(c *AssignmentDivContext)
+	// ExitAssignMul is called when exiting the assignMul production.
+	ExitAssignMul(c *AssignMulContext)
 
-	// ExitAssignmentMod is called when exiting the assignmentMod production.
-	ExitAssignmentMod(c *AssignmentModContext)
+	// ExitAssignDiv is called when exiting the assignDiv production.
+	ExitAssignDiv(c *AssignDivContext)
 
-	// ExitAssignmentPow is called when exiting the assignmentPow production.
-	ExitAssignmentPow(c *AssignmentPowContext)
+	// ExitAssignMod is called when exiting the assignMod production.
+	ExitAssignMod(c *AssignModContext)
 
-	// ExitAssignmentIndexRegular is called when exiting the assignmentIndexRegular production.
-	ExitAssignmentIndexRegular(c *AssignmentIndexRegularContext)
+	// ExitAssignPow is called when exiting the assignPow production.
+	ExitAssignPow(c *AssignPowContext)
+
+	// ExitAssignIdxRegular is called when exiting the assignIdxRegular production.
+	ExitAssignIdxRegular(c *AssignIdxRegularContext)
 
 	// ExitList is called when exiting the list production.
 	ExitList(c *ListContext)
@@ -232,108 +229,117 @@ type MlanListener interface {
 	// ExitDict is called when exiting the dict production.
 	ExitDict(c *DictContext)
 
-	// ExitIndex is called when exiting the index production.
-	ExitIndex(c *IndexContext)
+	// ExitIdx is called when exiting the idx production.
+	ExitIdx(c *IdxContext)
 
-	// ExitIdentifierFunctionInvoke is called when exiting the identifierFunctionInvoke production.
-	ExitIdentifierFunctionInvoke(c *IdentifierFunctionInvokeContext)
+	// ExitIdentifierMethodInvoke is called when exiting the identifierMethodInvoke production.
+	ExitIdentifierMethodInvoke(c *IdentifierMethodInvokeContext)
 
-	// ExitIdentifierClosureInvoke is called when exiting the identifierClosureInvoke production.
-	ExitIdentifierClosureInvoke(c *IdentifierClosureInvokeContext)
+	// ExitIdentifierFnInvoke is called when exiting the identifierFnInvoke production.
+	ExitIdentifierFnInvoke(c *IdentifierFnInvokeContext)
 
-	// ExitExpressionIntegerHex is called when exiting the expressionIntegerHex production.
-	ExitExpressionIntegerHex(c *ExpressionIntegerHexContext)
+	// ExitIdentifierCsInvoke is called when exiting the identifierCsInvoke production.
+	ExitIdentifierCsInvoke(c *IdentifierCsInvokeContext)
 
-	// ExitExpressionFunctionInvoke is called when exiting the expressionFunctionInvoke production.
-	ExitExpressionFunctionInvoke(c *ExpressionFunctionInvokeContext)
+	// ExitExpBool is called when exiting the expBool production.
+	ExitExpBool(c *ExpBoolContext)
 
-	// ExitExpressionUnaryNegation is called when exiting the expressionUnaryNegation production.
-	ExitExpressionUnaryNegation(c *ExpressionUnaryNegationContext)
+	// ExitExpComparison is called when exiting the expComparison production.
+	ExitExpComparison(c *ExpComparisonContext)
 
-	// ExitExpressionBool is called when exiting the expressionBool production.
-	ExitExpressionBool(c *ExpressionBoolContext)
+	// ExitExpIdx is called when exiting the expIdx production.
+	ExitExpIdx(c *ExpIdxContext)
 
-	// ExitExpressionPow is called when exiting the expressionPow production.
-	ExitExpressionPow(c *ExpressionPowContext)
+	// ExitExpString is called when exiting the expString production.
+	ExitExpString(c *ExpStringContext)
 
-	// ExitExpressionXor is called when exiting the expressionXor production.
-	ExitExpressionXor(c *ExpressionXorContext)
+	// ExitExpCsInvoke is called when exiting the expCsInvoke production.
+	ExitExpCsInvoke(c *ExpCsInvokeContext)
 
-	// ExitExpressionEqual is called when exiting the expressionEqual production.
-	ExitExpressionEqual(c *ExpressionEqualContext)
+	// ExitExpFloat is called when exiting the expFloat production.
+	ExitExpFloat(c *ExpFloatContext)
 
-	// ExitExpressionClosure is called when exiting the expressionClosure production.
-	ExitExpressionClosure(c *ExpressionClosureContext)
+	// ExitExpPow is called when exiting the expPow production.
+	ExitExpPow(c *ExpPowContext)
 
-	// ExitExpressionDict is called when exiting the expressionDict production.
-	ExitExpressionDict(c *ExpressionDictContext)
+	// ExitExpDict is called when exiting the expDict production.
+	ExitExpDict(c *ExpDictContext)
 
-	// ExitExpressionIdentifier is called when exiting the expressionIdentifier production.
-	ExitExpressionIdentifier(c *ExpressionIdentifierContext)
+	// ExitExpXor is called when exiting the expXor production.
+	ExitExpXor(c *ExpXorContext)
 
-	// ExitExpressionList is called when exiting the expressionList production.
-	ExitExpressionList(c *ExpressionListContext)
+	// ExitExpNeg is called when exiting the expNeg production.
+	ExitExpNeg(c *ExpNegContext)
 
-	// ExitExpressionSumSub is called when exiting the expressionSumSub production.
-	ExitExpressionSumSub(c *ExpressionSumSubContext)
+	// ExitExpInteger is called when exiting the expInteger production.
+	ExitExpInteger(c *ExpIntegerContext)
 
-	// ExitExpressionComparison is called when exiting the expressionComparison production.
-	ExitExpressionComparison(c *ExpressionComparisonContext)
+	// ExitExpLogicalOr is called when exiting the expLogicalOr production.
+	ExitExpLogicalOr(c *ExpLogicalOrContext)
 
-	// ExitExpressionLogicalOr is called when exiting the expressionLogicalOr production.
-	ExitExpressionLogicalOr(c *ExpressionLogicalOrContext)
+	// ExitExpCs is called when exiting the expCs production.
+	ExitExpCs(c *ExpCsContext)
 
-	// ExitExpressionIndex is called when exiting the expressionIndex production.
-	ExitExpressionIndex(c *ExpressionIndexContext)
+	// ExitExpMulDivMod is called when exiting the expMulDivMod production.
+	ExitExpMulDivMod(c *ExpMulDivModContext)
 
-	// ExitExpressionLogicalNot is called when exiting the expressionLogicalNot production.
-	ExitExpressionLogicalNot(c *ExpressionLogicalNotContext)
+	// ExitExpNull is called when exiting the expNull production.
+	ExitExpNull(c *ExpNullContext)
 
-	// ExitExpressionClosureInvoke is called when exiting the expressionClosureInvoke production.
-	ExitExpressionClosureInvoke(c *ExpressionClosureInvokeContext)
+	// ExitExpFnInvoke is called when exiting the expFnInvoke production.
+	ExitExpFnInvoke(c *ExpFnInvokeContext)
 
-	// ExitExpressionParentheses is called when exiting the expressionParentheses production.
-	ExitExpressionParentheses(c *ExpressionParenthesesContext)
+	// ExitExpList is called when exiting the expList production.
+	ExitExpList(c *ExpListContext)
 
-	// ExitExpressionMulDivMod is called when exiting the expressionMulDivMod production.
-	ExitExpressionMulDivMod(c *ExpressionMulDivModContext)
+	// ExitExpLogicalAnd is called when exiting the expLogicalAnd production.
+	ExitExpLogicalAnd(c *ExpLogicalAndContext)
 
-	// ExitExpressionLogicalAnd is called when exiting the expressionLogicalAnd production.
-	ExitExpressionLogicalAnd(c *ExpressionLogicalAndContext)
+	// ExitExpParentheses is called when exiting the expParentheses production.
+	ExitExpParentheses(c *ExpParenthesesContext)
 
-	// ExitExpressionFloat is called when exiting the expressionFloat production.
-	ExitExpressionFloat(c *ExpressionFloatContext)
+	// ExitExpEqual is called when exiting the expEqual production.
+	ExitExpEqual(c *ExpEqualContext)
 
-	// ExitExpressionInteger is called when exiting the expressionInteger production.
-	ExitExpressionInteger(c *ExpressionIntegerContext)
+	// ExitExpMethodInvoke is called when exiting the expMethodInvoke production.
+	ExitExpMethodInvoke(c *ExpMethodInvokeContext)
 
-	// ExitExpressionNull is called when exiting the expressionNull production.
-	ExitExpressionNull(c *ExpressionNullContext)
+	// ExitExpLogicalNot is called when exiting the expLogicalNot production.
+	ExitExpLogicalNot(c *ExpLogicalNotContext)
 
-	// ExitExpressionString is called when exiting the expressionString production.
-	ExitExpressionString(c *ExpressionStringContext)
+	// ExitExpIntegerHex is called when exiting the expIntegerHex production.
+	ExitExpIntegerHex(c *ExpIntegerHexContext)
 
-	// ExitIfBlockStatement is called when exiting the ifBlockStatement production.
-	ExitIfBlockStatement(c *IfBlockStatementContext)
+	// ExitExpIdentifier is called when exiting the expIdentifier production.
+	ExitExpIdentifier(c *ExpIdentifierContext)
 
-	// ExitElifBlockStatement is called when exiting the elifBlockStatement production.
-	ExitElifBlockStatement(c *ElifBlockStatementContext)
+	// ExitExpSumSub is called when exiting the expSumSub production.
+	ExitExpSumSub(c *ExpSumSubContext)
 
-	// ExitElseBlockStatement is called when exiting the elseBlockStatement production.
-	ExitElseBlockStatement(c *ElseBlockStatementContext)
+	// ExitIfBlockStmt is called when exiting the ifBlockStmt production.
+	ExitIfBlockStmt(c *IfBlockStmtContext)
 
-	// ExitIfStatement is called when exiting the ifStatement production.
-	ExitIfStatement(c *IfStatementContext)
+	// ExitElifBlockStmt is called when exiting the elifBlockStmt production.
+	ExitElifBlockStmt(c *ElifBlockStmtContext)
 
-	// ExitFunctionParameters is called when exiting the functionParameters production.
-	ExitFunctionParameters(c *FunctionParametersContext)
+	// ExitElseBlockStmt is called when exiting the elseBlockStmt production.
+	ExitElseBlockStmt(c *ElseBlockStmtContext)
 
-	// ExitFunctionDefinition is called when exiting the functionDefinition production.
-	ExitFunctionDefinition(c *FunctionDefinitionContext)
+	// ExitIfStmt is called when exiting the ifStmt production.
+	ExitIfStmt(c *IfStmtContext)
 
-	// ExitClosureDefinition is called when exiting the closureDefinition production.
-	ExitClosureDefinition(c *ClosureDefinitionContext)
+	// ExitFnParams is called when exiting the fnParams production.
+	ExitFnParams(c *FnParamsContext)
 
-	// ExitIncludeSubmodule is called when exiting the includeSubmodule production.
-	ExitIncludeSubmodule(c *IncludeSubmoduleContext)
+	// ExitFnBody is called when exiting the fnBody production.
+	ExitFnBody(c *FnBodyContext)
+
+	// ExitFn is called when exiting the fn production.
+	ExitFn(c *FnContext)
+
+	// ExitClosure is called when exiting the closure production.
+	ExitClosure(c *ClosureContext)
+
+	// ExitInclude is called when exiting the include production.
+	ExitInclude(c *IncludeContext)
 }
