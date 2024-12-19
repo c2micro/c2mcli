@@ -1,6 +1,7 @@
 package beacon
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/c2micro/c2mcli/internal/constants"
@@ -16,7 +17,7 @@ import (
 func aliasCommands(*console.Console) []*cobra.Command {
 	cmds := make([]*cobra.Command, 0)
 	for k, v := range aliases.Aliases {
-		cmds = append(cmds, &cobra.Command{
+		cmd := &cobra.Command{
 			Use:                   k,
 			Short:                 v.GetDescription(),
 			GroupID:               constants.AliasGroupId,
@@ -28,7 +29,9 @@ func aliasCommands(*console.Console) []*cobra.Command {
 					color.Red(err.Error())
 				}
 			},
-		})
+		}
+		cmd.SetHelpTemplate(fmt.Sprintf("%s\n\n%s\n", v.GetDescription(), v.GetUsage()))
+		cmds = append(cmds, cmd)
 	}
 	return cmds
 }

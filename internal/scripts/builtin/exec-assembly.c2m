@@ -21,6 +21,6 @@ alias(
     }
   },
   "execute .NET binary with arguments in beacon process memory",
-  "Usage:\n\texecute-assembly [host file path] <args>",
+  "Usage:\n  execute-assembly [host file path] <args>",
   true
 );

@@ -21,6 +21,6 @@ alias(
     }
   },
   "execute binary with arguments",
-  "Usage:\n\texec [binary path] [args]",
+  "Usage:\n  exec [binary path] [args]",
   true
 );

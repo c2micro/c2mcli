@@ -9,6 +9,6 @@ alias(
     return t_cancel(bid);
   },
   "cancel all (for operator) tasks in queue for beacon",
-  "Usage:\n\tcancel",
+  "Usage:\n  cancel",
   true
 );

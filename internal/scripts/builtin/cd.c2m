@@ -9,6 +9,6 @@ alias(
     return b_cd(bid, args[0]);
   },
   "change working directory of beacon process",
-  "Usage:\n\tcd [path]",
+  "Usage:\n  cd [path]",
   true
 );

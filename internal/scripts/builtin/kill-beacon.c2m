@@ -9,6 +9,6 @@ alias(
     return b_exit(bid);
   },
   "stop beacon process execution (without artefact removing from target system)",
-  "Usage:\n\tkill-beacon",
+  "Usage:\n  kill-beacon",
   true
 );

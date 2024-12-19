@@ -12,6 +12,6 @@ alias(
       }
     },
     "list files in directory",
-    "Usage:\n\tls [dir/file]",
+    "Usage:\n  ls [dir/file]",
     true
 );

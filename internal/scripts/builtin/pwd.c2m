@@ -9,6 +9,6 @@ alias(
     return b_pwd(bid);
   },
   "print beacon process working directory",
-  "Usage:\n\tpwd",
+  "Usage:\n  pwd",
   true
 );

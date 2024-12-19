@@ -9,6 +9,6 @@ alias(
     return b_jobkill(bid, int(args[0]));
   },
   "kill job, controlled by beacon",
-  "Usage:\n\tjobkill [jid]",
+  "Usage:\n  jobkill [jid]",
   true
 );

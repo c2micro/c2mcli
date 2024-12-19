@@ -9,6 +9,6 @@ alias(
     return b_upload(bid, args[0], args[1]);
   },
   "upload file from host to target specified by path",
-  "Usage:\n\tupload [host path] [dest path]",
+  "Usage:\n  upload [host path] [dest path]",
   true
 );

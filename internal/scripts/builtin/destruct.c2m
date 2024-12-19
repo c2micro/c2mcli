@@ -9,6 +9,6 @@ alias(
     return b_destruct(bid);
   },
   "destruct beacon itself (remove binary and kill process)",
-  "Usage:\n\tdestruct",
+  "Usage:\n  destruct",
   true
 );

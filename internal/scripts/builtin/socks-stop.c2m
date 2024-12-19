@@ -2,6 +2,6 @@ alias(
   "socks-stop",
   fn (bid, cmd, args, raw) {},
   "stop socks5 server for beacon",
-  "Usage:\n\tsocks-stop [port]",
+  "Usage:\n  socks-stop [port]",
   true
 );

@@ -24,6 +24,6 @@ alias(
     }
   },
   "change sleep/jitter values for beacon",
-  "Usage:\n\tsleep <sleep in sec> [jitter 1-99]",
+  "Usage:\n  sleep <sleep in sec> [jitter 1-99]",
   true
 );

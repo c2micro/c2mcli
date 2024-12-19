@@ -9,6 +9,6 @@ alias(
     return b_cat(bid, args[0]);
   },
   "print content of file to console",
-  "Usage:\n\tcat [file]",
+  "Usage:\n  cat [file]",
   true
 );

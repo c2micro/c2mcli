@@ -21,6 +21,6 @@ alias(
     }
   },
   "executed detached process, specified by binary with arguments",
-  "Usage:\n\texec-detach [path] [args]",
+  "Usage:\n  exec-detach [path] [args]",
   true
 );

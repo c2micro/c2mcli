@@ -9,6 +9,6 @@ alias(
     return b_ps(bid);
   },
   "list running processes on target machine",
-  "Usage:\n\tps",
+  "Usage:\n  ps",
   true
 );

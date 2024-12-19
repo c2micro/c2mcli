@@ -9,6 +9,6 @@ alias(
     return b_cp(bid, args[0], args[1]);
   },
   "copy source file to the specified destination on target",
-  "Usage:\n\tcp [src file] [dest file]",
+  "Usage:\n  cp [src file] [dest file]",
   true
 );

@@ -12,6 +12,6 @@ alias(
     return b_pause(bid, value);
   },
   "one-time sleep interval for beacon",
-  "Usage:\n\tpause [time in sec]",
+  "Usage:\n  pause [time in sec]",
   true
 );

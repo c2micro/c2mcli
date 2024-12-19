@@ -9,6 +9,6 @@ alias(
     return b_jobs(bid);
   },
   "list jobs, controlled by beacon",
-  "Usage:\n\tjobs",
+  "Usage:\n  jobs",
   true
 );

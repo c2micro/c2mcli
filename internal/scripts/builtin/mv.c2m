@@ -9,6 +9,6 @@ alias(
     return b_mv(bid, args[0], args[1]);
   },
   "move source file to the specified destination on target",
-  "Usage:\n\tmv [src file path] [dest file path]",
+  "Usage:\n  mv [src file path] [dest file path]",
   true
 );

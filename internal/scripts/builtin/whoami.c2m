@@ -9,6 +9,6 @@ alias(
     return b_whoami(bid);
   },
   "print current beacon process user",
-  "Usage:\n\twhoami",
+  "Usage:\n  whoami",
   true
 );

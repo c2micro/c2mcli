@@ -19,6 +19,6 @@ alias(
     }
   },
   "spoof parent PID for beacon processes launches",
-  "Usage:\n\tppid [pid] - spoof PPID\n\tppid - reset PPID",
+  "Usage:\n  ppid [pid] - spoof PPID\n\tppid - reset PPID",
   true
 );

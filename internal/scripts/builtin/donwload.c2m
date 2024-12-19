@@ -9,6 +9,6 @@ alias(
     return b_download(bid, args[0]);
   },
   "download file from the target",
-  "Usage:\n\tdownload [path]",
+  "Usage:\n  download [path]",
   true
 );

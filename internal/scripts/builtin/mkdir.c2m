@@ -9,6 +9,6 @@ alias(
     return b_mkdir(bid, args[0]);
   },
   "create directory on target",
-  "Usage:\n\tmkdir [path]",
+  "Usage:\n  mkdir [path]",
   true
 );

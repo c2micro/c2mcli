@@ -9,6 +9,6 @@ alias(
     return b_kill(bid, int(args[0]));
   },
   "kill specified process by PID",
-  "Usage:\n\tkill [pid]",
+  "Usage:\n  kill [pid]",
   true
 );

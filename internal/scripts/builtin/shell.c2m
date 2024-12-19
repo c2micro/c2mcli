@@ -9,6 +9,6 @@ alias(
     return b_shell(bid, raw);
   },
   "execute command with arguments from target OS shell process, e.g. cmd.exe/sh",
-  "Usage:\n\tshell [command] [args]",
+  "Usage:\n  shell [command] [args]",
   true
 );
