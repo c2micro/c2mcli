@@ -1,8 +1,6 @@
 package scripts
 
 import (
-	"fmt"
-
 	"github.com/c2micro/c2mcli/internal/scripts/aliases"
 	"github.com/c2micro/mlan/pkg/engine"
 )
@@ -29,7 +27,6 @@ func Rebuild() error {
 	// перерегистрация внешних скриптов
 	externalScripts := make([]*Script, 0)
 	scripts.Range(func(k string, v *Script) bool {
-		fmt.Println("A")
 		externalScripts = append(externalScripts, v)
 		scripts.Delete(k)
 		return true

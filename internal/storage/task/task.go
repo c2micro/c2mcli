@@ -141,13 +141,13 @@ func (t *Task) StringStatus() string {
 	var data string
 	switch t.status {
 	case defaults.StatusInProgress:
-		data = fmt.Sprintf("[%s] recieved output with length %d bytes", color.CyanString("*"), t.outputLen)
+		data = fmt.Sprintf("[%s] (%d) recieved output with length %d bytes", color.CyanString("*"), t.id, t.outputLen)
 	case defaults.StatusCancelled:
-		data = fmt.Sprintf("[%s] recieved output with length %d bytes", color.YellowString("!"), t.outputLen)
+		data = fmt.Sprintf("[%s] (%d) recieved output with length %d bytes", color.YellowString("!"), t.id, t.outputLen)
 	case defaults.StatusError:
-		data = fmt.Sprintf("[%s] recieved output with length %d bytes", color.RedString("!"), t.outputLen)
+		data = fmt.Sprintf("[%s] (%d) recieved output with length %d bytes", color.RedString("!"), t.id, t.outputLen)
 	case defaults.StatusSuccess:
-		data = fmt.Sprintf("[%s] recieved output with length %d bytes", color.GreenString("+"), t.outputLen)
+		data = fmt.Sprintf("[%s] (%d) recieved output with length %d bytes", color.GreenString("+"), t.id, t.outputLen)
 	}
 	return data
 }
