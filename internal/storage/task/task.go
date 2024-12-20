@@ -183,6 +183,11 @@ func (t *Task) GetOutputString() string {
 }
 
 func (t *Task) SetOutput(data []byte) {
+	if !utils.IsAsciiPrintable(string(data)) {
+		t.SetIsBinary(true)
+	} else {
+		t.SetIsBinary(false)
+	}
 	t.output = data
 }
 
@@ -264,9 +269,6 @@ func (t *TaskGroup) AddMessage(m *Message) {
 }
 
 func (t *TaskGroup) AddTask(task *Task) {
-	if utils.IsAsciiPrintable(task.GetOutputString()) {
-		task.SetIsBinary(true)
-	}
 	t.data.AddTask(task)
 }
 

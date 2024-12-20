@@ -1,8 +1,11 @@
 package utils
 
 import (
-	"fmt"
 	"unicode"
+)
+
+var (
+	ranger = []*unicode.RangeTable{unicode.Latin, unicode.Cyrillic, unicode.ASCII_Hex_Digit, unicode.Punct, unicode.White_Space}
 )
 
 func StrInSlice(line string, list []string) bool {
@@ -14,11 +17,12 @@ func StrInSlice(line string, list []string) bool {
 	return false
 }
 
-// TODO
 func IsAsciiPrintable(s string) bool {
-	for _, r := range s {
-		if (r > unicode.MaxASCII || !unicode.IsPrint(r)) && r != '\n' {
-			fmt.Println(r)
+	if len(s) > 1024 {
+		s = s[:1024]
+	}
+	for _, r := range []rune(s) {
+		if !unicode.IsOneOf(ranger, r) {
 			return false
 		}
 	}
