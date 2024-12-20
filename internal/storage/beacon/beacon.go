@@ -58,7 +58,7 @@ func (b *Beacon) GetId() uint32 {
 }
 
 func (b *Beacon) GetIdHex() string {
-	return fmt.Sprintf("%06x", b.id)[:6]
+	return fmt.Sprintf("%08x", b.id)[:8]
 }
 
 func (b *Beacon) SetId(id uint32) {

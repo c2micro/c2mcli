@@ -13,7 +13,7 @@ import (
 
 func commandCommand(c *console.Console) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:                   "command",
+		Use:                   "commands",
 		Short:                 "show commands for beacon",
 		Aliases:               []string{"t"},
 		DisableFlagsInUseLine: true,

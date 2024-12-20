@@ -63,7 +63,7 @@ func taskDownloadCommand(*console.Console) *cobra.Command {
 // обработка тасков для бикона
 func taskCommand(c *console.Console) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:                   "task",
+		Use:                   "tasks",
 		Short:                 "show tasks for beacon",
 		Aliases:               []string{"t"},
 		DisableFlagsInUseLine: true,

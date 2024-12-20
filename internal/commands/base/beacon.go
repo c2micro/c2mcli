@@ -46,7 +46,7 @@ func beaconListCommand(*console.Console) *cobra.Command {
 // работа с биконами
 func beaconCommand(c *console.Console) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:                   "beacon",
+		Use:                   "beacons",
 		Short:                 "manage beacons",
 		DisableFlagsInUseLine: true,
 	}

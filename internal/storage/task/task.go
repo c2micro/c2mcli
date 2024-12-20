@@ -5,6 +5,7 @@ import (
 	"sort"
 	"time"
 
+	"github.com/c2micro/c2mcli/internal/utils"
 	"github.com/c2micro/c2mshr/defaults"
 	"github.com/fatih/color"
 	"github.com/lrita/cmap"
@@ -131,6 +132,7 @@ type Task struct {
 	TaskData
 	id          int64
 	isOutputBig bool
+	isBinary    bool
 	output      []byte
 	outputLen   int64
 	status      defaults.TaskStatus
@@ -190,6 +192,14 @@ func (t *Task) GetOutputLen() int64 {
 
 func (t *Task) SetOutputLen(length int64) {
 	t.outputLen = length
+}
+
+func (t *Task) GetIsBinary() bool {
+	return t.isBinary
+}
+
+func (t *Task) SetIsBinary(flag bool) {
+	t.isBinary = flag
 }
 
 func (t *Task) GetStatus() defaults.TaskStatus {
@@ -254,6 +264,9 @@ func (t *TaskGroup) AddMessage(m *Message) {
 }
 
 func (t *TaskGroup) AddTask(task *Task) {
+	if utils.IsAsciiPrintable(task.GetOutputString()) {
+		task.SetIsBinary(true)
+	}
 	t.data.AddTask(task)
 }
 

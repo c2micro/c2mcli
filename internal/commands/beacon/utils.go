@@ -20,6 +20,9 @@ func printTaskGroupData(c *console.Console, v task.TaskData) {
 			c.Printf("[%s] %s %d %s\n", color.YellowString("!"), "output too big, use: task download", data.GetId(), "<path to save>")
 			return
 		}
+		//if data.GetIsBinary() {
+		//	c.Printf("[%s] %s %d %s\n", color.YellowString("!"), "output is possible binary, use: task download", data.GetId(), "<path to save>")
+		//}
 		output := data.GetOutputString()
 		if output != "" {
 			c.Printf("%s\n", output)
