@@ -8,29 +8,31 @@ import (
 
 func Commands(app *console.Console) console.Commands {
 	return func() *cobra.Command {
-		rootCmd := &cobra.Command{
+		cmd := &cobra.Command{
 			DisableFlagsInUseLine: true,
 		}
 
-		rootCmd.AddGroup(
+		cmd.AddGroup(
 			&cobra.Group{ID: constants.AliasGroupId, Title: constants.AliasGroupId},
 			&cobra.Group{ID: constants.CoreGroupId, Title: constants.CoreGroupId},
 		)
 
+		// command
+		cmd.AddCommand(commandCommand(app))
 		// last
-		rootCmd.AddCommand(lastCommand(app))
-		// tasks
-		rootCmd.AddCommand(tasksCommand(app))
+		cmd.AddCommand(lastCommand(app))
+		// task
+		cmd.AddCommand(taskCommand(app))
 		// exit
-		rootCmd.AddCommand(exitCommand(app))
+		cmd.AddCommand(exitCommand(app))
 		// алиасы
 		for _, v := range aliasCommands(app) {
-			rootCmd.AddCommand(v)
+			cmd.AddCommand(v)
 		}
 
-		rootCmd.InitDefaultHelpCmd()
-		rootCmd.SetHelpCommandGroupID(constants.CoreGroupId)
-		rootCmd.CompletionOptions.DisableDefaultCmd = true
-		return rootCmd
+		cmd.InitDefaultHelpCmd()
+		cmd.SetHelpCommandGroupID(constants.CoreGroupId)
+		cmd.CompletionOptions.DisableDefaultCmd = true
+		return cmd
 	}
 }

@@ -17,7 +17,7 @@ func printTaskGroupData(c *console.Console, v task.TaskData) {
 			c.Printf("%s\n", preambule)
 		}
 		if data.GetIsOutputBig() {
-			c.Printf("[%s] %s %d %s\n", color.YellowString("!"), "output too big, use: tasks download", data.GetId(), "<path to save>")
+			c.Printf("[%s] %s %d %s\n", color.YellowString("!"), "output too big, use: task download", data.GetId(), "<path to save>")
 			return
 		}
 		output := data.GetOutputString()

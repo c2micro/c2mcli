@@ -11,7 +11,7 @@ import (
 )
 
 // листинг биконов
-func beaconsListCommand(*console.Console) *cobra.Command {
+func beaconListCommand(*console.Console) *cobra.Command {
 	return &cobra.Command{
 		Use:                   "list",
 		Short:                 "list beacons",
@@ -44,17 +44,14 @@ func beaconsListCommand(*console.Console) *cobra.Command {
 }
 
 // работа с биконами
-func beaconsCommand(c *console.Console) *cobra.Command {
-	beaconsCmd := &cobra.Command{
-		Use:                   "beacons",
+func beaconCommand(c *console.Console) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:                   "beacon",
 		Short:                 "manage beacons",
 		DisableFlagsInUseLine: true,
 	}
-
-	// добавление саб-команд
-	beaconsCmd.AddCommand(
-		beaconsListCommand(c),
+	cmd.AddCommand(
+		beaconListCommand(c),
 	)
-
-	return beaconsCmd
+	return cmd
 }

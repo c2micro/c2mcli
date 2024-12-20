@@ -9,8 +9,8 @@ import (
 )
 
 // регистрация скрипта
-func scriptsLoadCommand(*console.Console) *cobra.Command {
-	scriptsLoadCmd := &cobra.Command{
+func scriptLoadCommand(*console.Console) *cobra.Command {
+	cmd := &cobra.Command{
 		Use:                   "load",
 		Short:                 "load script by path on FS",
 		DisableFlagsInUseLine: true,
@@ -24,14 +24,14 @@ func scriptsLoadCommand(*console.Console) *cobra.Command {
 		},
 	}
 	// генерация позиционного комплитера
-	carapace.Gen(scriptsLoadCmd).PositionalCompletion(carapace.ActionCallback(func(c carapace.Context) carapace.Action {
+	carapace.Gen(cmd).PositionalCompletion(carapace.ActionCallback(func(c carapace.Context) carapace.Action {
 		return carapace.ActionFiles()
 	}))
-	return scriptsLoadCmd
+	return cmd
 }
 
 // листинг скриптов
-func scriptsListCommand(c *console.Console) *cobra.Command {
+func scriptListCommand(c *console.Console) *cobra.Command {
 	return &cobra.Command{
 		Use:                   "list",
 		Short:                 "list registred scripts",
@@ -54,8 +54,8 @@ func scriptsListCommand(c *console.Console) *cobra.Command {
 }
 
 // удаление скриптов
-func scriptsRemoveCommand(*console.Console) *cobra.Command {
-	scriptsRemoveCmd := &cobra.Command{
+func scriptRemoveCommand(*console.Console) *cobra.Command {
+	cmd := &cobra.Command{
 		Use:                   "remove",
 		Short:                 "remove registred scripts",
 		DisableFlagsInUseLine: true,
@@ -69,13 +69,13 @@ func scriptsRemoveCommand(*console.Console) *cobra.Command {
 		},
 	}
 	// генерация позиционного комплитера
-	carapace.Gen(scriptsRemoveCmd).PositionalCompletion(externalScriptsCompleter())
-	return scriptsRemoveCmd
+	carapace.Gen(cmd).PositionalCompletion(externalScriptsCompleter())
+	return cmd
 }
 
 // перезагрузка скриптов
-func scriptsReloadCommand(*console.Console) *cobra.Command {
-	scriptsReloadCmd := &cobra.Command{
+func scriptReloadCommand(*console.Console) *cobra.Command {
+	cmd := &cobra.Command{
 		Use:                   "reload",
 		Short:                 "reload script/all scripts",
 		DisableFlagsInUseLine: true,
@@ -98,27 +98,24 @@ func scriptsReloadCommand(*console.Console) *cobra.Command {
 		},
 	}
 	// генерация позиционного комплитера
-	carapace.Gen(scriptsReloadCmd).PositionalCompletion(externalScriptsCompleter())
-	return scriptsReloadCmd
+	carapace.Gen(cmd).PositionalCompletion(externalScriptsCompleter())
+	return cmd
 }
 
 // работа со скриптам
-func scriptsCommand(c *console.Console) *cobra.Command {
-	scriptsCmd := &cobra.Command{
+func scriptCommand(c *console.Console) *cobra.Command {
+	cmd := &cobra.Command{
 		Use:                   "scripts",
 		Short:                 "manage scripts",
 		DisableFlagsInUseLine: true,
 	}
-
-	// добавление саб-команд
-	scriptsCmd.AddCommand(
-		scriptsLoadCommand(c),
-		scriptsListCommand(c),
-		scriptsReloadCommand(c),
-		scriptsRemoveCommand(c),
+	cmd.AddCommand(
+		scriptLoadCommand(c),
+		scriptListCommand(c),
+		scriptReloadCommand(c),
+		scriptRemoveCommand(c),
 	)
-
-	return scriptsCmd
+	return cmd
 }
 
 func externalScriptsCompleter() carapace.Action {
